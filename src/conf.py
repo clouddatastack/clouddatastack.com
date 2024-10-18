@@ -25,17 +25,4 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
-html_use_index = True
 html_baseurl = "https://dataspaces.dev"
-
-html_css_files = [
-    'https://dataspaces.dev/_static/pygments.css',
-    'https://dataspaces.dev/_static/basic.css',
-    'https://dataspaces.dev/_static/alabaster.css',
-]
-
-html_js_files = [
-    'https://dataspaces.dev/_static/documentation_options.js',
-    'https://dataspaces.dev/_static/doctools.js',
-    'https://dataspaces.dev/_static/sphinx_highlight.js',
-]
