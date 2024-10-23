@@ -30,11 +30,11 @@ html_favicon = '_static/logo_white_16x16.png'
 html_css_files = [
     'custom.css',
 ]
-html_theme_options = {
-    'logo_only': True,
-}
 
 html_show_sourcelink = False
 
-prev_next_buttons_location = None
-
+html_theme_options = {
+    'prev_next_buttons_location': None,
+    'style_nav_header_background': '#343131',
+    'logo_only': True,
+}
