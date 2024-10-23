@@ -1,9 +1,4 @@
-.. CloudDataStack documentation master file, created by
-   sphinx-quickstart on Wed Oct 23 08:23:34 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-CloudDataStack documentation
+Cloud Data Stack
 ============================
 
 Add your content using ``reStructuredText`` syntax. See the
