@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Cloud Data Stack'
-copyright = '2024, Yuri Chernushenko'
+copyright = ''
 author = 'Yuri Chernushenko'
 
 # -- General configuration ---------------------------------------------------
@@ -15,6 +15,9 @@ author = 'Yuri Chernushenko'
 
 extensions = ['sphinx_rtd_theme']
 
+html_context = {
+    'footer': ''
+}
 templates_path = ['_templates']
 exclude_patterns = []
 
