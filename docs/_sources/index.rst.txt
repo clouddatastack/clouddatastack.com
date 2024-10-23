@@ -14,4 +14,11 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    stack/data_streaming
    stack/data_storage
 
+.. raw:: html
 
+   <script>
+   var links = document.querySelectorAll('a[href^="http"]');
+   links.forEach(function(link) {
+       link.setAttribute('target', '_blank');
+   });
+   </script>
