@@ -30,3 +30,6 @@ html_favicon = '_static/logo_white_16x16.png'
 html_css_files = [
     'custom.css',
 ]
+html_theme_options = {
+    'logo_only': True,
+}
