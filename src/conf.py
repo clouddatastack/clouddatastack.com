@@ -33,3 +33,5 @@ html_css_files = [
 html_theme_options = {
     'logo_only': True,
 }
+
+html_show_sourcelink = False
