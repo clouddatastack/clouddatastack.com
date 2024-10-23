@@ -1,8 +1,18 @@
-.wy-side-nav-search .icon.icon-home::before {
-    content: none;
+.wy-side-nav-search {
+    display: flex;
+    align-items: center;
+    /* Vertically center align items */
 }
 
 .wy-side-nav-search img {
-    max-height: 32px;
     margin-right: 10px;
+    /* Adjust the spacing between logo and header */
+    max-height: 40px;
+    /* Set the maximum height of the logo */
+}
+
+.wy-side-nav-search .wy-nav-top {
+    display: inline-block;
+    /* Ensure the title stays on the same line */
+    margin: 0;
 }
