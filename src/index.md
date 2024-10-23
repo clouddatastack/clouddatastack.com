@@ -1,4 +1,4 @@
-# Welcome to Dataspaces
+# Welcome to Cloud Data Stack
 
 This is a project to showcase data engineering workshops.
 

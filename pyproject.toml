@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "dataspaces-dev"
+name = "clouddatastack-com"
 version = "0.1.0"
 description = ""
 authors = ["Yuri Chernushenko <y.chernushenko@gmail.com>"]
 readme = "README.md"
-packages = [{include = "dataspaces"}]
+packages = [{include = "clouddatastack"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -15,6 +15,3 @@ myst-parser = "^4.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-build-html = "sphinx:build -b html . _build/html"

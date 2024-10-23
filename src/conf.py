@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'dataspaces'
+project = 'CloudDataStack'
 copyright = '2024, Yuri Chernushenko'
 author = 'Yuri Chernushenko'
 
@@ -24,5 +24,4 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'alabaster'
-html_static_path = ['static']
-html_baseurl = "https://dataspaces.dev"
+html_static_path = ['_static']
