@@ -1,3 +1,10 @@
+/* Change color of logog area */
 .wy-side-nav-search {
     background-color: #343131;
+}
+
+/* Hide 'Next' and 'Previous' navigation buttons */
+.wy-nav-content .prev,
+.wy-nav-content .next {
+    display: none;
 }
