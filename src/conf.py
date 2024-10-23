@@ -26,6 +26,7 @@ exclude_patterns = []
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_logo = '_static/logo_white.png'
+html_favicon = '_static/logo_white_16x16.png'
 html_css_files = [
     'custom.css',
 ]
