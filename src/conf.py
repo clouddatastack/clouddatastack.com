@@ -35,3 +35,6 @@ html_theme_options = {
 }
 
 html_show_sourcelink = False
+
+prev_next_buttons_location = None
+
