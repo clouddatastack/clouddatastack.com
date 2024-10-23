@@ -1,4 +1,8 @@
-.logo {
-    max-width: 32px;
-    height: auto;
+.wy-side-nav-search .icon.icon-home::before {
+    content: none;
+}
+
+.wy-side-nav-search img {
+    max-height: 32px;
+    margin-right: 10px;
 }
