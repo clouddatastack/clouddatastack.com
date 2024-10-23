@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Cloud Data Stack'
+project = ''
 copyright = '2024, Yuri Chernushenko'
 author = 'Yuri Chernushenko'
 
