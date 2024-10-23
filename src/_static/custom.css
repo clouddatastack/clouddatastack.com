@@ -1,6 +1,16 @@
 .logo {
-    max-width: 200px;
+    max-width: 32px;
     /* Adjust this value as needed */
     height: auto;
     /* This ensures the height scales proportionally */
+}
+
+.wy-side-nav-search {
+    display: flex;
+    align-items: center;
+}
+
+.wy-side-nav-search img {
+    margin-right: 10px;
+    /* Adjust as necessary */
 }
