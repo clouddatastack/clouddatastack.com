@@ -1,6 +1,7 @@
 Data Governanace
 ============================
 
+- What should you put into Data Contract
 - How to archive data
 - How to delete PII by request
 - Access management strategy 
