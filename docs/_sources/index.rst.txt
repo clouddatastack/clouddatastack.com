@@ -13,6 +13,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    stack/data_streaming
    stack/compute
    stack/orchestration
+   stack/governanace
 
 .. raw:: html
 
