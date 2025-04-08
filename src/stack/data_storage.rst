@@ -1,7 +1,15 @@
 Data Storage
 ============================
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   data_storage/etl_vs_elt_on_datalake.rst
+
 - Database scaling framework (aka sharding)
-- ETL vs ETL on Datalake
 - Datalake vs Warehouse
 - Choosing Feature Store
+- Storage for RAG, choosing vector Database
+- Is CDC is too complicated
+- ClickHouse, BigQuery, Redshift

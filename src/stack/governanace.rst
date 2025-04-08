@@ -5,3 +5,4 @@ Data Governanace
 - How to delete PII by request
 - Access management strategy 
 - How to monitor datasets usage
+- They say you should use GCP for data projects
