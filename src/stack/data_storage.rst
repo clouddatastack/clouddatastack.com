@@ -2,7 +2,7 @@ Data Storage
 ============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    data_storage/etl_vs_elt_on_datalake.rst
