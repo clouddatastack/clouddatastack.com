@@ -1,4 +1,4 @@
-Data Governanace
+Data Governance
 ============================
 
 - What should you put into Data Contract
