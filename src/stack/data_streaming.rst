@@ -6,3 +6,5 @@ Data Streaming
 - Events quality assuarance strategy
 - How to manage Schemas
 - AVRO vs JSON
+- AVRO vs Protobuf vs FlatBuffers
+- Versionsing your streaming events

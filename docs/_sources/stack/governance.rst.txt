@@ -7,3 +7,4 @@ Data Governance
 - Access management strategy 
 - How to monitor datasets usage
 - They say you should use GCP for data projects
+- How to version datasets
