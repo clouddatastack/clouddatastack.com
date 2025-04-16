@@ -23,3 +23,18 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
        link.setAttribute('target', '_blank');
    });
    </script>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tools:
+
+   tools/databricks_audit_guide
+
+.. raw:: html
+
+   <script>
+   var links = document.querySelectorAll('a[href^="http"]');
+   links.forEach(function(link) {
+       link.setAttribute('target', '_blank');
+   });
+   </script>
