@@ -1,4 +1,4 @@
-Ingest of Web Analytics at Scale
+Ingest of Web Analytics
 =================================
 
-How to schedule your Notebooks on Databricks while keeping them on GitHub.
+Integrate you Google Analytics data into Datalake for analysis.
