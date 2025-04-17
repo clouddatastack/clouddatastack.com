@@ -8,6 +8,6 @@ Inventory: What Data Assets Exist?
 
 **Show the top N largest tables in Databricks by size**
 
-.. literalinclude:: ../code/tools/databricks_audit.py
+.. literalinclude:: code/databricks_audit.py
    :language: python
    :linenos:

@@ -15,20 +15,23 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    stack/orchestration
    stack/governance
 
-.. raw:: html
-
-   <script>
-   var links = document.querySelectorAll('a[href^="http"]');
-   links.forEach(function(link) {
-       link.setAttribute('target', '_blank');
-   });
-   </script>
-
 .. toctree::
    :maxdepth: 1
    :caption: Tools:
 
    tools/databricks_audit_guide
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Workshops:
+
+   workshops/github_airflow_databricks
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Products:
+
+   products/web_analytics
 
 .. raw:: html
 
