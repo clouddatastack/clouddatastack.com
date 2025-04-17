@@ -31,9 +31,10 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Products:
 
-   products/web_analytics
+   products/web_analytics_ingest
    products/rag
    products/gdpr_pii
+   products/streaming_platform
 
 .. raw:: html
 
