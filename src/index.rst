@@ -3,7 +3,7 @@ Cloud Data Stack
 
 Tools and Workshops for Event Streaming, Big Data and MLOps infrastructure.
 
-If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or workshop, you can write at `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_
+If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or workshop, you can write at `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_ or `schedule a call <https://calendly.com/y-chernushenko>`_
 
 .. toctree::
    :maxdepth: 1
@@ -38,6 +38,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    products/streaming_platform
    products/governance_monitor
    products/image_lake
+   products/dbt_pipelines
 
 .. raw:: html
 
