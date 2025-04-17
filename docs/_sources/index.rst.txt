@@ -32,6 +32,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :caption: Products:
 
    products/web_analytics
+   products/rag
 
 .. raw:: html
 
