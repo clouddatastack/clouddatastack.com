@@ -33,6 +33,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
 
    products/web_analytics
    products/rag
+   products/gdpr_pii
 
 .. raw:: html
 
