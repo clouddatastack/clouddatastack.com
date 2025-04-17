@@ -37,6 +37,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    products/gdpr_pii
    products/streaming_platform
    products/governance_monitor
+   products/image_lake
 
 .. raw:: html
 
