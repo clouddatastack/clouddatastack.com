@@ -20,6 +20,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :caption: Tools:
 
    tools/databricks_audit_guide
+   tools/snowflake_audit_guide
 
 .. toctree::
    :maxdepth: 1
@@ -35,6 +36,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    products/rag
    products/gdpr_pii
    products/streaming_platform
+   products/governance_monitor
 
 .. raw:: html
 
