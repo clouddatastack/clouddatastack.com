@@ -39,6 +39,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    products/governance_monitor
    products/image_lake
    products/dbt_pipelines
+   products/agentic_workflows
 
 .. raw:: html
 
