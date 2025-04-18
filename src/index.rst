@@ -26,7 +26,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Workshops:
 
-   workshops/github_airflow_databricks
+   workshops/airflow_databricks
 
 .. toctree::
    :maxdepth: 1
