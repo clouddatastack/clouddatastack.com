@@ -35,7 +35,7 @@ Low	Full automation/deploy	Refactor later if demand arises
 ✅ Week 1: Get the Engine Running (18-25 Apr)  
  Finalize 1 article: ETL vs ELT on Datalake  
  Create a public GitHub repo with Databricks Audit code & README  
- Setup your basic YouTube channel: logo, banner, about section  
+ ~~Setup your basic YouTube channel: logo, banner, about section~~  
  Write script for Databricks Audit video  
  Sketch Kubernetes Helm chart layout for deploying your tools  
 
