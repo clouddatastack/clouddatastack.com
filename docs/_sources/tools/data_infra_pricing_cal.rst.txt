@@ -1,4 +1,4 @@
-Data Infra Pricing Calulator
+Data Cost Calulator
 =======================================
 
 Here you can calculate, how much would it cost you to own you data stack.
