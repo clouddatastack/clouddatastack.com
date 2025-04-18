@@ -25,9 +25,9 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Tools:
-   
-   benchmarking/trino_query_engine
+   :caption: Benchmarks:
+
+   benchmarks/trino_query_engine
 
 .. toctree::
    :maxdepth: 1
