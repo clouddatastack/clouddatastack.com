@@ -2,4 +2,4 @@
 ============================
 
 - Catalog Structure
-- Data Contracts wiht GitHub
+- Data Contracts with GitHub
