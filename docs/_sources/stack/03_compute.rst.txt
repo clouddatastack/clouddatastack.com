@@ -1,7 +1,7 @@
 3. Compute and Query
 ============================
 
-- Deploying Notebooks and PySpark Pipelines
+- Deploying Notebooks and PySpark Jobs
 - Transformations with DBT
-- DBT with Slim CI and Write-Audit-Publish Approach
+- Write-Audit-Publish with Slim CI
 - Federation of queries through Trino
