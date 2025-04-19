@@ -11,3 +11,7 @@ Inventory: What Data Assets Exist?
 .. literalinclude:: code/databricks_audit.py
    :language: python
    :linenos:
+
+
+Usage: Which datasets are regularly queried?
+------------------------------------------------------
