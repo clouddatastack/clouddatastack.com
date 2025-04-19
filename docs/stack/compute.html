@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compute and Query &mdash; Cloud Data Stack  documentation</title>
+  <title>3. Compute and Query &mdash; Cloud Data Stack  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Orchestration" href="orchestration.html" />
-    <link rel="prev" title="Data Streaming" href="data_streaming.html" /> 
+    <link rel="next" title="4. Orchestration" href="orchestration.html" />
+    <link rel="prev" title="2.2. Flink Analytics Template" href="streaming/flink_analytics_template.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,36 +47,25 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="data_storage.html">Data Storage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_streaming.html">Data Streaming</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Compute and Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="orchestration.html">Orchestration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="governance.html">Data Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">1. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streaming.html">2. Data Streaming</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orchestration.html">4. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="governance.html">5. Data Governance</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tools:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tools/databricks_audit_guide.html">Databricks Audit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tools/snowflake_audit_guide.html">Snowflake Audit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tools/data_infra_pricing_cal.html">Data Cost Calculator</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Benchmarks:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../benchmarks/trino_query_engine.html">Trino Query Engine</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Workshops:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../workshops/airflow_databricks.html">Airflow on Databricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/infra_pricing_cal.html">Cost Calculator</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Products:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../products/web_analytics_ingest.html">Ingest of Web Analytics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../products/rag.html">Custom RAG pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../products/web_analytics_elt.html">Web Analytics ELT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../products/gdpr_pii.html">GDPR PII Manager</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../products/streaming_platform.html">Streaming Platform</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../products/governance_monitor.html">Governance Monitor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../products/image_lake.html">Image Lake</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../products/dbt_pipelines.html">DBT Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../products/agentic_workflows.html">Agentic Workflows</a></li>
 </ul>
 
         </div>
@@ -93,7 +82,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Compute and Query</li>
+      <li class="breadcrumb-item active">3. Compute and Query</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -103,14 +92,13 @@
            <div itemprop="articleBody">
              
   <section id="compute-and-query">
-<h1>Compute and Query<a class="headerlink" href="#compute-and-query" title="Link to this heading"></a></h1>
+<h1>3. Compute and Query<a class="headerlink" href="#compute-and-query" title="Link to this heading"></a></h1>
 <ul class="simple">
-<li><p>How to choose Query Engine</p></li>
-<li><p>When to use Spark</p></li>
-<li><p>When Query Federation is a good idea (Trino)</p></li>
-<li><p>If GraphQL is useful in BigData domain</p></li>
-<li><p>How to use DuckDB for analytics</p></li>
-<li><p>DIY Query Engine with DataFusion</p></li>
+<li><p>Deploying Notebooks and PySpark Pipelines</p></li>
+<li><p>Transformations with DBT</p></li>
+<li><p>DBT for Streaming Sources</p></li>
+<li><p>DBT with Slim CI and Write-Audit-Publish Approach</p></li>
+<li><p>Federation of queries through Trino</p></li>
 </ul>
 </section>
 

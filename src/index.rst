@@ -9,8 +9,8 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Technology Stack:
 
-   stack/data_storage
-   stack/data_streaming
+   stack/storage
+   stack/streaming
    stack/compute
    stack/orchestration
    stack/governance
@@ -21,32 +21,17 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
 
    tools/databricks_audit_guide
    tools/snowflake_audit_guide
-   tools/data_infra_pricing_cal
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Benchmarks:
-
-   benchmarks/trino_query_engine
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Workshops:
-
-   workshops/airflow_databricks
+   tools/infra_pricing_cal
 
 .. toctree::
    :maxdepth: 1
    :caption: Products:
 
-   products/web_analytics_ingest
-   products/rag
+   products/web_analytics_elt
    products/gdpr_pii
    products/streaming_platform
    products/governance_monitor
-   products/image_lake
    products/dbt_pipelines
-   products/agentic_workflows
 
 .. raw:: html
 
