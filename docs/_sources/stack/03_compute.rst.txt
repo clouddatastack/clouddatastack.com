@@ -5,3 +5,4 @@
 - Transformations with DBT
 - Write-Audit-Publish with Slim CI
 - Federation of queries through Trino
+- CDC with Debezium
