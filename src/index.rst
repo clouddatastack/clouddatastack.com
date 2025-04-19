@@ -19,8 +19,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Tools:
 
-   tools/databricks_audit_guide
-   tools/snowflake_audit_guide
+   tools/audit_guide
    tools/infra_pricing_cal
 
 .. toctree::
