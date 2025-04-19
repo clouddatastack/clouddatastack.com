@@ -9,11 +9,11 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Technology Stack:
 
-   stack/storage
-   stack/streaming
-   stack/compute
-   stack/orchestration
-   stack/governance
+   stack/01_storage
+   stack/02_streaming
+   stack/03_compute
+   stack/04_orchestration
+   stack/05_governance
 
 .. toctree::
    :maxdepth: 1

@@ -5,5 +5,5 @@
    :maxdepth: 1
    :caption: Contents:
 
-   streaming/events_schema_management.rst
-   streaming/flink_analytics_template.rst
+   02_streaming/02_01_schema_registry.rst
+   02_streaming/02_02_online_analytics.rst
