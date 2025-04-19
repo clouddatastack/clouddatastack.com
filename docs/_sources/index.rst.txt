@@ -28,8 +28,6 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
 
    products/web_analytics_elt
    products/gdpr_pii
-   products/streaming_platform
-   products/governance_monitor
 
 .. raw:: html
 
