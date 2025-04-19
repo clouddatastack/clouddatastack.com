@@ -2,4 +2,6 @@
 ============================
 
 - Catalog Structure
-- Data Contracts with GitHub
+- Metadata Wanagement with DBT
+- Write-Audit-Publish with Slim CI
+- Data Contracts on GitHub Actions
