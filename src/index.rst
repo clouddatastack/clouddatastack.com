@@ -26,8 +26,8 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Products:
 
-   products/web_analytics_elt
-   products/gdpr_pii
+   products/web_analytics_ingestor
+   products/pii_tracer
 
 .. raw:: html
 
