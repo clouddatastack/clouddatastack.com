@@ -20,7 +20,7 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :caption: Tools:
 
    tools/audit_guide
-   tools/infra_pricing_cal
+   tools/cost_calculator
 
 .. toctree::
    :maxdepth: 1

@@ -4,4 +4,4 @@
 Partitioning
 Format
 Size
-Order of fiels inside a File
+Columns
