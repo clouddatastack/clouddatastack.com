@@ -1,4 +1,4 @@
-2. Data Streaming
+2. Streaming
 ============================
 
 .. toctree::

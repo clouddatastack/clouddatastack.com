@@ -21,7 +21,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2. Data Streaming" href="../02_streaming.html" />
+    <link rel="next" title="2. Streaming" href="../02_streaming.html" />
     <link rel="prev" title="1.1. Buckets" href="01_01_buckets.html" /> 
 </head>
 
@@ -49,10 +49,19 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../01_storage.html">1. Storage</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01_01_buckets.html">1.1. Buckets</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1.2. Files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.2. Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#format">Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#size">Size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partitioning">Partitioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#columns">Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schema-evolution-and-versioning">Schema Evolution and Versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compaction">Compaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vacuuming">Vacuuming</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Data Streaming</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../03_compute.html">3. Compute and Query</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../04_orchestration.html">4. Orchestration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../05_governance.html">5. Data Governance</a></li>
@@ -94,10 +103,184 @@
              
   <section id="files">
 <h1>1.2. Files<a class="headerlink" href="#files" title="Link to this heading"></a></h1>
-<p>Partitioning
-Format
-Size
-Columns</p>
+<p>Efficient file organization in object storage is key to scalable and cost-effective data processing. This page provides guidelines and trade-offs for structuring files in a modern data lake.</p>
+<section id="format">
+<h2>Format<a class="headerlink" href="#format" title="Link to this heading"></a></h2>
+<p>Choosing the right file format depends on the use case and processing engine compatibility.</p>
+<p><strong>When to use each format:</strong></p>
+<ul class="simple">
+<li><p><strong>Parquet</strong>: Columnar, highly efficient for most analytical queries. Recommended for general-purpose analytics.</p></li>
+<li><p><strong>Avro</strong>: Supports schema evolution, good for streaming pipelines and serialization.</p></li>
+<li><p><strong>JSON / CSV</strong>: Human-readable and useful for raw ingest, debugging, or exchanging data across systems.</p></li>
+</ul>
+<p><strong>Compression options:</strong></p>
+<ul class="simple">
+<li><p><strong>Snappy</strong>: Fast, splittable. Ideal for Parquet and Avro.</p></li>
+<li><p><strong>ZSTD</strong>: High compression ratio, slower than Snappy. Good for cost savings.</p></li>
+<li><p><strong>GZIP</strong>: Widely supported but not splittable. Avoid for large distributed processing.</p></li>
+</ul>
+</section>
+<section id="size">
+<h2>Size<a class="headerlink" href="#size" title="Link to this heading"></a></h2>
+<p>Small files can negatively impact performance, while very large files can slow down writes and shuffle operations.</p>
+<p><strong>Target guidelines:</strong></p>
+<ul class="simple">
+<li><p>Aim for file sizes between <strong>100 MB and 512 MB</strong></p></li>
+<li><p>Avoid creating too many small files (also known as the “small files problem”)</p></li>
+</ul>
+<p><strong>Can you control file size directly?</strong>
+Not precisely. Spark doesn’t allow you to specify output file size directly, but you can influence it using the techniques below.</p>
+<p><strong>Approaches to influence output file size:</strong></p>
+<ol class="arabic">
+<li><p><strong>Manually reduce the number of output files using `coalesce()`</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reduce number of output files to ~10</span>
+<span class="n">df</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;parquet&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;s3://bucket/path/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is best used when you’re writing a smaller DataFrame or combining files at the end of processing.</p>
+</li>
+<li><p><strong>Repartition based on estimated total dataset size</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">target_file_size_mb</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">row_count</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">avg_row_size_bytes</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># adjust based on your schema</span>
+
+<span class="n">estimated_total_size_mb</span> <span class="o">=</span> <span class="p">(</span><span class="n">row_count</span> <span class="o">*</span> <span class="n">avg_row_size_bytes</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="n">num_partitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">estimated_total_size_mb</span> <span class="o">/</span> <span class="n">target_file_size_mb</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="n">num_partitions</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;s3://bucket/path/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Use Delta Lake’s `OPTIMIZE` for post-write compaction</strong></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIMIZE</span><span class="w"> </span><span class="n">delta</span><span class="p">.</span><span class="o">`</span><span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">bucket</span><span class="o">/</span><span class="k">table</span><span class="o">/`</span><span class="w"> </span><span class="n">ZORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">event_date</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Enable adaptive partitioning in Spark 3+</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.sql.adaptive.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="partitioning">
+<h2>Partitioning<a class="headerlink" href="#partitioning" title="Link to this heading"></a></h2>
+<p>Partitioning is used to organize and prune data efficiently during reads. It improves performance and reduces cost by scanning only relevant data.</p>
+<p><strong>Common partition keys:</strong></p>
+<ul class="simple">
+<li><p><cite>year</cite>, <cite>month</cite>, <cite>day</cite></p></li>
+<li><p><cite>region</cite>, <cite>country</cite></p></li>
+<li><p><cite>event_type</cite>, <cite>device_type</cite></p></li>
+</ul>
+<p><strong>Trade-offs:</strong></p>
+<ul class="simple">
+<li><p>Too many partitions with small data volumes → too many files, higher metadata overhead.</p></li>
+<li><p>Too few partitions → large files, slower incremental writes.</p></li>
+</ul>
+<p><strong>Best practice:</strong></p>
+<ul class="simple">
+<li><p>Use high-cardinality fields with caution.</p></li>
+<li><p>Keep partitions balanced by data volume and query access patterns.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">partitionBy</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;s3://bucket/events/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="columns">
+<h2>Columns<a class="headerlink" href="#columns" title="Link to this heading"></a></h2>
+<p>Column-level organization matters when using columnar formats like Parquet or ORC.</p>
+<p><strong>Recommendations:</strong></p>
+<ul class="simple">
+<li><p>Prune unused columns before writing.</p></li>
+<li><p>Use proper data types (e.g., <cite>int</cite> instead of <cite>string</cite> for IDs).</p></li>
+<li><p>Use consistent column order for schema evolution compatibility.</p></li>
+<li><p>Sort data within partitions to improve compression and query performance.</p></li>
+</ul>
+<p>Sorting ensures that rows stored together on disk have similar values, leading to better compression (especially in Parquet) and more efficient predicate filtering in query engines like Trino, Presto, or Spark SQL.</p>
+<p><strong>Example: Sorting within partitions in Spark</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="c1"># Load and cast types</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;s3://bucket/nyc-taxi-raw/&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;pickup_datetime&quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pickup_datetime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span>
+
+<span class="c1"># Sort rows within each partition and write efficiently</span>
+<span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">sortWithinPartitions</span><span class="p">(</span><span class="s2">&quot;vendor_id&quot;</span><span class="p">,</span> <span class="s2">&quot;pickup_datetime&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">repartition</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">write</span>
+    <span class="o">.</span><span class="n">partitionBy</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;s3://bucket/nyc-taxi-data/curated/&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example:</p>
+<ul class="simple">
+<li><p>The dataset is partitioned by <cite>year</cite> and <cite>month</cite>.</p></li>
+<li><p>Rows within each partition are sorted by <cite>vendor_id</cite> and <cite>pickup_datetime</cite>.</p></li>
+<li><p>This improves compression ratios and enables faster filtering on those fields during query execution.</p></li>
+</ul>
+<p>Sorting should be applied on fields that are often filtered in queries or have strong cardinality.</p>
+</section>
+<section id="schema-evolution-and-versioning">
+<h2>Schema Evolution and Versioning<a class="headerlink" href="#schema-evolution-and-versioning" title="Link to this heading"></a></h2>
+<p>When formats like Avro or Delta Lake are used, schema changes must be tracked over time.</p>
+<p><strong>Best practices:</strong></p>
+<ul class="simple">
+<li><p>Store schema files (e.g., <cite>.avsc</cite>, <cite>.json</cite>) in version control.</p></li>
+<li><p>For streaming systems, use a centralized schema registry (e.g., Confluent Schema Registry).</p></li>
+<li><p>Track and review schema evolution history during ingestion pipeline changes.</p></li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;record&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TaxiTrip&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trip_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pickup_time&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="compaction">
+<h2>Compaction<a class="headerlink" href="#compaction" title="Link to this heading"></a></h2>
+<p>Compaction is the process of merging many small files into larger ones to improve query performance and reduce metadata overhead.</p>
+<p>This is especially relevant for streaming pipelines or frequent micro-batch jobs that write many small files.</p>
+<p><strong>Tools and techniques:</strong></p>
+<ul class="simple">
+<li><p>Delta Lake: <cite>OPTIMIZE</cite> command for table compaction.</p></li>
+<li><p>Iceberg: <cite>rewrite_data_files</cite> procedure.</p></li>
+<li><p>Spark: Batch job that reads and rewrites data with <cite>coalesce()</cite> or <cite>repartition()</cite>.</p></li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Delta Lake table compaction</span>
+<span class="n">OPTIMIZE</span><span class="w"> </span><span class="n">nyc_taxi_data</span><span class="p">.</span><span class="n">zones</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2024</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="vacuuming">
+<h2>Vacuuming<a class="headerlink" href="#vacuuming" title="Link to this heading"></a></h2>
+<p><strong>Vacuuming</strong> is the process of permanently deleting old data files that are no longer referenced by the current version of the Delta Lake table.</p>
+<p>When you update, overwrite, or delete data in a Delta table, the old files are marked as deleted but still physically exist on disk. Vacuuming helps clean them up to reduce storage usage.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Delta Lake cleanup: delete unreferenced files older than 7 days</span>
+<span class="k">VACUUM</span><span class="w"> </span><span class="n">nyc_taxi_data</span><span class="p">.</span><span class="n">zones</span><span class="w"> </span><span class="n">RETAIN</span><span class="w"> </span><span class="mi">168</span><span class="w"> </span><span class="n">HOURS</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><strong>Important:</strong> Vacuuming will remove files that support <strong>time travel</strong> and <strong>rollback</strong> for older versions of your table. Once those files are deleted, queries such as:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">nyc_taxi_data</span><span class="p">.</span><span class="n">zones</span><span class="w"> </span><span class="k">VERSION</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>will no longer work if the associated data files have been removed.</p>
+<p><strong>Best Practices:</strong></p>
+<ul class="simple">
+<li><p>For production tables, retain at least 7 days: <code class="docutils literal notranslate"><span class="pre">RETAIN</span> <span class="pre">168</span> <span class="pre">HOURS</span></code></p></li>
+<li><p>For development or cost-sensitive environments, you may choose <code class="docutils literal notranslate"><span class="pre">RETAIN</span> <span class="pre">24</span> <span class="pre">HOURS</span></code></p></li>
+<li><p>Do not set <code class="docutils literal notranslate"><span class="pre">RETAIN</span> <span class="pre">0</span> <span class="pre">HOURS</span></code> unless you’re absolutely sure you no longer need historical versions</p></li>
+</ul>
+<p>Regular compaction and vacuuming are crucial in maintaining long-term performance and cost efficiency.</p>
+</section>
 </section>
 
 
