@@ -16,9 +16,72 @@ Choosing the right file format depends on the use case and processing engine com
 
 **Compression options:**
 
-- **Snappy**: Fast, splittable. Ideal for Parquet and Avro.
-- **ZSTD**: High compression ratio, slower than Snappy. Good for cost savings.
-- **GZIP**: Widely supported but not splittable. Avoid for large distributed processing.
+By default, file formats like **Parquet** and **Avro** are written with **Snappy compression**, which offers a good balance between speed and compression ratio. You can override this behavior when writing data using the ``compression`` option.
+
+The choice of compression affects both **storage cost** and **query performance**, especially in distributed processing engines like Spark, Trino, or Presto.
+
+**Available options:**
+
+- **Snappy**: Fast and splittable. Default for Parquet and Avro. Recommended for most workloads.
+- **ZSTD**: Higher compression ratio than Snappy (smaller files), slightly slower to write. Useful when optimizing for storage cost.
+- **GZIP**: Widely supported, but **not splittable**. Should be avoided for large-scale distributed processing (e.g., with Spark), especially when used with CSV or JSON.
+
+**What does "splittable" mean?**
+
+A **splittable** compression format allows a large file to be broken into smaller chunks and read by multiple workers in parallel. This is critical for performance in distributed processing.
+
+- **Splittable**: Parquet + Snappy/ZSTD, Avro + Snappy → good for Spark, Trino
+- **Not splittable**: CSV + GZIP → single-threaded read, can cause bottlenecks
+
+Use **splittable formats** to ensure scalability and high throughput in data lakes.
+
+**How to change compression algorithm**
+
+You can explicitly configure compression during write operations. Below are common examples.
+
+*PySpark (Parquet with ZSTD)*
+
+.. code-block:: python
+
+    df.write \
+      .option("compression", "zstd") \
+      .parquet("s3://bucket/path/")
+
+*PySpark (Avro with Snappy)*
+
+.. code-block:: python
+
+    df.write \
+      .format("avro") \
+      .option("compression", "snappy") \
+      .save("s3://bucket/path/")
+
+*Delta Lake (ZSTD compression via Spark config)*
+
+.. code-block:: python
+
+    spark.conf.set("spark.sql.parquet.compression.codec", "zstd")
+    
+    df.write.format("delta").save("s3://bucket/delta/")
+
+*dbt (Parquet with ZSTD in Delta Lake)*
+
+In `dbt_project.yml` or a model config:
+
+.. code-block:: yaml
+
+    models:
+      my_project:
+        +file_format: delta
+        +parquet_compression: zstd
+
+GZIP can also be used for CSV/JSON, but use with caution in distributed systems:
+
+.. code-block:: python
+
+    df.write \
+      .option("compression", "gzip") \
+      .csv("s3://bucket/archive/")
 
 Size
 ----

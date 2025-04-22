@@ -114,11 +114,56 @@
 <li><p><strong>JSON / CSV</strong>: Human-readable and useful for raw ingest, debugging, or exchanging data across systems.</p></li>
 </ul>
 <p><strong>Compression options:</strong></p>
+<p>By default, file formats like <strong>Parquet</strong> and <strong>Avro</strong> are written with <strong>Snappy compression</strong>, which offers a good balance between speed and compression ratio. You can override this behavior when writing data using the <code class="docutils literal notranslate"><span class="pre">compression</span></code> option.</p>
+<p>The choice of compression affects both <strong>storage cost</strong> and <strong>query performance</strong>, especially in distributed processing engines like Spark, Trino, or Presto.</p>
+<p><strong>Available options:</strong></p>
 <ul class="simple">
-<li><p><strong>Snappy</strong>: Fast, splittable. Ideal for Parquet and Avro.</p></li>
-<li><p><strong>ZSTD</strong>: High compression ratio, slower than Snappy. Good for cost savings.</p></li>
-<li><p><strong>GZIP</strong>: Widely supported but not splittable. Avoid for large distributed processing.</p></li>
+<li><p><strong>Snappy</strong>: Fast and splittable. Default for Parquet and Avro. Recommended for most workloads.</p></li>
+<li><p><strong>ZSTD</strong>: Higher compression ratio than Snappy (smaller files), slightly slower to write. Useful when optimizing for storage cost.</p></li>
+<li><p><strong>GZIP</strong>: Widely supported, but <strong>not splittable</strong>. Should be avoided for large-scale distributed processing (e.g., with Spark), especially when used with CSV or JSON.</p></li>
 </ul>
+<p><strong>What does “splittable” mean?</strong></p>
+<p>A <strong>splittable</strong> compression format allows a large file to be broken into smaller chunks and read by multiple workers in parallel. This is critical for performance in distributed processing.</p>
+<ul class="simple">
+<li><p><strong>Splittable</strong>: Parquet + Snappy/ZSTD, Avro + Snappy → good for Spark, Trino</p></li>
+<li><p><strong>Not splittable</strong>: CSV + GZIP → single-threaded read, can cause bottlenecks</p></li>
+</ul>
+<p>Use <strong>splittable formats</strong> to ensure scalability and high throughput in data lakes.</p>
+<p><strong>How to change compression algorithm</strong></p>
+<p>You can explicitly configure compression during write operations. Below are common examples.</p>
+<p><em>PySpark (Parquet with ZSTD)</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;zstd&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">parquet</span><span class="p">(</span><span class="s2">&quot;s3://bucket/path/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>PySpark (Avro with Snappy)</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span> \
+  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;avro&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;snappy&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;s3://bucket/path/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Delta Lake (ZSTD compression via Spark config)</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.sql.parquet.compression.codec&quot;</span><span class="p">,</span> <span class="s2">&quot;zstd&quot;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">write</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;s3://bucket/delta/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>dbt (Parquet with ZSTD in Delta Lake)</em></p>
+<p>In <cite>dbt_project.yml</cite> or a model config:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">my_project</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">+file_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delta</span>
+<span class="w">    </span><span class="nt">+parquet_compression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zstd</span>
+</pre></div>
+</div>
+<p>GZIP can also be used for CSV/JSON, but use with caution in distributed systems:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">write</span> \
+  <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;gzip&quot;</span><span class="p">)</span> \
+  <span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="s2">&quot;s3://bucket/archive/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="size">
 <h2>Size<a class="headerlink" href="#size" title="Link to this heading"></a></h2>

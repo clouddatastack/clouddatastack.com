@@ -20,33 +20,18 @@ To reduce the risk of accidental data exposure or corruption, production and dev
 - ``data-prod`` (production workloads and analytics)
 - ``data-dev`` (experiments, testing, staging)
 
-Buckets per Logical Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+Buckets per Logical Domain and Processing Stage
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Create a separate bucket for each logical data domain in your organization. This improves data governance, cost attribution, and access control.
+Create a separate bucket for each logical data domain in your organization, and consider using **dedicated buckets for each processing stage**: raw, processed, and curated. This improves access control, lifecycle management, and clarity in data ownership.
 
-**Example domains:**
+**Example structure:**
 
-- ``user-profile-data``
-- ``sales-data``
-- ``clickstream-events``
+- ``domain_name-raw``: incoming raw JSON payloads
+- ``domain_name-processed``: cleaned and structured Parquet
+- ``domain_name-curated``: aggregated tables for analytics
 
-Processing Stage Prefixes
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Organize data inside each bucket by processing stage using structured path prefixes:
-
-::
-
-    domain-name/raw/
-    domain-name/processed/
-    domain-name/curated/
-
-- ``raw/`` — original ingested files, unaltered
-- ``processed/`` — cleaned, structured, possibly joined
-- ``curated/`` — ready for consumption by analysts or ML models
-
-This layout enables easy cleanup, partitioning, and clear lineage.
+This structure also allows you to apply bucket-level settings — like versioning, encryption, and cleanup rules — specific to the processing stage.
 
 Project-Type Prefixes
 ^^^^^^^^^^^^^^^^^^^^^
@@ -67,16 +52,14 @@ Configuration
 Enable Versioning
 ^^^^^^^^^^^^^^^^^
 
-Versioning tracks all versions of an object, allowing for recovery from accidental deletes or overwrites.
+S3 bucket versioning tracks all versions of an object, allowing recovery from accidental deletes or overwrites.
 
-**Pros:**
+**Best practice:**
 
-- Accidental overwrite protection
-- Required for rollback in raw zones
+- **Enable versioning** for buckets that store **raw, unprocessed files**, which may be overwritten or accidentally deleted.
+- **Disable versioning** for **processed** or **curated** zones that use formats like **Delta Lake**, which handles versioning internally.
 
-**Considerations:**
-
-- Can increase storage costs significantly if not paired with lifecycle cleanup
+Delta Lake maintains its own version history via transaction logs and does not benefit from S3-level versioning — enabling both can lead to higher storage costs and management complexity.
 
 **Terraform example:**
 
@@ -116,9 +99,9 @@ Lifecycle Rules and Archiving
 Expire Raw Data
 ^^^^^^^^^^^^^^^
 
-Raw data is often large and infrequently accessed. It may also contain **sensitive or personally identifiable information (PII)** that has not yet been masked, anonymized, or validated. 
+Raw data is often large and infrequently accessed. It may also contain **sensitive or personally identifiable information (PII)** that has not yet been masked, anonymized, or validated.
 
-It is recommended to configure lifecycle policies that expire raw data after a defined period, such as 30 or 90 days.
+To reduce storage cost and meet compliance requirements (such as GDPR's data minimization principle), configure lifecycle rules that automatically expire raw data after a defined retention period (e.g., 30 to 90 days).
 
 **Terraform example:**
 
@@ -165,8 +148,8 @@ To reuse the Terraform module from GitHub:
       source  = "git::https://github.com/clouddatastack/terraform-aws-s3-data-bucket.git?ref=v1.0.0"
 
       bucket_name       = "mycompany-nyc-taxi-data"
-      force_destroy     = true      # Allow deletion in the example even if bucket contains files
-      enable_versioning = true
+      force_destroy     = true      # Allow deletion for this example even if bucket contains files
+      enable_versioning = true      # Enable for raw zone only
 
       lifecycle_rules = [
         {

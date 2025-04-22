@@ -51,8 +51,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">1.1. Buckets</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#structure">Structure</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#separate-production-and-development-accounts">Separate Production and Development Accounts</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#buckets-per-logical-domain">Buckets per Logical Domain</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#processing-stage-prefixes">Processing Stage Prefixes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buckets-per-logical-domain-and-processing-stage">Buckets per Logical Domain and Processing Stage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#project-type-prefixes">Project-Type Prefixes</a></li>
 </ul>
 </li>
@@ -132,30 +131,16 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">data-dev</span></code> (experiments, testing, staging)</p></li>
 </ul>
 </section>
-<section id="buckets-per-logical-domain">
-<h3>Buckets per Logical Domain<a class="headerlink" href="#buckets-per-logical-domain" title="Link to this heading"></a></h3>
-<p>Create a separate bucket for each logical data domain in your organization. This improves data governance, cost attribution, and access control.</p>
-<p><strong>Example domains:</strong></p>
+<section id="buckets-per-logical-domain-and-processing-stage">
+<h3>Buckets per Logical Domain and Processing Stage<a class="headerlink" href="#buckets-per-logical-domain-and-processing-stage" title="Link to this heading"></a></h3>
+<p>Create a separate bucket for each logical data domain in your organization, and consider using <strong>dedicated buckets for each processing stage</strong>: raw, processed, and curated. This improves access control, lifecycle management, and clarity in data ownership.</p>
+<p><strong>Example structure:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">user-profile-data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sales-data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">clickstream-events</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">domain_name-raw</span></code>: incoming raw JSON payloads</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">domain_name-processed</span></code>: cleaned and structured Parquet</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">domain_name-curated</span></code>: aggregated tables for analytics</p></li>
 </ul>
-</section>
-<section id="processing-stage-prefixes">
-<h3>Processing Stage Prefixes<a class="headerlink" href="#processing-stage-prefixes" title="Link to this heading"></a></h3>
-<p>Organize data inside each bucket by processing stage using structured path prefixes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">domain</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">raw</span><span class="o">/</span>
-<span class="n">domain</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">processed</span><span class="o">/</span>
-<span class="n">domain</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">curated</span><span class="o">/</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">raw/</span></code> — original ingested files, unaltered</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">processed/</span></code> — cleaned, structured, possibly joined</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">curated/</span></code> — ready for consumption by analysts or ML models</p></li>
-</ul>
-<p>This layout enables easy cleanup, partitioning, and clear lineage.</p>
+<p>This structure also allows you to apply bucket-level settings — like versioning, encryption, and cleanup rules — specific to the processing stage.</p>
 </section>
 <section id="project-type-prefixes">
 <h3>Project-Type Prefixes<a class="headerlink" href="#project-type-prefixes" title="Link to this heading"></a></h3>
@@ -172,16 +157,13 @@
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
 <section id="enable-versioning">
 <h3>Enable Versioning<a class="headerlink" href="#enable-versioning" title="Link to this heading"></a></h3>
-<p>Versioning tracks all versions of an object, allowing for recovery from accidental deletes or overwrites.</p>
-<p><strong>Pros:</strong></p>
+<p>S3 bucket versioning tracks all versions of an object, allowing recovery from accidental deletes or overwrites.</p>
+<p><strong>Best practice:</strong></p>
 <ul class="simple">
-<li><p>Accidental overwrite protection</p></li>
-<li><p>Required for rollback in raw zones</p></li>
+<li><p><strong>Enable versioning</strong> for buckets that store <strong>raw, unprocessed files</strong>, which may be overwritten or accidentally deleted.</p></li>
+<li><p><strong>Disable versioning</strong> for <strong>processed</strong> or <strong>curated</strong> zones that use formats like <strong>Delta Lake</strong>, which handles versioning internally.</p></li>
 </ul>
-<p><strong>Considerations:</strong></p>
-<ul class="simple">
-<li><p>Can increase storage costs significantly if not paired with lifecycle cleanup</p></li>
-</ul>
+<p>Delta Lake maintains its own version history via transaction logs and does not benefit from S3-level versioning — enabling both can lead to higher storage costs and management complexity.</p>
 <p><strong>Terraform example:</strong></p>
 <div class="highlight-hcl notranslate"><div class="highlight"><pre><span></span><span class="nb">versioning</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
@@ -218,7 +200,7 @@
 <section id="expire-raw-data">
 <h3>Expire Raw Data<a class="headerlink" href="#expire-raw-data" title="Link to this heading"></a></h3>
 <p>Raw data is often large and infrequently accessed. It may also contain <strong>sensitive or personally identifiable information (PII)</strong> that has not yet been masked, anonymized, or validated.</p>
-<p>It is recommended to configure lifecycle policies that expire raw data after a defined period, such as 30 or 90 days.</p>
+<p>To reduce storage cost and meet compliance requirements (such as GDPR’s data minimization principle), configure lifecycle rules that automatically expire raw data after a defined retention period (e.g., 30 to 90 days).</p>
 <p><strong>Terraform example:</strong></p>
 <div class="highlight-hcl notranslate"><div class="highlight"><pre><span></span><span class="nb">rule</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="na">id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;expire-raw&quot;</span>
@@ -257,8 +239,8 @@
 <span class="w">  </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git::https://github.com/clouddatastack/terraform-aws-s3-data-bucket.git?ref=v1.0.0&quot;</span>
 
 <span class="w">  </span><span class="na">bucket_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mycompany-nyc-taxi-data&quot;</span>
-<span class="w">  </span><span class="na">force_destroy</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">      # Allow deletion in the example even if bucket contains files</span>
-<span class="w">  </span><span class="na">enable_versioning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">force_destroy</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">      # Allow deletion for this example even if bucket contains files</span>
+<span class="w">  </span><span class="na">enable_versioning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">      # Enable for raw zone only</span>
 
 <span class="w">  </span><span class="na">lifecycle_rules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
