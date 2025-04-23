@@ -54,7 +54,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#size">Size</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#partitioning">Partitioning</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#columns">Columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#schema-evolution-and-versioning">Schema Evolution and Versioning</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compaction">Compaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vacuuming">Vacuuming</a></li>
 </ul>
@@ -269,26 +268,6 @@ Not precisely. Spark doesn’t allow you to specify output file size directly, b
 <li><p>This improves compression ratios and enables faster filtering on those fields during query execution.</p></li>
 </ul>
 <p>Sorting should be applied on fields that are often filtered in queries or have strong cardinality.</p>
-</section>
-<section id="schema-evolution-and-versioning">
-<h2>Schema Evolution and Versioning<a class="headerlink" href="#schema-evolution-and-versioning" title="Link to this heading"></a></h2>
-<p>When formats like Avro or Delta Lake are used, schema changes must be tracked over time.</p>
-<p><strong>Best practices:</strong></p>
-<ul class="simple">
-<li><p>Store schema files (e.g., <cite>.avsc</cite>, <cite>.json</cite>) in version control.</p></li>
-<li><p>For streaming systems, use a centralized schema registry (e.g., Confluent Schema Registry).</p></li>
-<li><p>Track and review schema evolution history during ingestion pipeline changes.</p></li>
-</ul>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;record&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TaxiTrip&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;trip_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pickup_time&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
 </section>
 <section id="compaction">
 <h2>Compaction<a class="headerlink" href="#compaction" title="Link to this heading"></a></h2>

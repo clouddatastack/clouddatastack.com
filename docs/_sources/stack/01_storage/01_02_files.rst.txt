@@ -201,28 +201,6 @@ In this example:
 
 Sorting should be applied on fields that are often filtered in queries or have strong cardinality.
 
-Schema Evolution and Versioning
--------------------------------
-
-When formats like Avro or Delta Lake are used, schema changes must be tracked over time.
-
-**Best practices:**
-
-- Store schema files (e.g., `.avsc`, `.json`) in version control.
-- For streaming systems, use a centralized schema registry (e.g., Confluent Schema Registry).
-- Track and review schema evolution history during ingestion pipeline changes.
-
-.. code-block:: json
-
-    {
-      "type": "record",
-      "name": "TaxiTrip",
-      "fields": [
-        { "name": "trip_id", "type": "string" },
-        { "name": "pickup_time", "type": "string" }
-      ]
-    }
-
 Compaction
 ----------
 

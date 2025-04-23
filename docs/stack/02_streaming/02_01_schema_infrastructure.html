@@ -1,0 +1,233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.1. Streaming Infrastructure &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="2.2. Online Analytics" href="02_02_online_analytics.html" />
+    <link rel="prev" title="2. Streaming" href="../02_streaming.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_storage.html">1. Storage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../02_streaming.html">2. Streaming</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Streaming Infrastructure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stream-design">Stream Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-schemas">Event Schemas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#formats">Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#versioning-strategy">Versioning Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="02_02_online_analytics.html">2.2. Online Analytics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../03_compute.html">3. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_orchestration.html">4. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_governance.html">5. Data Governance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/audit_guide.html">Audit Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/cost_calculator.html">Cost Calculator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Products:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../products/web_analytics_ingestor.html">Web Analytics Ingestor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../products/pii_tracer.html">PII Tracer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../02_streaming.html">2. Streaming</a></li>
+      <li class="breadcrumb-item active">2.1. Streaming Infrastructure</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="streaming-infrastructure">
+<h1>2.1. Streaming Infrastructure<a class="headerlink" href="#streaming-infrastructure" title="Link to this heading"></a></h1>
+<p>Real-time data pipelines rely on robust streaming infrastructure. This page outlines the building blocks of a modern streaming system, including schema design, stream architecture, emitters and sinks, and integration using Kafka Connect.</p>
+<section id="stream-design">
+<h2>Stream Design<a class="headerlink" href="#stream-design" title="Link to this heading"></a></h2>
+<p>A <strong>stream</strong> is typically represented as a Kafka topic. Structuring your streams well ensures clarity, reusability, and performance.</p>
+<p><strong>Best practices:</strong></p>
+<ul class="simple">
+<li><p>Use domain-based topic names: <code class="docutils literal notranslate"><span class="pre">ecommerce.orders.created</span></code></p></li>
+<li><p>Prefer one event type per topic unless there’s a strong reason to combine</p></li>
+<li><p>Version topics if breaking schema changes are expected (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>)</p></li>
+</ul>
+<p><strong>Partitioning guidelines:</strong></p>
+<ul>
+<li><p>Partition by IDs (<code class="docutils literal notranslate"><span class="pre">order_id</span></code>, <code class="docutils literal notranslate"><span class="pre">user_id</span></code>) for ordering guarantees
+Kafka only guarantees order <em>within</em> a partition — so all events for the same ID must go to the same partition to preserve sequence.</p>
+<p><em>Example (using user_id as key in Python):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;user-events&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Example (compound key with user_id + session_id):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compound_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;session-events&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">compound_key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use high-cardinality keys to distribute load
+High cardinality — many unique values — helps spread records across partitions evenly, preventing hot spots and enabling parallel processing.</p>
+<p><em>Example (use session_id to spread load):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;clickstream&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Ensure partitions are balanced for parallelism, <strong>after</strong> the data has already landed in Kafka
+When producer-side keys are suboptimal, you can still improve distribution by:</p>
+<ul class="simple">
+<li><p><strong>Rekeying in stream processors</strong>: consume events, assign a high-cardinality key (e.g., <code class="docutils literal notranslate"><span class="pre">user_id</span></code>), and write to a new topic with better partitioning.</p></li>
+</ul>
+<p><em>Example (Faust rekeying by user_id):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">faust</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">faust</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="s2">&quot;rekeying-app&quot;</span><span class="p">,</span> <span class="n">broker</span><span class="o">=</span><span class="s2">&quot;kafka://localhost:9092&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">(</span><span class="n">faust</span><span class="o">.</span><span class="n">Record</span><span class="p">):</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">topic</span><span class="p">(</span><span class="s2">&quot;events_by_country&quot;</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="n">Event</span><span class="p">)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">topic</span><span class="p">(</span><span class="s2">&quot;events_by_user&quot;</span><span class="p">,</span> <span class="n">key_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="n">Event</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">agent</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">events</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">target</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Custom partitioner</strong>: Implement logic in your producer to assign partitions manually when default hashing is insufficient.</p></li>
+<li><p><strong>Increase partition count</strong>: More partitions allow greater consumer parallelism, especially useful when keys can’t be optimized at the source.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="event-schemas">
+<h2>Event Schemas<a class="headerlink" href="#event-schemas" title="Link to this heading"></a></h2>
+<p>Defining consistent, versioned event schemas is key to reliable and scalable stream processing.</p>
+<p><strong>Why schemas matter:</strong></p>
+<ul class="simple">
+<li><p>Enforce data contracts between producers and consumers</p></li>
+<li><p>Validate structure before sending/processing events</p></li>
+<li><p>Enable safe schema evolution</p></li>
+<li><p>Power downstream automation (e.g., code generation, analytics models)</p></li>
+</ul>
+</section>
+<section id="formats">
+<h2>Formats<a class="headerlink" href="#formats" title="Link to this heading"></a></h2>
+<p>AVRO is the most commonly used for Kafka events due to its balance of compactness and compatibility features.</p>
+</section>
+<section id="versioning-strategy">
+<h2>Versioning Strategy<a class="headerlink" href="#versioning-strategy" title="Link to this heading"></a></h2>
+<p><strong>Types of changes:</strong></p>
+<ul class="simple">
+<li><p><em>Non-breaking changes</em> (schema evolution allowed on same topic):
+- Add optional fields with defaults
+- Add new fields with <cite>null</cite> union types
+- Change logical types (e.g., add <cite>timestamp-millis</cite>)</p></li>
+<li><p><em>Breaking changes</em> (requires new topic version):
+- Remove or rename fields
+- Change required field types
+- Modify enum values incompatibly</p></li>
+</ul>
+<p><strong>Best practices:</strong></p>
+<ul class="simple">
+<li><p>Use schema evolution for safe, additive changes</p></li>
+<li><p>For breaking changes, publish to a new topic (e.g., <cite>orders.v2</cite>)</p></li>
+<li><p>Version schema files and record names to make changes explicit:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>schemas/
+<span class="w">  </span>orders/
+<span class="w">    </span>order_created.v1.avsc
+<span class="w">    </span>order_created.v2.avsc
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;record&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OrderCreatedV2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ecommerce.orders.v2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="c1">// remaining fields omitted</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This versioning convention allows producers and consumers to gradually migrate, while preserving backward compatibility where possible.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
