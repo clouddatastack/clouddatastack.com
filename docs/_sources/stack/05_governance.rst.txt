@@ -5,3 +5,4 @@
 - Templatize pipelines with DBT
 - Write-Audit-Publish with Slim CI
 - Data Contracts on GitHub Actions
+- Monitoring big queries, heavy notebooks, sensitive data
