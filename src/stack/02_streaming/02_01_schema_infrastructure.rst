@@ -122,7 +122,7 @@ Other formats to consider:
 
 - **Protobuf**:  
   Suitable for strongly typed APIs and gRPC-based microservices.  
-  Offers compact encoding but requires careful code generation and stricter evolution rules.
+  Offers compact encoding but requires careful code generation and stricter evolution management compared to Avro.
 
 - **JSON Schema**:  
   Human-readable and easier for manual inspection, but results in larger payloads and weaker typing guarantees.
@@ -200,9 +200,6 @@ With these settings, Kafka will automatically deduplicate retried messages at th
 **Example: Configuring a Kafka producer with exactly-once guarantees (Python)**
 
 .. code-block:: python
-
-   from kafka import KafkaProducer
-
    producer = KafkaProducer(
        bootstrap_servers="localhost:9092",
        enable_idempotence=True,    # Critical for exactly-once
@@ -218,7 +215,6 @@ With these settings, Kafka will automatically deduplicate retried messages at th
    }
 
    # Serialize and send
-   import json
    producer.send(
        topic="user-registrations",
        key=event["user_id"].encode("utf-8"),
@@ -261,6 +257,7 @@ Example (Python with KafkaProducer):
 .. code-block:: python
 
    from kafka import KafkaProducer, KafkaConsumer
+   from kafka.structs import TopicPartition
 
    producer = KafkaProducer(
        bootstrap_servers="localhost:9092",
@@ -289,7 +286,7 @@ Example (Python with KafkaProducer):
 
            # Commit consumed offset inside the transaction
            producer.send_offsets_to_transaction(
-               {consumer.assignment()[0]: message.offset + 1},
+               {TopicPartition(message.topic, message.partition): message.offset + 1},
                consumer_group_id="consumer-group-1"
            )
 
@@ -303,8 +300,9 @@ This pattern guarantees that event processing, output production, and offset com
 
 **2. Stateful Stream Processors (automatic checkpointing):**
 
-Apache Flink manage both the event processing state and Kafka offsets atomically.  
-They use periodic checkpointing to achieve exactly-once semantics without manual transaction handling.
+Apache Flink manages both the event processing state and Kafka consumer offsets atomically.  
+It uses periodic checkpointing to capture a consistent snapshot of the system state,  
+enabling automatic recovery and exactly-once processing guarantees without manual transaction handling.
 
 Example:
 
@@ -331,8 +329,6 @@ Example:
    env.addSource(source)
       .map(record -> transform(record))
       .addSink(sink);
-
-This approach ensures that processing state and offsets are saved consistently, with automatic failure recovery.
 
 Trade-offs to consider
 ----------------------
