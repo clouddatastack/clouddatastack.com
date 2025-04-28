@@ -1,54 +1,71 @@
 2.1. Streaming Infrastructure
 =============================
 
-Real-time data pipelines rely on robust streaming infrastructure. This page outlines the building blocks of a modern streaming system, including schema design, stream architecture, emitters and sinks, and integration using Kafka Connect.
+Real-time data pipelines rely on robust streaming infrastructure.  
+This page outlines the building blocks of a modern streaming system, including stream design, schema management, event producers and consumers, and integration with Kafka Connect.
+
+Overview
+--------
+
+- Stream Design
+- Schema Management
+- Event Producers
+- Event Consumers
+- Kafka Connect
 
 Stream Design
 -------------
 
-A **stream** is typically represented as a Kafka topic. Structuring your streams well ensures clarity, reusability, and performance.
+A **stream** is typically represented as a Kafka topic.  
+Structuring your streams well ensures clarity, reusability, and performance across services.
 
-**Best practices:**
+**Best practices for topic design:**
 
 - Use domain-based topic names: ``ecommerce.orders.created``
-- Prefer one event type per topic unless there’s a strong reason to combine
+- Prefer one event type per topic unless there's a strong operational reason to combine
 - Version topics if breaking schema changes are expected (e.g., ``orders.v2``)
+- Avoid topics that mix unrelated domains or concerns
 
-**Partitioning guidelines:**
+Partitioning guidelines
+------------------------
 
-- Partition by IDs (``order_id``, ``user_id``) for ordering guarantees  
-  Kafka only guarantees order *within* a partition — so all events for the same ID must go to the same partition to preserve sequence.
+Kafka guarantees ordering *within* a partition only — events for the same entity must be routed consistently to the same partition.
 
-  *Example (using user_id as key in Python):*
+**Partition by business identifiers** (e.g., ``order_id``, ``user_id``) to guarantee ordering.
 
-  .. code-block:: python
+*Example (using ``user_id`` as key):*
 
-     key = record["user_id"].encode("utf-8")
-     producer.send("user-events", key=key, value=record)
+.. code-block:: python
 
-  *Example (compound key with user_id + session_id):*
+   key = record["user_id"].encode("utf-8")
+   producer.send("user-events", key=key, value=record)
 
-  .. code-block:: python
+*Example (compound key with ``user_id`` + ``session_id``):*
 
-     compound_key = f"{record['user_id']}:{record['session_id']}".encode("utf-8")
-     producer.send("session-events", key=compound_key, value=record)
+.. code-block:: python
 
-- Use high-cardinality keys to distribute load  
-  High cardinality — many unique values — helps spread records across partitions evenly, preventing hot spots and enabling parallel processing.
+   compound_key = f"{record['user_id']}:{record['session_id']}".encode("utf-8")
+   producer.send("session-events", key=compound_key, value=record)
 
-  *Example (use session_id to spread load):*
+**Use high-cardinality keys** to distribute load evenly across partitions.  
+High cardinality helps avoid "hot" partitions and enables parallel processing.
 
-  .. code-block:: python
+*Example (using ``session_id`` to spread load):*
 
-     key = record["session_id"].encode("utf-8")
-     producer.send("clickstream", key=key, value=record)
+.. code-block:: python
 
-- Ensure partitions are balanced for parallelism, **after** the data has already landed in Kafka  
-  When producer-side keys are suboptimal, you can still improve distribution by:
+   key = record["session_id"].encode("utf-8")
+   producer.send("clickstream", key=key, value=record)
 
-  • **Rekeying in stream processors**: consume events, assign a high-cardinality key (e.g., ``user_id``), and write to a new topic with better partitioning.
+**Plan partition count carefully** at topic creation.  
+Partitioning affects both throughput and scalability.  
+Reassigning partitions later is possible but operationally complex.
 
-  *Example (Faust rekeying by user_id):*
+**Improve partition distribution after ingestion if needed:**
+
+- **Rekey in stream processors**: Consume events, assign a better partitioning key, and produce to a new topic.
+
+  *Example (rekeying using Faust, by ``user_id``):*
 
   .. code-block:: python
 
@@ -68,47 +85,77 @@ A **stream** is typically represented as a Kafka topic. Structuring your streams
          async for event in events:
              await target.send(key=event.user_id, value=event)
 
-  • **Custom partitioner**: Implement logic in your producer to assign partitions manually when default hashing is insufficient.
+- **Custom partitioners**: Implement producer-side logic to control partition assignment beyond default hashing.
+- **Increase partition count**: Add partitions when consumer parallelism needs to scale, but monitor distribution closely.
 
-  • **Increase partition count**: More partitions allow greater consumer parallelism, especially useful when keys can’t be optimized at the source.
+Trade-offs to consider
+----------------------
 
-Event Schemas
--------------
+- Simple hashing vs custom partitioning logic
+- Early selection of partition key vs rekeying later
+- Fixed partition count vs operational complexity when scaling
+- Single-event-type topics vs aggregated topics (event grouping)
 
-Defining consistent, versioned event schemas is key to reliable and scalable stream processing.
+Schema Management
+-----------------
+
+Defining consistent, versioned event schemas is critical for reliable and scalable stream processing.
 
 **Why schemas matter:**
 
 - Enforce data contracts between producers and consumers
-- Validate structure before sending/processing events
+- Validate event structure at runtime
 - Enable safe schema evolution
 - Power downstream automation (e.g., code generation, analytics models)
 
 Formats
 -------
 
-AVRO is the most commonly used for Kafka events due to its balance of compactness and compatibility features.
+AVRO is the recommended default format for Kafka events due to its compact serialization, dynamic typing, and strong support for schema evolution.
+
+Kafka messages typically do **not embed full schema definitions** inside the payload.  
+Instead, a small **Schema ID** is included in the message, allowing producers and consumers to resolve the full schema from a centralized Schema Registry.
+
+(Confluent Schema Registry handles Schema ID registration and lookup automatically when using official Kafka serializers.)
+
+Other formats to consider:
+
+- **Protobuf**:  
+  Suitable for strongly typed APIs and gRPC-based microservices.  
+  Offers compact encoding but requires careful code generation and stricter evolution management compared to Avro.
+
+- **JSON Schema**:  
+  Human-readable and easier for manual inspection, but results in larger payloads and weaker typing guarantees.
+
+**Format recommendation:**  
+For internal event-driven pipelines and analytics, **Avro** is the preferred choice.  
+Protobuf may be preferred for cross-service APIs requiring strong language bindings.
 
 Versioning Strategy
--------------------
+--------------------
 
-**Types of changes:**
+Schemas must evolve safely without breaking producers or consumers.
 
-- *Non-breaking changes* (schema evolution allowed on same topic):
+**Types of schema changes:**
+
+- *Non-breaking changes* (allowed on the same topic):
   - Add optional fields with defaults
-  - Add new fields with `null` union types
-  - Change logical types (e.g., add `timestamp-millis`)
+  - Add new fields with ``null`` union types
+  - Expand enum values
 
-- *Breaking changes* (requires new topic version):
+- *Breaking changes* (require a new topic version):
   - Remove or rename fields
   - Change required field types
-  - Modify enum values incompatibly
+  - Restrict enum values
 
 **Best practices:**
 
-- Use schema evolution for safe, additive changes
-- For breaking changes, publish to a new topic (e.g., `orders.v2`)
-- Version schema files and record names to make changes explicit:
+- Favor backward-compatible changes
+- For breaking changes, create a new versioned topic (e.g., ``orders.v2``)
+- Version both topic names and schema files explicitly
+- Validate schemas during pull requests using CI/CD pipelines
+
+Example schema structure:
 
 .. code-block:: bash
 
@@ -117,134 +164,193 @@ Versioning Strategy
        order_created.v1.avsc
        order_created.v2.avsc
 
-.. code-block:: json
+Each event references its schema indirectly through the Schema ID, ensuring minimal payload size and centralized governance.
 
-   {
-     "type": "record",
-     "name": "OrderCreatedV2",
-     "namespace": "ecommerce.orders.v2",
-     // remaining fields omitted
+Event Producers
+---------------
+
+Producers are systems that publish events into Kafka topics.
+
+**Common producer types:**
+
+- Microservices emitting business events (e.g., ``UserRegistered``, ``OrderPlaced``)
+- Change Data Capture (CDC) tools capturing database changes (e.g., **Debezium**)
+- IoT devices sending telemetry data
+- Log shippers (e.g., FluentBit, Filebeat)
+
+Producer Strategy for Exactly-Once Guarantees
+---------------------------------------------
+
+When a producer is only writing to Kafka (without consuming from Kafka),  
+exactly-once delivery can be achieved by configuring the Kafka producer for **idempotent writes**.
+
+**Key configurations:**
+
+- ``enable.idempotence=true``:  
+  Ensures that retries of a produce request will not result in duplicate records.
+
+- ``acks=all``:  
+  Waits for all in-sync replicas to acknowledge the write, ensuring durability and consistency.
+
+- ``retries=Integer.MAX_VALUE`` (or a very high number):  
+  Automatically retries transient failures without risking duplicates.
+
+With these settings, Kafka will automatically deduplicate retried messages at the broker side, achieving exactly-once semantics for event production.
+
+**Example: Configuring a Kafka producer with exactly-once guarantees (Python)**
+
+.. code-block:: python
+
+   # Create Kafka producer with exactly-once settings
+   producer = KafkaProducer(
+       bootstrap_servers="localhost:9092",
+       enable_idempotence=True,    # Critical for exactly-once
+       acks="all",                  # Ensure full replication
+       retries=2147483647           # Retry infinitely
+   )
+
+   # Example event
+   event = {
+       "event_type": "UserRegistered",
+       "user_id": "1234",
+       "timestamp": "2025-04-28T12:34:56Z"
    }
 
-This versioning convention allows producers and consumers to gradually migrate, while preserving backward compatibility where possible.
+   # Serialize and send
+   producer.send(
+       topic="user-registrations",
+       key=event["user_id"].encode("utf-8"),
+       value=json.dumps(event).encode("utf-8")
+   )
 
-.. Coming Soon: Schema Registry + Codegen Repo
-.. -------------------------------------------
+   producer.flush()
 
-.. We'll provide a public example repository with:
+Best Practices
+--------------
 
-.. - AVRO-based schemas organized by domain
-.. - A workflow for PR review and schema approval
-.. - CI pipeline to:
-..   - Register schemas to Kafka Schema Registry
-..   - Generate strongly typed classes for JavaScript/TypeScript, Java, and iOS
-..   - Publish generated libraries or zip artifacts
+- Always enable idempotence on all production Kafka producers.
+- Ensure producer retries are configured correctly to avoid message loss during transient failures.
+- Validate event payloads against schemas at the producer side before sending.
+- Use stable, meaningful keys for partitioning to ensure proper event ordering if required.
 
-.. **Link to repo:** *(coming soon)*
+Event Consumers
+---------------
 
-.. Emitters (Producers)
-.. --------------------
+Consumers subscribe to Kafka topics and process incoming events.
 
-.. Event emitters are systems or applications that write messages into Kafka topics.
+**Best practices:**
 
-.. **Examples:**
+- Validate incoming event schemas to ensure compatibility with expected structures.
+- Manage consumer offsets manually:
+  - Only commit offsets after successful event processing.
+  - Avoid premature commits to ensure reliability.
 
-.. - Microservices emitting `UserRegistered`, `OrderPlaced`, etc.
-.. - Databases with change data capture tools like **Debezium**
-.. - IoT devices or log aggregators
+- Build for exactly-once delivery guarantees:
 
-.. **Tips:**
+Exactly-once processing ensures that every event is processed exactly once — no duplicates, no data loss.  
+Two practical patterns enable exactly-once guarantees:
 
-.. - Validate schema before emitting
-.. - Include metadata fields like `event_type`, `timestamp`, and `source`
-.. - Use consistent naming and types
+**1. Kafka Transactions (manual, per event batch):**
 
-.. Sinks (Consumers)
-.. -----------------
+Use a transactional Kafka producer that sends output messages and commits consumer offsets atomically within a single transaction.
 
-.. Event sinks consume data from Kafka and send it to storage or downstream processors.
+Example (Python with KafkaProducer):
 
-.. **Common sinks:**
+.. code-block:: python
 
-.. - Data lakes (S3, GCS)
-.. - Data warehouses (Snowflake, BigQuery)
-.. - Real-time processors (Apache Flink, Spark Streaming)
+   from kafka import KafkaProducer, KafkaConsumer
+   from kafka.structs import TopicPartition
 
-.. **Ensure:**
+   producer = KafkaProducer(
+       bootstrap_servers="localhost:9092",
+       transactional_id="producer-1",
+       enable_idempotence=True
+   )
+   producer.init_transactions()
 
-.. - Schema compatibility is respected
-.. - Fault tolerance and at-least-once delivery where needed
+   consumer = KafkaConsumer(
+       "input-topic",
+       group_id="consumer-group-1",
+       bootstrap_servers="localhost:9092",
+       enable_auto_commit=False,  # manual offset commits
+       isolation_level="read_committed"  # only consume committed messages
+   )
 
-.. Kafka Connect
-.. -------------
+   for message in consumer:
+       try:
+           producer.begin_transaction()
 
-.. **Kafka Connect** is a framework for connecting Kafka with external systems using pluggable source and sink connectors.
+           # Process the event
+           output_record = process_event(message.value)
 
-.. **Advantages:**
+           # Produce to output topic
+           producer.send("output-topic", value=output_record)
 
-.. - No custom code required
-.. - Supports config-based deployment
-.. - Built-in scalability and fault-tolerance
+           # Commit consumed offset inside the transaction
+           producer.send_offsets_to_transaction(
+               {TopicPartition(message.topic, message.partition): message.offset + 1},
+               consumer_group_id="consumer-group-1"
+           )
 
-.. **Popular connectors:**
+           producer.commit_transaction()
 
-.. - **Sources**: PostgreSQL, MySQL, MongoDB
-.. - **Sinks**: S3, Elasticsearch, BigQuery
+       except Exception as e:
+           producer.abort_transaction()
+           handle_processing_error(e)
 
-.. **Example config (S3 Sink):**
+This pattern guarantees that event processing, output production, and offset commits are atomic.
 
-.. .. code-block:: json
+**2. Stateful Stream Processors (automatic checkpointing):**
 
-..    {
-..      "name": "s3-sink",
-..      "config": {
-..        "connector.class": "io.confluent.connect.s3.S3SinkConnector",
-..        "topics": "orders",
-..        "s3.bucket.name": "my-data-bucket",
-..        "format.class": "io.confluent.connect.s3.format.avro.AvroFormat",
-..        "schema.compatibility": "BACKWARD"
-..      }
-..    }
+Apache Flink manages both the event processing state and Kafka consumer offsets atomically.  
+It uses periodic checkpointing to capture a consistent snapshot of the system state,  
+enabling automatic recovery and exactly-once processing guarantees without manual transaction handling.
 
-.. Deployment Recommendations
-.. --------------------------
+Example:
 
-.. **Local development:**
+.. code-block:: java
 
-.. Use Docker Compose with:
+   StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-.. - Kafka broker
-.. - Schema Registry
-.. - Kafka Connect
+   env.enableCheckpointing(60000); // checkpoint every 60 seconds
+   env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
 
-.. **Production setup:**
+   FlinkKafkaConsumer<String> source = new FlinkKafkaConsumer<>(
+       "input-topic",
+       new SimpleStringSchema(),
+       kafkaProperties
+   );
 
-.. - Helm charts (Bitnami or Confluent)
-.. - Confluent Cloud (fully managed)
-.. - AWS MSK + self-managed Connect and Registry
+   FlinkKafkaProducer<String> sink = new FlinkKafkaProducer<>(
+       "output-topic",
+       new SimpleStringSchema(),
+       kafkaProperties,
+       FlinkKafkaProducer.Semantic.EXACTLY_ONCE
+   );
 
-.. **Security & monitoring:**
+   env.addSource(source)
+      .map(record -> transform(record))
+      .addSink(sink);
 
-.. - TLS encryption, SASL authentication, and ACLs
-.. - Monitor with Prometheus, Grafana, OpenTelemetry
+Trade-offs to consider
+----------------------
 
-.. Best Practices
-.. --------------
+- Kafka transactions add some latency but are flexible for simple pipelines.
+- Stateful processors like Flink offer high-level exactly-once guarantees but require stream processing infrastructure.
+- If exactly-once complexity is too high, fallback to at-least-once processing combined with idempotent operations to tolerate occasional duplicates.
 
-.. - Central schema repository + CI checks for compatibility
-.. - Use partition keys with high cardinality
-.. - Favor AVRO for compact payloads and schema evolution
-.. - Reuse logical types and standard metadata fields
-.. - Stream retention: define based on replay needs and SLA
+Kafka Connect
+-------------
 
-.. Conclusion
-.. ----------
+Kafka Connect simplifies integrating Kafka with external systems without writing custom code.
 
-.. Streaming infrastructure provides the foundation for building scalable, real-time data systems.
+**Typical use cases:**
 
-.. **Next steps:**
+- Capture changes from databases into Kafka (source connectors)
+- Sink Kafka topics into object storage, data warehouses, or search engines (sink connectors)
 
-.. - Set up a local Kafka + Schema Registry stack
-.. - Create a schema repo with evolution checks
-.. - Start streaming events with confidence
+**Advantages:**
 
+- Declarative configuration (JSON/YAML based)
+- Built-in scalability, fault tolerance, and distributed deployments
+- Extensive ecosystem of pre-built connectors

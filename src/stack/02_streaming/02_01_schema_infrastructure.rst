@@ -200,6 +200,8 @@ With these settings, Kafka will automatically deduplicate retried messages at th
 **Example: Configuring a Kafka producer with exactly-once guarantees (Python)**
 
 .. code-block:: python
+
+   # Create Kafka producer with exactly-once settings
    producer = KafkaProducer(
        bootstrap_servers="localhost:9092",
        enable_idempotence=True,    # Critical for exactly-once
