@@ -186,6 +186,7 @@
 <li><p><strong>SSE-S3</strong> (default, managed by AWS)</p></li>
 <li><p><strong>SSE-KMS</strong> (uses customer-managed keys for finer access control)</p></li>
 </ul>
+<p><strong>Terraform example:</strong></p>
 <div class="highlight-hcl notranslate"><div class="highlight"><pre><span></span><span class="nb">rule</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">apply_server_side_encryption_by_default</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="na">sse_algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AES256&quot;</span>

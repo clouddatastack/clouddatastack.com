@@ -22,12 +22,12 @@ Structuring your streams well ensures clarity, reusability, and performance acro
 **Best practices for topic design:**
 
 - Use domain-based topic names: ``ecommerce.orders.created``
-- Prefer one event type per topic unless there's a strong operational reason to combine
-- Version topics if breaking schema changes are expected (e.g., ``orders.v2``)
-- Avoid topics that mix unrelated domains or concerns
+- Prefer one event type per topic unless there's a strong operational reason to combine.
+- Version topics if breaking schema changes are expected (e.g., ``orders.v2``).
+- Avoid topics that mix unrelated domains or concerns.
 
-Partitioning guidelines
-------------------------
+Partitioning Guidelines
+-----------------------
 
 Kafka guarantees ordering *within* a partition only — events for the same entity must be routed consistently to the same partition.
 
@@ -88,13 +88,13 @@ Reassigning partitions later is possible but operationally complex.
 - **Custom partitioners**: Implement producer-side logic to control partition assignment beyond default hashing.
 - **Increase partition count**: Add partitions when consumer parallelism needs to scale, but monitor distribution closely.
 
-Trade-offs to consider
+Trade-offs to Consider
 ----------------------
 
-- Simple hashing vs custom partitioning logic
-- Early selection of partition key vs rekeying later
-- Fixed partition count vs operational complexity when scaling
-- Single-event-type topics vs aggregated topics (event grouping)
+- Simple hashing vs custom partitioning logic.
+- Early selection of partition key vs rekeying later.
+- Fixed partition count vs operational complexity when scaling.
+- Single-event-type topics vs aggregated topics (event grouping).
 
 Schema Management
 -----------------
@@ -103,10 +103,10 @@ Defining consistent, versioned event schemas is critical for reliable and scalab
 
 **Why schemas matter:**
 
-- Enforce data contracts between producers and consumers
-- Validate event structure at runtime
-- Enable safe schema evolution
-- Power downstream automation (e.g., code generation, analytics models)
+- Enforce data contracts between producers and consumers.
+- Validate event structure at runtime.
+- Enable safe schema evolution.
+- Power downstream automation (e.g., code generation, analytics models).
 
 Formats
 -------
@@ -139,21 +139,21 @@ Schemas must evolve safely without breaking producers or consumers.
 **Types of schema changes:**
 
 - *Non-breaking changes* (allowed on the same topic):
-  - Add optional fields with defaults
-  - Add new fields with ``null`` union types
-  - Expand enum values
+  - Add optional fields with defaults.
+  - Add new fields with ``null`` union types.
+  - Expand enum values.
 
 - *Breaking changes* (require a new topic version):
-  - Remove or rename fields
-  - Change required field types
-  - Restrict enum values
+  - Remove or rename fields.
+  - Change required field types.
+  - Restrict enum values.
 
 **Best practices:**
 
-- Favor backward-compatible changes
-- For breaking changes, create a new versioned topic (e.g., ``orders.v2``)
-- Version both topic names and schema files explicitly
-- Validate schemas during pull requests using CI/CD pipelines
+- Favor backward-compatible changes.
+- For breaking changes, create a new versioned topic (e.g., ``orders.v2``).
+- Version both topic names and schema files explicitly.
+- Validate schemas during pull requests using CI/CD pipelines.
 
 Example schema structure:
 
@@ -173,10 +173,10 @@ Producers are systems that publish events into Kafka topics.
 
 **Common producer types:**
 
-- Microservices emitting business events (e.g., ``UserRegistered``, ``OrderPlaced``)
-- Change Data Capture (CDC) tools capturing database changes (e.g., **Debezium**)
-- IoT devices sending telemetry data
-- Log shippers (e.g., FluentBit, Filebeat)
+- Microservices emitting business events (e.g., ``UserRegistered``, ``OrderPlaced``).
+- Change Data Capture (CDC) tools capturing database changes (e.g., **Debezium**).
+- IoT devices sending telemetry data.
+- Log shippers (e.g., FluentBit, Filebeat).
 
 Producer Strategy for Exactly-Once Guarantees
 ---------------------------------------------
@@ -247,7 +247,7 @@ Consumers subscribe to Kafka topics and process incoming events.
 
 - Build for exactly-once delivery guarantees:
 
-Exactly-once processing ensures that every event is processed exactly once — no duplicates, no data loss.  
+Exactly-once processing ensures that every event is processed exactly once — no duplicates, no data loss.
 Two practical patterns enable exactly-once guarantees:
 
 **1. Kafka Transactions (manual, per event batch):**
@@ -346,11 +346,11 @@ Kafka Connect simplifies integrating Kafka with external systems without writing
 
 **Typical use cases:**
 
-- Capture changes from databases into Kafka (source connectors)
-- Sink Kafka topics into object storage, data warehouses, or search engines (sink connectors)
+- Capture changes from databases into Kafka (source connectors).
+- Sink Kafka topics into object storage, data warehouses, or search engines (sink connectors).
 
 **Advantages:**
 
-- Declarative configuration (JSON/YAML based)
-- Built-in scalability, fault tolerance, and distributed deployments
-- Extensive ecosystem of pre-built connectors
+- Declarative configuration (JSON/YAML based).
+- Built-in scalability, fault tolerance, and distributed deployments.
+- Extensive ecosystem of pre-built connectors.

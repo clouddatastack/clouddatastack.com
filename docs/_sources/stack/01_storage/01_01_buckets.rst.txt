@@ -85,6 +85,8 @@ Use encryption to protect data at rest. Options include:
 - **SSE-S3** (default, managed by AWS)
 - **SSE-KMS** (uses customer-managed keys for finer access control)
 
+**Terraform example:**
+
 .. code-block:: hcl
 
     rule {

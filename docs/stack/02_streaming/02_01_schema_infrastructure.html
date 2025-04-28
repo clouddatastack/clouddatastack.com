@@ -52,8 +52,8 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Streaming Infrastructure</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#stream-design">Stream Design</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#partitioning-guidelines">Partitioning guidelines</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#trade-offs-to-consider">Trade-offs to consider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partitioning-guidelines">Partitioning Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trade-offs-to-consider">Trade-offs to Consider</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#schema-management">Schema Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#formats">Formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#versioning-strategy">Versioning Strategy</a></li>
@@ -128,13 +128,13 @@ Structuring your streams well ensures clarity, reusability, and performance acro
 <p><strong>Best practices for topic design:</strong></p>
 <ul class="simple">
 <li><p>Use domain-based topic names: <code class="docutils literal notranslate"><span class="pre">ecommerce.orders.created</span></code></p></li>
-<li><p>Prefer one event type per topic unless there’s a strong operational reason to combine</p></li>
-<li><p>Version topics if breaking schema changes are expected (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>)</p></li>
-<li><p>Avoid topics that mix unrelated domains or concerns</p></li>
+<li><p>Prefer one event type per topic unless there’s a strong operational reason to combine.</p></li>
+<li><p>Version topics if breaking schema changes are expected (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>).</p></li>
+<li><p>Avoid topics that mix unrelated domains or concerns.</p></li>
 </ul>
 </section>
 <section id="partitioning-guidelines">
-<h2>Partitioning guidelines<a class="headerlink" href="#partitioning-guidelines" title="Link to this heading"></a></h2>
+<h2>Partitioning Guidelines<a class="headerlink" href="#partitioning-guidelines" title="Link to this heading"></a></h2>
 <p>Kafka guarantees ordering <em>within</em> a partition only — events for the same entity must be routed consistently to the same partition.</p>
 <p><strong>Partition by business identifiers</strong> (e.g., <code class="docutils literal notranslate"><span class="pre">order_id</span></code>, <code class="docutils literal notranslate"><span class="pre">user_id</span></code>) to guarantee ordering.</p>
 <p><em>Example (using ``user_id`` as key):</em></p>
@@ -184,12 +184,12 @@ Reassigning partitions later is possible but operationally complex.</p>
 </ul>
 </section>
 <section id="trade-offs-to-consider">
-<h2>Trade-offs to consider<a class="headerlink" href="#trade-offs-to-consider" title="Link to this heading"></a></h2>
+<h2>Trade-offs to Consider<a class="headerlink" href="#trade-offs-to-consider" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Simple hashing vs custom partitioning logic</p></li>
-<li><p>Early selection of partition key vs rekeying later</p></li>
-<li><p>Fixed partition count vs operational complexity when scaling</p></li>
-<li><p>Single-event-type topics vs aggregated topics (event grouping)</p></li>
+<li><p>Simple hashing vs custom partitioning logic.</p></li>
+<li><p>Early selection of partition key vs rekeying later.</p></li>
+<li><p>Fixed partition count vs operational complexity when scaling.</p></li>
+<li><p>Single-event-type topics vs aggregated topics (event grouping).</p></li>
 </ul>
 </section>
 <section id="schema-management">
@@ -197,10 +197,10 @@ Reassigning partitions later is possible but operationally complex.</p>
 <p>Defining consistent, versioned event schemas is critical for reliable and scalable stream processing.</p>
 <p><strong>Why schemas matter:</strong></p>
 <ul class="simple">
-<li><p>Enforce data contracts between producers and consumers</p></li>
-<li><p>Validate event structure at runtime</p></li>
-<li><p>Enable safe schema evolution</p></li>
-<li><p>Power downstream automation (e.g., code generation, analytics models)</p></li>
+<li><p>Enforce data contracts between producers and consumers.</p></li>
+<li><p>Validate event structure at runtime.</p></li>
+<li><p>Enable safe schema evolution.</p></li>
+<li><p>Power downstream automation (e.g., code generation, analytics models).</p></li>
 </ul>
 </section>
 <section id="formats">
@@ -227,20 +227,20 @@ Protobuf may be preferred for cross-service APIs requiring strong language bindi
 <p><strong>Types of schema changes:</strong></p>
 <ul class="simple">
 <li><p><em>Non-breaking changes</em> (allowed on the same topic):
-- Add optional fields with defaults
-- Add new fields with <code class="docutils literal notranslate"><span class="pre">null</span></code> union types
-- Expand enum values</p></li>
+- Add optional fields with defaults.
+- Add new fields with <code class="docutils literal notranslate"><span class="pre">null</span></code> union types.
+- Expand enum values.</p></li>
 <li><p><em>Breaking changes</em> (require a new topic version):
-- Remove or rename fields
-- Change required field types
-- Restrict enum values</p></li>
+- Remove or rename fields.
+- Change required field types.
+- Restrict enum values.</p></li>
 </ul>
 <p><strong>Best practices:</strong></p>
 <ul class="simple">
-<li><p>Favor backward-compatible changes</p></li>
-<li><p>For breaking changes, create a new versioned topic (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>)</p></li>
-<li><p>Version both topic names and schema files explicitly</p></li>
-<li><p>Validate schemas during pull requests using CI/CD pipelines</p></li>
+<li><p>Favor backward-compatible changes.</p></li>
+<li><p>For breaking changes, create a new versioned topic (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>).</p></li>
+<li><p>Version both topic names and schema files explicitly.</p></li>
+<li><p>Validate schemas during pull requests using CI/CD pipelines.</p></li>
 </ul>
 <p>Example schema structure:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>schemas/
@@ -256,10 +256,10 @@ Protobuf may be preferred for cross-service APIs requiring strong language bindi
 <p>Producers are systems that publish events into Kafka topics.</p>
 <p><strong>Common producer types:</strong></p>
 <ul class="simple">
-<li><p>Microservices emitting business events (e.g., <code class="docutils literal notranslate"><span class="pre">UserRegistered</span></code>, <code class="docutils literal notranslate"><span class="pre">OrderPlaced</span></code>)</p></li>
-<li><p>Change Data Capture (CDC) tools capturing database changes (e.g., <strong>Debezium</strong>)</p></li>
-<li><p>IoT devices sending telemetry data</p></li>
-<li><p>Log shippers (e.g., FluentBit, Filebeat)</p></li>
+<li><p>Microservices emitting business events (e.g., <code class="docutils literal notranslate"><span class="pre">UserRegistered</span></code>, <code class="docutils literal notranslate"><span class="pre">OrderPlaced</span></code>).</p></li>
+<li><p>Change Data Capture (CDC) tools capturing database changes (e.g., <strong>Debezium</strong>).</p></li>
+<li><p>IoT devices sending telemetry data.</p></li>
+<li><p>Log shippers (e.g., FluentBit, Filebeat).</p></li>
 </ul>
 </section>
 <section id="producer-strategy-for-exactly-once-guarantees">
@@ -412,14 +412,14 @@ enabling automatic recovery and exactly-once processing guarantees without manua
 <p>Kafka Connect simplifies integrating Kafka with external systems without writing custom code.</p>
 <p><strong>Typical use cases:</strong></p>
 <ul class="simple">
-<li><p>Capture changes from databases into Kafka (source connectors)</p></li>
-<li><p>Sink Kafka topics into object storage, data warehouses, or search engines (sink connectors)</p></li>
+<li><p>Capture changes from databases into Kafka (source connectors).</p></li>
+<li><p>Sink Kafka topics into object storage, data warehouses, or search engines (sink connectors).</p></li>
 </ul>
 <p><strong>Advantages:</strong></p>
 <ul class="simple">
-<li><p>Declarative configuration (JSON/YAML based)</p></li>
-<li><p>Built-in scalability, fault tolerance, and distributed deployments</p></li>
-<li><p>Extensive ecosystem of pre-built connectors</p></li>
+<li><p>Declarative configuration (JSON/YAML based).</p></li>
+<li><p>Built-in scalability, fault tolerance, and distributed deployments.</p></li>
+<li><p>Extensive ecosystem of pre-built connectors.</p></li>
 </ul>
 </section>
 </section>
