@@ -4,7 +4,7 @@ Audit Guide
 Here’s a practical guide to auditing and analyzing datasets, workloads, and costs within Databricks environment. This checklist helps understand data usage, performance, and cost management.
 
 Inventory: What Data Assets Exist?
--------------------------------------
+----------------------------------
 
 **Show the top N largest tables in Databricks by size**
 
@@ -14,4 +14,4 @@ Inventory: What Data Assets Exist?
 
 
 Usage: Which datasets are regularly queried?
-------------------------------------------------------
+--------------------------------------------
