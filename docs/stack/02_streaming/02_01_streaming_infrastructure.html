@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.1. Streaming Infrastructure &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="2.2. Online Analytics" href="02_02_online_analytics.html" />
+    <link rel="prev" title="2. Streaming" href="../02_streaming.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_storage.html">1. Storage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../02_streaming.html">2. Streaming</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Streaming Infrastructure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stream-design">Stream Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partitioning-guidelines">Partitioning Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trade-offs-to-consider">Trade-offs to Consider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schema-management">Schema Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#formats">Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#versioning-strategy">Versioning Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-producers">Event Producers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#producer-strategy-for-exactly-once-guarantees">Producer Strategy for Exactly-Once Guarantees</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-consumers">Event Consumers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Trade-offs to consider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kafka-connect">Kafka Connect</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="02_02_online_analytics.html">2.2. Online Analytics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../03_compute.html">3. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_orchestration.html">4. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_governance.html">5. Data Governance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/audit_guide.html">Audit Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/cost_calculator.html">Cost Calculator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Products:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../products/web_analytics_ingestor.html">Web Analytics Ingestor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../products/pii_tracer.html">PII Tracer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../02_streaming.html">2. Streaming</a></li>
+      <li class="breadcrumb-item active">2.1. Streaming Infrastructure</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="streaming-infrastructure">
+<h1>2.1. Streaming Infrastructure<a class="headerlink" href="#streaming-infrastructure" title="Link to this heading"></a></h1>
+<p>Real-time data pipelines rely on robust streaming infrastructure.
+This page outlines the building blocks of a modern streaming system, including stream design, schema management, event producers and consumers, and integration with Kafka Connect.</p>
+<p><strong>Relevant repositories:</strong></p>
+<ul class="simple">
+<li><p>[Streaming Kafka Cluster](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-cluster">https://github.com/clouddatastack/streaming-kafka-cluster</a>)</p></li>
+<li><p>[Terraform AWS EKS](<a class="reference external" href="https://github.com/clouddatastack/terraform-aws-eks">https://github.com/clouddatastack/terraform-aws-eks</a>)</p></li>
+</ul>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Stream Design</p></li>
+<li><p>Schema Management</p></li>
+<li><p>Event Producers</p></li>
+<li><p>Event Consumers</p></li>
+<li><p>Kafka Connect</p></li>
+</ul>
+</section>
+<section id="stream-design">
+<h2>Stream Design<a class="headerlink" href="#stream-design" title="Link to this heading"></a></h2>
+<p>A <strong>stream</strong> is typically represented as a Kafka topic.
+Structuring your streams well ensures clarity, reusability, and performance across services.</p>
+<p><strong>Relevant repository:</strong></p>
+<ul class="simple">
+<li><p>[Streaming Kafka Producer](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-producer">https://github.com/clouddatastack/streaming-kafka-producer</a>)</p></li>
+</ul>
+<p><strong>Best practices for topic design:</strong></p>
+<ul class="simple">
+<li><p>Use domain-based topic names: <code class="docutils literal notranslate"><span class="pre">ecommerce.orders.created</span></code></p></li>
+<li><p>Prefer one event type per topic unless there’s a strong operational reason to combine.</p></li>
+<li><p>Version topics if breaking schema changes are expected (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>).</p></li>
+<li><p>Avoid topics that mix unrelated domains or concerns.</p></li>
+</ul>
+</section>
+<section id="partitioning-guidelines">
+<h2>Partitioning Guidelines<a class="headerlink" href="#partitioning-guidelines" title="Link to this heading"></a></h2>
+<p>Kafka guarantees ordering <em>within</em> a partition only — events for the same entity must be routed consistently to the same partition.</p>
+<p><strong>Partition by business identifiers</strong> (e.g., <code class="docutils literal notranslate"><span class="pre">order_id</span></code>, <code class="docutils literal notranslate"><span class="pre">user_id</span></code>) to guarantee ordering.</p>
+<p><em>Example (using ``user_id`` as key):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;user-events&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Example (compound key with ``user_id`` + ``session_id``):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compound_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;session-events&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">compound_key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Use high-cardinality keys</strong> to distribute load evenly across partitions.
+High cardinality helps avoid “hot” partitions and enables parallel processing.</p>
+<p><em>Example (using ``session_id`` to spread load):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;session_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;clickstream&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Plan partition count carefully</strong> at topic creation.
+Partitioning affects both throughput and scalability.
+Reassigning partitions later is possible but operationally complex.</p>
+<p><strong>Improve partition distribution after ingestion if needed:</strong></p>
+<ul>
+<li><p><strong>Rekey in stream processors</strong>: Consume events, assign a better partitioning key, and produce to a new topic.</p>
+<p><em>Example (rekeying using Faust, by ``user_id``):</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">faust</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">faust</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="s2">&quot;rekeying-app&quot;</span><span class="p">,</span> <span class="n">broker</span><span class="o">=</span><span class="s2">&quot;kafka://localhost:9092&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">(</span><span class="n">faust</span><span class="o">.</span><span class="n">Record</span><span class="p">):</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">topic</span><span class="p">(</span><span class="s2">&quot;events_by_country&quot;</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="n">Event</span><span class="p">)</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">topic</span><span class="p">(</span><span class="s2">&quot;events_by_user&quot;</span><span class="p">,</span> <span class="n">key_type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="n">Event</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">agent</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">events</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">target</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Custom partitioners</strong>: Implement producer-side logic to control partition assignment beyond default hashing.</p></li>
+<li><p><strong>Increase partition count</strong>: Add partitions when consumer parallelism needs to scale, but monitor distribution closely.</p></li>
+</ul>
+</section>
+<section id="trade-offs-to-consider">
+<h2>Trade-offs to Consider<a class="headerlink" href="#trade-offs-to-consider" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Simple hashing vs custom partitioning logic.</p></li>
+<li><p>Early selection of partition key vs rekeying later.</p></li>
+<li><p>Fixed partition count vs operational complexity when scaling.</p></li>
+<li><p>Single-event-type topics vs aggregated topics (event grouping).</p></li>
+</ul>
+</section>
+<section id="schema-management">
+<h2>Schema Management<a class="headerlink" href="#schema-management" title="Link to this heading"></a></h2>
+<p>Defining consistent, versioned event schemas is critical for reliable and scalable stream processing.</p>
+<p><strong>Relevant repository:</strong></p>
+<ul class="simple">
+<li><p>[Streaming Kafka Schemas](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-schemas">https://github.com/clouddatastack/streaming-kafka-schemas</a>)</p></li>
+</ul>
+<p><strong>Why schemas matter:</strong></p>
+<ul class="simple">
+<li><p>Enforce data contracts between producers and consumers.</p></li>
+<li><p>Validate event structure at runtime.</p></li>
+<li><p>Enable safe schema evolution.</p></li>
+<li><p>Power downstream automation (e.g., code generation, analytics models).</p></li>
+</ul>
+</section>
+<section id="formats">
+<h2>Formats<a class="headerlink" href="#formats" title="Link to this heading"></a></h2>
+<p>AVRO is the recommended default format for Kafka events due to its compact serialization, dynamic typing, and strong support for schema evolution.</p>
+<p>Kafka messages typically do <strong>not embed full schema definitions</strong> inside the payload.
+Instead, a small <strong>Schema ID</strong> is included in the message, allowing producers and consumers to resolve the full schema from a centralized Schema Registry.</p>
+<p>(Confluent Schema Registry handles Schema ID registration and lookup automatically when using official Kafka serializers.)</p>
+<p>Other formats to consider:</p>
+<ul class="simple">
+<li><p><strong>Protobuf</strong>:
+Suitable for strongly typed APIs and gRPC-based microservices.
+Offers compact encoding but requires careful code generation and stricter evolution management compared to Avro.</p></li>
+<li><p><strong>JSON Schema</strong>:
+Human-readable and easier for manual inspection, but results in larger payloads and weaker typing guarantees.</p></li>
+</ul>
+<p><strong>Format recommendation:</strong>
+For internal event-driven pipelines and analytics, <strong>Avro</strong> is the preferred choice.
+Protobuf may be preferred for cross-service APIs requiring strong language bindings.</p>
+</section>
+<section id="versioning-strategy">
+<h2>Versioning Strategy<a class="headerlink" href="#versioning-strategy" title="Link to this heading"></a></h2>
+<p>Schemas must evolve safely without breaking producers or consumers.</p>
+<p><strong>Types of schema changes:</strong></p>
+<ul class="simple">
+<li><p><em>Non-breaking changes</em> (allowed on the same topic):
+- Add optional fields with defaults.
+- Add new fields with <code class="docutils literal notranslate"><span class="pre">null</span></code> union types.
+- Expand enum values.</p></li>
+<li><p><em>Breaking changes</em> (require a new topic version):
+- Remove or rename fields.
+- Change required field types.
+- Restrict enum values.</p></li>
+</ul>
+<p><strong>Best practices:</strong></p>
+<ul class="simple">
+<li><p>Favor backward-compatible changes.</p></li>
+<li><p>For breaking changes, create a new versioned topic (e.g., <code class="docutils literal notranslate"><span class="pre">orders.v2</span></code>).</p></li>
+<li><p>Version both topic names and schema files explicitly.</p></li>
+<li><p>Validate schemas during pull requests using CI/CD pipelines.</p></li>
+</ul>
+<p>Example schema structure:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>schemas/
+<span class="w">  </span>orders/
+<span class="w">    </span>order_created.v1.avsc
+<span class="w">    </span>order_created.v2.avsc
+</pre></div>
+</div>
+<p>Each event references its schema indirectly through the Schema ID, ensuring minimal payload size and centralized governance.</p>
+</section>
+<section id="event-producers">
+<h2>Event Producers<a class="headerlink" href="#event-producers" title="Link to this heading"></a></h2>
+<p>Producers are systems that publish events into Kafka topics.</p>
+<p><strong>Relevant repository:</strong></p>
+<ul class="simple">
+<li><p>[Streaming Kafka Producer](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-producer">https://github.com/clouddatastack/streaming-kafka-producer</a>)</p></li>
+</ul>
+<p><strong>Common producer types:</strong></p>
+<ul class="simple">
+<li><p>Microservices emitting business events (e.g., <code class="docutils literal notranslate"><span class="pre">UserRegistered</span></code>, <code class="docutils literal notranslate"><span class="pre">OrderPlaced</span></code>).</p></li>
+<li><p>Change Data Capture (CDC) tools capturing database changes (e.g., <strong>Debezium</strong>).</p></li>
+<li><p>IoT devices sending telemetry data.</p></li>
+<li><p>Log shippers (e.g., FluentBit, Filebeat).</p></li>
+</ul>
+</section>
+<section id="producer-strategy-for-exactly-once-guarantees">
+<h2>Producer Strategy for Exactly-Once Guarantees<a class="headerlink" href="#producer-strategy-for-exactly-once-guarantees" title="Link to this heading"></a></h2>
+<p>When a producer is only writing to Kafka (without consuming from Kafka),
+exactly-once delivery can be achieved by configuring the Kafka producer for <strong>idempotent writes</strong>.</p>
+<p><strong>Key configurations:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enable.idempotence=true</span></code>:
+Ensures that retries of a produce request will not result in duplicate records.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">acks=all</span></code>:
+Waits for all in-sync replicas to acknowledge the write, ensuring durability and consistency.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retries=Integer.MAX_VALUE</span></code> (or a very high number):
+Automatically retries transient failures without risking duplicates.</p></li>
+</ul>
+<p>With these settings, Kafka will automatically deduplicate retried messages at the broker side, achieving exactly-once semantics for event production.</p>
+<p><strong>Example: Configuring a Kafka producer with exactly-once guarantees (Python)</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create Kafka producer with exactly-once settings</span>
+<span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
+    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="s2">&quot;localhost:9092&quot;</span><span class="p">,</span>
+    <span class="n">enable_idempotence</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>    <span class="c1"># Critical for exactly-once</span>
+    <span class="n">acks</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>                  <span class="c1"># Ensure full replication</span>
+    <span class="n">retries</span><span class="o">=</span><span class="mi">2147483647</span>           <span class="c1"># Retry infinitely</span>
+<span class="p">)</span>
+
+<span class="c1"># Example event</span>
+<span class="n">event</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="s2">&quot;UserRegistered&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-04-28T12:34:56Z&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Serialize and send</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+    <span class="n">topic</span><span class="o">=</span><span class="s2">&quot;user-registrations&quot;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+    <span class="n">value</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Always enable idempotence on all production Kafka producers.</p></li>
+<li><p>Ensure producer retries are configured correctly to avoid message loss during transient failures.</p></li>
+<li><p>Validate event payloads against schemas at the producer side before sending.</p></li>
+<li><p>Use stable, meaningful keys for partitioning to ensure proper event ordering if required.</p></li>
+</ul>
+</section>
+<section id="event-consumers">
+<h2>Event Consumers<a class="headerlink" href="#event-consumers" title="Link to this heading"></a></h2>
+<p>Consumers subscribe to Kafka topics and process incoming events.</p>
+<p><strong>Relevant repository:</strong></p>
+<ul class="simple">
+<li><p>[Streaming Kafka Consumer](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-consumer">https://github.com/clouddatastack/streaming-kafka-consumer</a>)</p></li>
+</ul>
+<p><strong>Best practices:</strong></p>
+<ul class="simple">
+<li><p>Validate incoming event schemas to ensure compatibility with expected structures.</p></li>
+<li><p>Manage consumer offsets manually:
+- Only commit offsets after successful event processing.
+- Avoid premature commits to ensure reliability.</p></li>
+<li><p>Build for exactly-once delivery guarantees:</p></li>
+</ul>
+<p>Exactly-once processing ensures that every event is processed exactly once — no duplicates, no data loss.
+Two practical patterns enable exactly-once guarantees:</p>
+<p><strong>1. Kafka Transactions (manual, per event batch):</strong></p>
+<p>Use a transactional Kafka producer that sends output messages and commits consumer offsets atomically within a single transaction.</p>
+<p>Example (Python with KafkaProducer):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaProducer</span><span class="p">,</span> <span class="n">KafkaConsumer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka.structs</span><span class="w"> </span><span class="kn">import</span> <span class="n">TopicPartition</span>
+
+<span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span>
+    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="s2">&quot;localhost:9092&quot;</span><span class="p">,</span>
+    <span class="n">transactional_id</span><span class="o">=</span><span class="s2">&quot;producer-1&quot;</span><span class="p">,</span>
+    <span class="n">enable_idempotence</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">producer</span><span class="o">.</span><span class="n">init_transactions</span><span class="p">()</span>
+
+<span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
+    <span class="s2">&quot;input-topic&quot;</span><span class="p">,</span>
+    <span class="n">group_id</span><span class="o">=</span><span class="s2">&quot;consumer-group-1&quot;</span><span class="p">,</span>
+    <span class="n">bootstrap_servers</span><span class="o">=</span><span class="s2">&quot;localhost:9092&quot;</span><span class="p">,</span>
+    <span class="n">enable_auto_commit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># manual offset commits</span>
+    <span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;read_committed&quot;</span>  <span class="c1"># only consume committed messages</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">consumer</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">begin_transaction</span><span class="p">()</span>
+
+        <span class="c1"># Process the event</span>
+        <span class="n">output_record</span> <span class="o">=</span> <span class="n">process_event</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Produce to output topic</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;output-topic&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">output_record</span><span class="p">)</span>
+
+        <span class="c1"># Commit consumed offset inside the transaction</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">send_offsets_to_transaction</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">TopicPartition</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">topic</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">partition</span><span class="p">):</span> <span class="n">message</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">consumer_group_id</span><span class="o">=</span><span class="s2">&quot;consumer-group-1&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">producer</span><span class="o">.</span><span class="n">commit_transaction</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">abort_transaction</span><span class="p">()</span>
+        <span class="n">handle_processing_error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This pattern guarantees that event processing, output production, and offset commits are atomic.</p>
+<p><strong>2. Stateful Stream Processors (automatic checkpointing):</strong></p>
+<p>Apache Flink manages both the event processing state and Kafka consumer offsets atomically.
+It uses periodic checkpointing to capture a consistent snapshot of the system state,
+enabling automatic recovery and exactly-once processing guarantees without manual transaction handling.</p>
+<p>Example:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">StreamExecutionEnvironment</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StreamExecutionEnvironment</span><span class="p">.</span><span class="na">getExecutionEnvironment</span><span class="p">();</span>
+
+<span class="n">env</span><span class="p">.</span><span class="na">enableCheckpointing</span><span class="p">(</span><span class="mi">60000</span><span class="p">);</span><span class="w"> </span><span class="c1">// checkpoint every 60 seconds</span>
+<span class="n">env</span><span class="p">.</span><span class="na">getCheckpointConfig</span><span class="p">().</span><span class="na">setCheckpointingMode</span><span class="p">(</span><span class="n">CheckpointingMode</span><span class="p">.</span><span class="na">EXACTLY_ONCE</span><span class="p">);</span>
+
+<span class="n">FlinkKafkaConsumer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FlinkKafkaConsumer</span><span class="o">&lt;&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;input-topic&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">SimpleStringSchema</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">kafkaProperties</span>
+<span class="p">);</span>
+
+<span class="n">FlinkKafkaProducer</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FlinkKafkaProducer</span><span class="o">&lt;&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;output-topic&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">SimpleStringSchema</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">kafkaProperties</span><span class="p">,</span>
+<span class="w">    </span><span class="n">FlinkKafkaProducer</span><span class="p">.</span><span class="na">Semantic</span><span class="p">.</span><span class="na">EXACTLY_ONCE</span>
+<span class="p">);</span>
+
+<span class="n">env</span><span class="p">.</span><span class="na">addSource</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="w">   </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">record</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">transform</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+<span class="w">   </span><span class="p">.</span><span class="na">addSink</span><span class="p">(</span><span class="n">sink</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>Trade-offs to consider<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Kafka transactions add some latency but are flexible for simple pipelines.</p></li>
+<li><p>Stateful processors like Flink offer high-level exactly-once guarantees but require stream processing infrastructure.</p></li>
+<li><p>If exactly-once complexity is too high, fallback to at-least-once processing combined with idempotent operations to tolerate occasional duplicates.</p></li>
+</ul>
+</section>
+<section id="kafka-connect">
+<h2>Kafka Connect<a class="headerlink" href="#kafka-connect" title="Link to this heading"></a></h2>
+<p>Kafka Connect simplifies integrating Kafka with external systems without writing custom code.</p>
+<p><strong>Typical use cases:</strong></p>
+<ul class="simple">
+<li><p>Capture changes from databases into Kafka (source connectors).</p></li>
+<li><p>Sink Kafka topics into object storage, data warehouses, or search engines (sink connectors).</p></li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul class="simple">
+<li><p>Declarative configuration (JSON/YAML based).</p></li>
+<li><p>Built-in scalability, fault tolerance, and distributed deployments.</p></li>
+<li><p>Extensive ecosystem of pre-built connectors.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

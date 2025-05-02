@@ -4,6 +4,11 @@
 Real-time data pipelines rely on robust streaming infrastructure.  
 This page outlines the building blocks of a modern streaming system, including stream design, schema management, event producers and consumers, and integration with Kafka Connect.
 
+**Relevant repositories:**
+
+- [Streaming Kafka Cluster](https://github.com/clouddatastack/streaming-kafka-cluster)
+- [Terraform AWS EKS](https://github.com/clouddatastack/terraform-aws-eks)
+
 Overview
 --------
 
@@ -18,6 +23,10 @@ Stream Design
 
 A **stream** is typically represented as a Kafka topic.  
 Structuring your streams well ensures clarity, reusability, and performance across services.
+
+**Relevant repository:**
+
+- [Streaming Kafka Producer](https://github.com/clouddatastack/streaming-kafka-producer)
 
 **Best practices for topic design:**
 
@@ -101,6 +110,10 @@ Schema Management
 
 Defining consistent, versioned event schemas is critical for reliable and scalable stream processing.
 
+**Relevant repository:**
+
+- [Streaming Kafka Schemas](https://github.com/clouddatastack/streaming-kafka-schemas)
+
 **Why schemas matter:**
 
 - Enforce data contracts between producers and consumers.
@@ -171,6 +184,10 @@ Event Producers
 
 Producers are systems that publish events into Kafka topics.
 
+**Relevant repository:**
+
+- [Streaming Kafka Producer](https://github.com/clouddatastack/streaming-kafka-producer)
+
 **Common producer types:**
 
 - Microservices emitting business events (e.g., ``UserRegistered``, ``OrderPlaced``).
@@ -237,6 +254,10 @@ Event Consumers
 ---------------
 
 Consumers subscribe to Kafka topics and process incoming events.
+
+**Relevant repository:**
+
+- [Streaming Kafka Consumer](https://github.com/clouddatastack/streaming-kafka-consumer)
 
 **Best practices:**
 
