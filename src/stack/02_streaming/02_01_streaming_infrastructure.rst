@@ -380,3 +380,12 @@ Kafka Connect simplifies integrating Kafka with external systems without writing
 - Declarative configuration (JSON/YAML based).
 - Built-in scalability, fault tolerance, and distributed deployments.
 - Extensive ecosystem of pre-built connectors.
+
+.. raw:: html
+
+   <script>
+   var links = document.querySelectorAll('a[href^="http"]');
+   links.forEach(function(link) {
+       link.setAttribute('target', '_blank');
+   });
+   </script>
