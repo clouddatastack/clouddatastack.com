@@ -30,8 +30,8 @@ Structuring your streams well ensures clarity, reusability, and performance acro
 
 **Relevant repository:**
 
-- `Streaming Kafka Cluster <https://github.com/clouddatastack/streaming-kafka-cluster>`_
 - `Terraform AWS EKS <https://github.com/clouddatastack/terraform-aws-eks>`_
+- `Streaming Kafka Cluster <https://github.com/clouddatastack/streaming-kafka-cluster>`_
 
 **Best practices for topic design:**
 
