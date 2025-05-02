@@ -6,8 +6,12 @@ This page outlines the building blocks of a modern streaming system, including s
 
 **Relevant repositories:**
 
-- `Streaming Kafka Cluster <https://github.com/clouddatastack/streaming-kafka-cluster>`_
 - `Terraform AWS EKS <https://github.com/clouddatastack/terraform-aws-eks>`_
+- `Streaming Kafka Cluster <https://github.com/clouddatastack/streaming-kafka-cluster>`_
+- `Streaming Kafka Schemas <https://github.com/clouddatastack/streaming-kafka-schemas>`_
+- `Streaming Kafka Producer <https://github.com/clouddatastack/streaming-kafka-producer>`_
+- `Streaming Kafka Consumer <https://github.com/clouddatastack/streaming-kafka-consumer>`_
+
 
 Overview
 --------
@@ -26,7 +30,8 @@ Structuring your streams well ensures clarity, reusability, and performance acro
 
 **Relevant repository:**
 
-- `Streaming Kafka Producer <https://github.com/clouddatastack/streaming-kafka-producer>`_
+- `Streaming Kafka Cluster <https://github.com/clouddatastack/streaming-kafka-cluster>`_
+- `Terraform AWS EKS <https://github.com/clouddatastack/terraform-aws-eks>`_
 
 **Best practices for topic design:**
 
