@@ -61,7 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#producer-strategy-for-exactly-once-guarantees">Producer Strategy for Exactly-Once Guarantees</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#best-practices">Best Practices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#event-consumers">Event Consumers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Trade-offs to consider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Trade-offs to consider</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#kafka-connect">Kafka Connect</a></li>
 </ul>
 </li>
@@ -113,8 +113,8 @@
 This page outlines the building blocks of a modern streaming system, including stream design, schema management, event producers and consumers, and integration with Kafka Connect.</p>
 <p><strong>Relevant repositories:</strong></p>
 <ul class="simple">
-<li><p>[Streaming Kafka Cluster](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-cluster">https://github.com/clouddatastack/streaming-kafka-cluster</a>)</p></li>
-<li><p>[Terraform AWS EKS](<a class="reference external" href="https://github.com/clouddatastack/terraform-aws-eks">https://github.com/clouddatastack/terraform-aws-eks</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-cluster">Streaming Kafka Cluster</a></p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/terraform-aws-eks">Terraform AWS EKS</a></p></li>
 </ul>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
@@ -132,7 +132,7 @@ This page outlines the building blocks of a modern streaming system, including s
 Structuring your streams well ensures clarity, reusability, and performance across services.</p>
 <p><strong>Relevant repository:</strong></p>
 <ul class="simple">
-<li><p>[Streaming Kafka Producer](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-producer">https://github.com/clouddatastack/streaming-kafka-producer</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-producer">Streaming Kafka Producer</a></p></li>
 </ul>
 <p><strong>Best practices for topic design:</strong></p>
 <ul class="simple">
@@ -206,7 +206,7 @@ Reassigning partitions later is possible but operationally complex.</p>
 <p>Defining consistent, versioned event schemas is critical for reliable and scalable stream processing.</p>
 <p><strong>Relevant repository:</strong></p>
 <ul class="simple">
-<li><p>[Streaming Kafka Schemas](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-schemas">https://github.com/clouddatastack/streaming-kafka-schemas</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-schemas">Streaming Kafka Schemas</a></p></li>
 </ul>
 <p><strong>Why schemas matter:</strong></p>
 <ul class="simple">
@@ -269,7 +269,7 @@ Protobuf may be preferred for cross-service APIs requiring strong language bindi
 <p>Producers are systems that publish events into Kafka topics.</p>
 <p><strong>Relevant repository:</strong></p>
 <ul class="simple">
-<li><p>[Streaming Kafka Producer](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-producer">https://github.com/clouddatastack/streaming-kafka-producer</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-producer">Streaming Kafka Producer</a></p></li>
 </ul>
 <p><strong>Common producer types:</strong></p>
 <ul class="simple">
@@ -334,7 +334,7 @@ Automatically retries transient failures without risking duplicates.</p></li>
 <p>Consumers subscribe to Kafka topics and process incoming events.</p>
 <p><strong>Relevant repository:</strong></p>
 <ul class="simple">
-<li><p>[Streaming Kafka Consumer](<a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-consumer">https://github.com/clouddatastack/streaming-kafka-consumer</a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-kafka-consumer">Streaming Kafka Consumer</a></p></li>
 </ul>
 <p><strong>Best practices:</strong></p>
 <ul class="simple">
@@ -420,8 +420,8 @@ enabling automatic recovery and exactly-once processing guarantees without manua
 </pre></div>
 </div>
 </section>
-<section id="id1">
-<h2>Trade-offs to consider<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id2">
+<h2>Trade-offs to consider<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Kafka transactions add some latency but are flexible for simple pipelines.</p></li>
 <li><p>Stateful processors like Flink offer high-level exactly-once guarantees but require stream processing infrastructure.</p></li>

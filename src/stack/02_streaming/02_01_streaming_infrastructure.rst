@@ -6,8 +6,8 @@ This page outlines the building blocks of a modern streaming system, including s
 
 **Relevant repositories:**
 
-- [Streaming Kafka Cluster](https://github.com/clouddatastack/streaming-kafka-cluster)
-- [Terraform AWS EKS](https://github.com/clouddatastack/terraform-aws-eks)
+- `Streaming Kafka Cluster <https://github.com/clouddatastack/streaming-kafka-cluster>`_
+- `Terraform AWS EKS <https://github.com/clouddatastack/terraform-aws-eks>`_
 
 Overview
 --------
@@ -26,7 +26,7 @@ Structuring your streams well ensures clarity, reusability, and performance acro
 
 **Relevant repository:**
 
-- [Streaming Kafka Producer](https://github.com/clouddatastack/streaming-kafka-producer)
+- `Streaming Kafka Producer <https://github.com/clouddatastack/streaming-kafka-producer>`_
 
 **Best practices for topic design:**
 
@@ -112,7 +112,7 @@ Defining consistent, versioned event schemas is critical for reliable and scalab
 
 **Relevant repository:**
 
-- [Streaming Kafka Schemas](https://github.com/clouddatastack/streaming-kafka-schemas)
+- `Streaming Kafka Schemas <https://github.com/clouddatastack/streaming-kafka-schemas>`_
 
 **Why schemas matter:**
 
@@ -186,7 +186,7 @@ Producers are systems that publish events into Kafka topics.
 
 **Relevant repository:**
 
-- [Streaming Kafka Producer](https://github.com/clouddatastack/streaming-kafka-producer)
+- `Streaming Kafka Producer <https://github.com/clouddatastack/streaming-kafka-producer>`_
 
 **Common producer types:**
 
@@ -257,7 +257,7 @@ Consumers subscribe to Kafka topics and process incoming events.
 
 **Relevant repository:**
 
-- [Streaming Kafka Consumer](https://github.com/clouddatastack/streaming-kafka-consumer)
+- `Streaming Kafka Consumer <https://github.com/clouddatastack/streaming-kafka-consumer>`_
 
 **Best practices:**
 
