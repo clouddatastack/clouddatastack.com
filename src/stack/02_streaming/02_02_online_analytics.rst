@@ -5,8 +5,8 @@ Real-time analytics systems rely on robust stream processing frameworks. This pa
 
 **Relevant repositories:**
 
-- `Streaming Flink Analytics <https://github.com/clouddatastack/streaming-flink-analytics>`_: Demonstrates a real-time analytics pipeline using Apache Flink and Kafka.
-- `Terraform AWS Flink Cluster <https://github.com/clouddatastack/terraform-aws-flink-cluster>`_: Provides Terraform configurations to deploy a Flink cluster on AWS with Kafka and S3 integration.
+- `Streaming Flink Analytics <https://github.com/clouddatastack/streaming-flink-analytics>`_
+- `Terraform AWS Flink Cluster <https://github.com/clouddatastack/terraform-aws-flink-cluster>`_
 
 Overview
 --------
