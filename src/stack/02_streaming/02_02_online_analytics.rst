@@ -230,8 +230,8 @@ Trade-offs to Consider
 References
 ----------
 
-- [Flink Documentation](https://nightlies.apache.org/flink/flink-docs-release-1.20/)
-- [Advanced Flink Application Patterns](https://flink.apache.org/2020/01/15/advanced-flink-application-patterns-vol.1-case-study-of-a-fraud-detection-system/)
+- `Flink Documentation <https://nightlies.apache.org/flink/flink-docs-release-1.20>`_
+- `Advanced Flink Application Patterns <https://flink.apache.org/2020/01/15/advanced-flink-application-patterns-vol.1-case-study-of-a-fraud-detection-system/>`
 
 .. raw:: html
 
