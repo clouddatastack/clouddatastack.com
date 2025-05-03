@@ -5,7 +5,8 @@ Real-time analytics systems rely on robust stream processing frameworks. This pa
 
 **Relevant repositories:**
 
-- `Streaming Flink Cluster <https://github.com/clouddatastack/streaming-flink-cluster>`_
+- `Streaming Flink Analytics <https://github.com/clouddatastack/streaming-flink-analytics>`_: Demonstrates a real-time analytics pipeline using Apache Flink and Kafka.
+- `Terraform AWS Flink Cluster <https://github.com/clouddatastack/terraform-aws-flink-cluster>`_: Provides Terraform configurations to deploy a Flink cluster on AWS with Kafka and S3 integration.
 
 Overview
 --------
@@ -29,6 +30,8 @@ Flink is a distributed stream processing framework designed for high-throughput,
 - **DataStream API**: Used for processing unbounded streams of data.
 - **Stateful Processing**: Enables maintaining intermediate results across events.
 - **Event Time and Watermarks**: Handles late-arriving data with precision.
+
+For a practical implementation, refer to the `Streaming Flink Analytics <https://github.com/clouddatastack/streaming-flink-analytics>`_ repository.
 
 Time Semantics
 ---------------
@@ -212,6 +215,8 @@ Deployment Strategies
 
 - Integrate with Prometheus and Grafana for real-time metrics.
 - Use Flink's web UI to monitor job execution and troubleshoot issues.
+
+For infrastructure setup, refer to the `Terraform AWS Flink Cluster <https://github.com/clouddatastack/terraform-aws-flink-cluster>`_ repository.
 
 Trade-offs to Consider
 -----------------------

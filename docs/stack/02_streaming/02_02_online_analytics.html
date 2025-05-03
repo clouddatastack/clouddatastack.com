@@ -109,7 +109,8 @@
 <p>Real-time analytics systems rely on robust stream processing frameworks. This page outlines the building blocks of a modern Flink-based analytics system, focusing on Flink concepts such as configuration, state management, window operations, time semantics, event ordering, and exactly-once processing.</p>
 <p><strong>Relevant repositories:</strong></p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-flink-cluster">Streaming Flink Cluster</a></p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/streaming-flink-analytics">Streaming Flink Analytics</a>: Demonstrates a real-time analytics pipeline using Apache Flink and Kafka.</p></li>
+<li><p><a class="reference external" href="https://github.com/clouddatastack/terraform-aws-flink-cluster">Terraform AWS Flink Cluster</a>: Provides Terraform configurations to deploy a Flink cluster on AWS with Kafka and S3 integration.</p></li>
 </ul>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
@@ -133,6 +134,7 @@
 <li><p><strong>Stateful Processing</strong>: Enables maintaining intermediate results across events.</p></li>
 <li><p><strong>Event Time and Watermarks</strong>: Handles late-arriving data with precision.</p></li>
 </ul>
+<p>For a practical implementation, refer to the <a class="reference external" href="https://github.com/clouddatastack/streaming-flink-analytics">Streaming Flink Analytics</a> repository.</p>
 </section>
 <section id="time-semantics">
 <h2>Time Semantics<a class="headerlink" href="#time-semantics" title="Link to this heading"></a></h2>
@@ -298,6 +300,7 @@
 <li><p>Integrate with Prometheus and Grafana for real-time metrics.</p></li>
 <li><p>Use Flink’s web UI to monitor job execution and troubleshoot issues.</p></li>
 </ul>
+<p>For infrastructure setup, refer to the <a class="reference external" href="https://github.com/clouddatastack/terraform-aws-flink-cluster">Terraform AWS Flink Cluster</a> repository.</p>
 </section>
 <section id="trade-offs-to-consider">
 <h2>Trade-offs to Consider<a class="headerlink" href="#trade-offs-to-consider" title="Link to this heading"></a></h2>
