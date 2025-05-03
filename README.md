@@ -7,4 +7,5 @@ poetry run sphinx-build -E -b html src docs
 
 
 ## TODO
-Storage - Iceberg, Delta or Parquet
+- Storage - Iceberg, Delta or Parquet
+- Add Kafka konfiguration with terraform for AWS MKS
