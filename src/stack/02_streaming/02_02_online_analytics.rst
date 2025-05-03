@@ -5,7 +5,7 @@ Real-time analytics systems rely on robust stream processing frameworks. This pa
 
 **Relevant repositories:**
 
-- `Flink Job Repository <https://github.com/clouddatastack/flink-jobs>`_
+- `Streaming Flink Cluster <https://github.com/clouddatastack/streaming-flink-cluster>`_
 
 Overview
 --------
