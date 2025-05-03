@@ -232,3 +232,12 @@ References
 
 - [Flink Documentation](https://nightlies.apache.org/flink/flink-docs-release-1.20/)
 - [Advanced Flink Application Patterns](https://flink.apache.org/2020/01/15/advanced-flink-application-patterns-vol.1-case-study-of-a-fraud-detection-system/)
+
+.. raw:: html
+
+   <script>
+   var links = document.querySelectorAll('a[href^="http"]');
+   links.forEach(function(link) {
+       link.setAttribute('target', '_blank');
+   });
+   </script>
