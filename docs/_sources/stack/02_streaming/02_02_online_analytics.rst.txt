@@ -218,15 +218,6 @@ Deployment Strategies
 
 For infrastructure setup, refer to the `Terraform AWS Flink Cluster <https://github.com/clouddatastack/terraform-aws-flink-cluster>`_ repository.
 
-Trade-offs to Consider
------------------------
-
-- **State Management**: RocksDB provides durability but adds latency.
-- **Windowing Strategy**: Tumbling windows are simpler but less flexible than sliding or session windows.
-- **Checkpointing Frequency**: Frequent checkpointing reduces recovery time but increases overhead.
-- **Time Semantics**: Event time is accurate but requires handling late events; processing time is simpler but less precise.
-- **Event Ordering**: Ensuring global ordering increases latency and reduces parallelism.
-
 References
 ----------
 

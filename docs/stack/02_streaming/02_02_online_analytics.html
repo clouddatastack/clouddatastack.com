@@ -59,7 +59,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#event-ordering-and-latency">Event Ordering and Latency</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#exactly-once-processing">Exactly-Once Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deployment-strategies">Deployment Strategies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#trade-offs-to-consider">Trade-offs to Consider</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
@@ -301,16 +300,6 @@
 <li><p>Use Flink’s web UI to monitor job execution and troubleshoot issues.</p></li>
 </ul>
 <p>For infrastructure setup, refer to the <a class="reference external" href="https://github.com/clouddatastack/terraform-aws-flink-cluster">Terraform AWS Flink Cluster</a> repository.</p>
-</section>
-<section id="trade-offs-to-consider">
-<h2>Trade-offs to Consider<a class="headerlink" href="#trade-offs-to-consider" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><strong>State Management</strong>: RocksDB provides durability but adds latency.</p></li>
-<li><p><strong>Windowing Strategy</strong>: Tumbling windows are simpler but less flexible than sliding or session windows.</p></li>
-<li><p><strong>Checkpointing Frequency</strong>: Frequent checkpointing reduces recovery time but increases overhead.</p></li>
-<li><p><strong>Time Semantics</strong>: Event time is accurate but requires handling late events; processing time is simpler but less precise.</p></li>
-<li><p><strong>Event Ordering</strong>: Ensuring global ordering increases latency and reduces parallelism.</p></li>
-</ul>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
