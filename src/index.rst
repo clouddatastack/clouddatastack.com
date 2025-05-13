@@ -15,20 +15,6 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    stack/04_orchestration
    stack/05_governance
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Tools:
-
-   tools/audit_guide
-   tools/cost_calculator
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Products:
-
-   products/web_analytics_ingestor
-   products/pii_tracer
-
 .. raw:: html
 
    <script>
