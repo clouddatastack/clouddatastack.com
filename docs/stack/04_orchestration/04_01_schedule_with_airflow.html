@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; Cloud Data Stack  documentation</title>
+  <title>4.1 Schedule With Airflow &mdash; Cloud Data Stack  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -51,18 +51,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../03_compute.html">3. Compute and Query</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../04_orchestration.html">4. Orchestration</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#core-requirements-design-considerations">Core Requirements &amp; Design Considerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#recommended-project-structure">Recommended Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#python-project-setup-with-uv">Python Project Setup with <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#configuring-for-aws-mwaa">Configuring for AWS MWAA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#scheduling-databricks-workloads">Scheduling Databricks Workloads</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#local-development-with-docker">Local Development with Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#managing-environments-test-vs-prod">Managing Environments (Test vs. Prod)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#potential-tradeoffs-and-considerations">Potential Tradeoffs and Considerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#other-common-concerns">Other Common Concerns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.1 Schedule With Airflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-requirements-design-considerations">Core Requirements &amp; Design Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recommended-project-structure">Recommended Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-project-setup-with-uv">Python Project Setup with <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-for-aws-mwaa">Configuring for AWS MWAA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scheduling-databricks-workloads">Scheduling Databricks Workloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#local-development-with-docker">Local Development with Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#managing-environments-test-vs-prod">Managing Environments (Test vs. Prod)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#potential-tradeoffs-and-considerations">Potential Tradeoffs and Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-common-concerns">Other Common Concerns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="04_02_templatize_with_prefect.html">4.2. Templatize With Prefect</a></li>
 </ul>
 </li>
@@ -84,7 +87,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../04_orchestration.html">4. Orchestration</a></li>
-      <li class="breadcrumb-item active">Introduction</li>
+      <li class="breadcrumb-item active">4.1 Schedule With Airflow</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -93,10 +96,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p>4.1 Schedule With Airflow
-=================================</p>
+  <section id="schedule-with-airflow">
+<h1>4.1 Schedule With Airflow<a class="headerlink" href="#schedule-with-airflow" title="Link to this heading"></a></h1>
 <p>How to schedule your Workloads on Databricks with Airflow.</p>
-<nav class="contents local" id="article-outline" role="doc-toc">
+<nav class="contents local" id="article-outline">
 <p class="topic-title">Article Outline</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#introduction" id="id2">Introduction</a></p></li>
@@ -114,7 +117,7 @@
 </ul>
 </nav>
 <section id="introduction">
-<h1><a class="toc-backref" href="#id2" role="doc-backlink">Introduction</a><a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Introduction</a><a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Brief overview of using Airflow, specifically AWS Managed Workflows for Apache Airflow (MWAA), to orchestrate workloads on Databricks.</p></li>
 <li><p>Benefits: robust scheduling, dependency management, visibility, and centralized workflow management.</p></li>
@@ -131,7 +134,7 @@
 </ul>
 </section>
 <section id="core-requirements-design-considerations">
-<h1><a class="toc-backref" href="#id3" role="doc-backlink">Core Requirements &amp; Design Considerations</a><a class="headerlink" href="#core-requirements-design-considerations" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Core Requirements &amp; Design Considerations</a><a class="headerlink" href="#core-requirements-design-considerations" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>Workload Diversity</strong>: Effectively scheduling and managing:</p>
 <ul>
@@ -153,7 +156,7 @@
 </ul>
 </section>
 <section id="recommended-project-structure">
-<h1><a class="toc-backref" href="#id4" role="doc-backlink">Recommended Project Structure</a><a class="headerlink" href="#recommended-project-structure" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Recommended Project Structure</a><a class="headerlink" href="#recommended-project-structure" title="Link to this heading"></a></h2>
 <p>A well-organized project structure is crucial for maintainability and scalability.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>airflow-databricks-project/
 ├── dags/                     # Airflow DAGs
@@ -205,7 +208,7 @@
 </ul>
 </section>
 <section id="python-project-setup-with-uv">
-<h1><a class="toc-backref" href="#id5" role="doc-backlink">Python Project Setup with <code class="docutils literal notranslate"><span class="pre">uv</span></code></a><a class="headerlink" href="#python-project-setup-with-uv" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Python Project Setup with <code class="docutils literal notranslate"><span class="pre">uv</span></code></a><a class="headerlink" href="#python-project-setup-with-uv" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">uv</span></code> is a fast Python package installer and resolver.</p>
 <ul>
 <li><p><strong>Virtual Environment with ``uv``</strong>:</p>
@@ -255,7 +258,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="configuring-for-aws-mwaa">
-<h1><a class="toc-backref" href="#id6" role="doc-backlink">Configuring for AWS MWAA</a><a class="headerlink" href="#configuring-for-aws-mwaa" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Configuring for AWS MWAA</a><a class="headerlink" href="#configuring-for-aws-mwaa" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>S3 Bucket</strong>: MWAA requires an S3 bucket for DAGs, plugins, and the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file.</p></li>
 <li><p><strong>`requirements.txt` for MWAA</strong>:</p>
@@ -275,7 +278,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="scheduling-databricks-workloads">
-<h1><a class="toc-backref" href="#id7" role="doc-backlink">Scheduling Databricks Workloads</a><a class="headerlink" href="#scheduling-databricks-workloads" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Scheduling Databricks Workloads</a><a class="headerlink" href="#scheduling-databricks-workloads" title="Link to this heading"></a></h2>
 <ol class="arabic">
 <li><p><strong>Databricks Connection in Airflow</strong>:</p>
 <ul>
@@ -420,7 +423,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ol>
 </section>
 <section id="local-development-with-docker">
-<h1><a class="toc-backref" href="#id8" role="doc-backlink">Local Development with Docker</a><a class="headerlink" href="#local-development-with-docker" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Local Development with Docker</a><a class="headerlink" href="#local-development-with-docker" title="Link to this heading"></a></h2>
 <ul>
 <li><p><strong>`Dockerfile` for Airflow</strong>:</p>
 <ul>
@@ -505,7 +508,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="managing-environments-test-vs-prod">
-<h1><a class="toc-backref" href="#id9" role="doc-backlink">Managing Environments (Test vs. Prod)</a><a class="headerlink" href="#managing-environments-test-vs-prod" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Managing Environments (Test vs. Prod)</a><a class="headerlink" href="#managing-environments-test-vs-prod" title="Link to this heading"></a></h2>
 <ul>
 <li><p><strong>Airflow Variables &amp; Connections</strong>:</p>
 <ul>
@@ -537,7 +540,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="potential-tradeoffs-and-considerations">
-<h1><a class="toc-backref" href="#id10" role="doc-backlink">Potential Tradeoffs and Considerations</a><a class="headerlink" href="#potential-tradeoffs-and-considerations" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Potential Tradeoffs and Considerations</a><a class="headerlink" href="#potential-tradeoffs-and-considerations" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>Monorepo vs. Polyrepo</strong>:</p>
 <ul>
@@ -609,7 +612,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="other-common-concerns">
-<h1><a class="toc-backref" href="#id11" role="doc-backlink">Other Common Concerns</a><a class="headerlink" href="#other-common-concerns" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Other Common Concerns</a><a class="headerlink" href="#other-common-concerns" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>Security</strong>:</p>
 <ul>
@@ -643,7 +646,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="conclusion">
-<h1><a class="toc-backref" href="#id12" role="doc-backlink">Conclusion</a><a class="headerlink" href="#conclusion" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Conclusion</a><a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Recap of key elements: structured project (based on <cite>clouddatastack/aws-airflow-databricks</cite>), <code class="docutils literal notranslate"><span class="pre">uv</span></code> for dependencies, Docker for local dev, MWAA for deployment, robust Databricks integration.</p></li>
 <li><p>Emphasis on the importance of a well-thought-out project structure and operational practices from the start.</p></li>
@@ -651,7 +654,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 </ul>
 </section>
 <section id="references">
-<h1><a class="toc-backref" href="#id13" role="doc-backlink">References</a><a class="headerlink" href="#references" title="Link to this heading"></a></h1>
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">References</a><a class="headerlink" href="#references" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Template Project: <a class="reference external" href="https://github.com/clouddatastack/aws-airflow-databricks">clouddatastack/aws-airflow-databricks</a></p></li>
 <li><p><a class="reference external" href="https://docs.aws.amazon.com/mwaa/latest/userguide/">AWS Managed Workflows for Apache Airflow (MWAA) Documentation</a></p></li>
@@ -660,6 +663,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>sync<span class="w"> </span
 <li><p><a class="reference external" href="https://docs.getdbt.com/">dbt Documentation</a></p></li>
 <li><p><a class="reference external" href="https://docs.databricks.com/">Databricks Documentation</a></p></li>
 </ul>
+</section>
 </section>
 
 
