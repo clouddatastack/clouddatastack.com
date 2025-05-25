@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="4.1 Schedule Workloads" href="04_orchestration/04_01_schedule_workloads.html" />
-    <link rel="prev" title="3.4. Optimize compute with DataFusion Comet" href="03_compute/03_04_optimize_compute_with_datafusion_comet.html" /> 
+    <link rel="next" title="Introduction" href="04_orchestration/04_01_schedule_with_airflow.html" />
+    <link rel="prev" title="3.4. Optimize compute with DataFusion Comet" href="03_compute/03_03_optimize_compute_with_datafusion_comet.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,8 +51,19 @@
 <li class="toctree-l1"><a class="reference internal" href="02_streaming.html">2. Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_compute.html">3. Compute and Query</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Orchestration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_workloads.html">4.1 Schedule Workloads</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_02_project_templates.html">4.2. Project Templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#core-requirements-design-considerations">Core Requirements &amp; Design Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#recommended-project-structure">Recommended Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#python-project-setup-with-uv">Python Project Setup with <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#configuring-for-aws-mwaa">Configuring for AWS MWAA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#scheduling-databricks-workloads">Scheduling Databricks Workloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#local-development-with-docker">Local Development with Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#managing-environments-test-vs-prod">Managing Environments (Test vs. Prod)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#potential-tradeoffs-and-considerations">Potential Tradeoffs and Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#other-common-concerns">Other Common Concerns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#conclusion">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#references">References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_orchestration/04_02_templatize_with_prefect.html">4.2. Templatize With Prefect</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="05_governance.html">5. Data Governance</a></li>
@@ -86,8 +97,19 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_workloads.html">4.1 Schedule Workloads</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_02_project_templates.html">4.2. Project Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#core-requirements-design-considerations">Core Requirements &amp; Design Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#recommended-project-structure">Recommended Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#python-project-setup-with-uv">Python Project Setup with <code class="docutils literal notranslate"><span class="pre">uv</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#configuring-for-aws-mwaa">Configuring for AWS MWAA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#scheduling-databricks-workloads">Scheduling Databricks Workloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#local-development-with-docker">Local Development with Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#managing-environments-test-vs-prod">Managing Environments (Test vs. Prod)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#potential-tradeoffs-and-considerations">Potential Tradeoffs and Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#other-common-concerns">Other Common Concerns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#conclusion">Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_01_schedule_with_airflow.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_orchestration/04_02_templatize_with_prefect.html">4.2. Templatize With Prefect</a></li>
 </ul>
 </div>
 </section>
