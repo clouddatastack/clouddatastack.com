@@ -46,7 +46,7 @@ Consistent naming conventions are crucial for a maintainable dbt project.
 -   **Sources and Seeds**: Prefix with `src_` and `seed_` respectively, or follow project-specific guidelines.
 -   **File Names**: Model file names should match the model names (e.g., `stg_customers.sql`).
 
-Refer to your organization's specific guidelines, such as those found in ``ka-data-airflow/docs/dbt-usage-and-best-practices/README.md`` if applicable, for detailed conventions.
+Refer to your organization's specific guidelines for detailed conventions.
 
 Using sqlfluff for SQL Linting
 ------------------------------
@@ -256,7 +256,7 @@ Lookup tables (or static tables) often contain reference data that changes infre
         3.  In dbt, define these external tables as sources in a ``sources.yml`` file.
         4.  Reference them using ``{{ source('my_external_source', 'lookup_table_name') }}``.
 
-    -   **Example (from ``prd_project.md`` context)**: For static tables, use CSV files on S3 (e.g., ``s3://ka-data-<domain>-<env>/core/static/<table_name>.csv``) and create external tables pointing to these files. The DDL for these external tables can be managed via Airflow DAGs or dbt pre-hooks.
+    -   **Example**: For static tables, use CSV files on S3 (e.g., `s3://<your-bucket>/<domain>/<env>/core/static/<table_name>.csv`) and create external tables pointing to these files. The DDL for these external tables can be managed via Airflow DAGs or dbt pre-hooks.
 
 Data Partitioning Strategies with dbt
 -------------------------------------

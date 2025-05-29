@@ -136,7 +136,7 @@
 <li><p><strong>Sources and Seeds</strong>: Prefix with <cite>src_</cite> and <cite>seed_</cite> respectively, or follow project-specific guidelines.</p></li>
 <li><p><strong>File Names</strong>: Model file names should match the model names (e.g., <cite>stg_customers.sql</cite>).</p></li>
 </ul>
-<p>Refer to your organization’s specific guidelines, such as those found in <code class="docutils literal notranslate"><span class="pre">ka-data-airflow/docs/dbt-usage-and-best-practices/README.md</span></code> if applicable, for detailed conventions.</p>
+<p>Refer to your organization’s specific guidelines for detailed conventions.</p>
 </section>
 <section id="using-sqlfluff-for-sql-linting">
 <h2>Using sqlfluff for SQL Linting<a class="headerlink" href="#using-sqlfluff-for-sql-linting" title="Link to this heading"></a></h2>
@@ -355,7 +355,7 @@ Reference them in models using <code class="docutils literal notranslate"><span 
 <li><p>Reference them using <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">source('my_external_source',</span> <span class="pre">'lookup_table_name')</span> <span class="pre">}}</span></code>.</p></li>
 </ol>
 </li>
-<li><p><strong>Example (from ``prd_project.md`` context)</strong>: For static tables, use CSV files on S3 (e.g., <code class="docutils literal notranslate"><span class="pre">s3://ka-data-&lt;domain&gt;-&lt;env&gt;/core/static/&lt;table_name&gt;.csv</span></code>) and create external tables pointing to these files. The DDL for these external tables can be managed via Airflow DAGs or dbt pre-hooks.</p></li>
+<li><p><strong>Example</strong>: For static tables, use CSV files on S3 (e.g., <cite>s3://&lt;your-bucket&gt;/&lt;domain&gt;/&lt;env&gt;/core/static/&lt;table_name&gt;.csv</cite>) and create external tables pointing to these files. The DDL for these external tables can be managed via Airflow DAGs or dbt pre-hooks.</p></li>
 </ul>
 </li>
 </ul>
