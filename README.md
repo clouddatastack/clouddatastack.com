@@ -11,3 +11,4 @@ poetry run sphinx-build -E -b html src docs
 - Add Kafka konfiguration with terraform for AWS MKS
 - Add section about algorythms an relevant data structures and design patterns
 - Maintanance of DataLake (Optimize queries, monitor usage and others)
+- Write-Audit-Publish with Slim CI
