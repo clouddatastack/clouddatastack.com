@@ -12,3 +12,5 @@ poetry run sphinx-build -E -b html src docs
 - Add section about algorythms an relevant data structures and design patterns
 - Maintanance of DataLake (Optimize queries, monitor usage and others)
 - Write-Audit-Publish with Slim CI
+- Write about Debezium
+- Write baout Prefect templitize of the projects
