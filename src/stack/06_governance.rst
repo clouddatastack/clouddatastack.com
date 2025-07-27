@@ -1,4 +1,4 @@
-5. Governance
+6. Governance
 ============================
 
 .. toctree::
