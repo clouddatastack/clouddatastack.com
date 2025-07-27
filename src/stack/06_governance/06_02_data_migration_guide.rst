@@ -1,4 +1,4 @@
-5.2. Data Migration Guide
+6.2. Data Migration Guide
 =========================
 
 Introduction
