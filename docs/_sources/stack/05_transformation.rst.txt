@@ -1,4 +1,4 @@
-5. Data Transformation
+5. Transformation
 ============================
 
 .. toctree::

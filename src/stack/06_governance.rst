@@ -1,4 +1,4 @@
-5. Data Governance
+5. Governance
 ============================
 
 .. toctree::
