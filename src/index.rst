@@ -12,8 +12,8 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    stack/01_storage
    stack/02_streaming
    stack/03_compute
-   stack/04_orchestration
-   stack/05_transformation
+   stack/04_transformation
+   stack/05_orchestration
    stack/06_governance
 
 .. raw:: html

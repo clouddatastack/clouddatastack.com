@@ -20,7 +20,9 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4. Orchestration" href="../05_orchestration.html" />
+    <link rel="prev" title="5. Transformation" href="../04_transformation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,10 +46,31 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../01_storage.html">1. Storage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../03_compute.html">3. Compute and Query</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../04_transformation.html">5. Transformation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.1. dbt Incremental Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-benefits-of-incremental-models">Key Benefits of Incremental Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-incremental-strategies">Core Incremental Strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#understanding-incremental-predicates">Understanding Incremental Predicates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partition-strategy-with-partition-by">Partition Strategy with partition_by</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-date-as-the-standard">Event Date as the Standard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schema-evolution-with-on-schema-change">Schema Evolution with on_schema_change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-retention-management">Data Retention Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#column-ordering-problem-and-solution">Column Ordering Problem and Solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complete-example-implementation">Complete Example Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#best-practices-and-recommendations">Best Practices and Recommendations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-pitfalls-and-solutions">Common Pitfalls and Solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../05_orchestration.html">4. Orchestration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../06_governance.html">6. Governance</a></li>
 </ul>
 
@@ -65,6 +88,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../04_transformation.html">5. Transformation</a></li>
       <li class="breadcrumb-item active">4.1. dbt Incremental Models</li>
       <li class="wy-breadcrumbs-aside">
       </li>
