@@ -1,4 +1,4 @@
-3.1. Queries Federation with Apache Trino
+2.1. Queries Federation with Apache Trino
 =========================================
 
 Introduction

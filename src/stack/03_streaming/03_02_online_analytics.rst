@@ -1,4 +1,4 @@
-2.2. Online Analytics
+3.2. Online Analytics
 =============================
 
 Real-time analytics systems rely on robust stream processing frameworks. This page outlines the building blocks of a modern Flink-based analytics system, focusing on Flink concepts such as configuration, state management, window operations, time semantics, event ordering, and exactly-once processing.

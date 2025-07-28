@@ -1,4 +1,4 @@
-2.1. Streaming Infrastructure
+3.1. Streaming Infrastructure
 =============================
 
 Real-time data pipelines rely on robust streaming infrastructure.  
