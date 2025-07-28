@@ -14,9 +14,10 @@ Key Features
 Setup and Configuration
 ------------------------
 
-### AWS Setup
+1. **AWS Setup**:
 
-1. **Provision an EC2 Instance**:
+   **Provision an EC2 Instance**:
+   
    - Launch an EC2 instance with a Linux AMI (e.g., Amazon Linux 2).
    - Ensure the instance has sufficient resources (e.g., 4 vCPUs, 16 GB RAM) for Trino.
    - Install Java and Trino on the instance:
@@ -30,7 +31,7 @@ Setup and Configuration
      mkdir etc
      ```
 
-2. **Configure Trino**:
+   **Configure Trino**:
    - Create a `config.properties` file in the `etc` directory to define Trino's coordinator and discovery settings:
 
      ```properties
@@ -57,7 +58,7 @@ Setup and Configuration
      bin/launcher start
      ```
 
-3. **Configure AWS S3 Connector**:
+   **Configure AWS S3 Connector**:
    - Add an S3 catalog in the `etc/catalog` directory (e.g., `s3.properties`) to enable querying data stored in S3:
 
      ```properties
@@ -70,92 +71,92 @@ Setup and Configuration
 
    - Use AWS Glue as the metastore for managing table schemas.
 
-### Kubernetes Setup
+2. **Kubernetes Setup**:
 
-1. **Deploy Trino on Kubernetes**:
+   **Deploy Trino on Kubernetes**:
    - Create a Kubernetes deployment YAML file to define the Trino pods:
 
-  ..  ```yaml
-  ..  apiVersion: apps/v1
-  ..  kind: Deployment
-  ..  metadata:
-  ..    name: trino
-  ..  spec:
-  ..      replicas: 3
-  ..      selector:
-  ..          matchLabels:
-  ..              app: trino
-  ..      template:
-  ..          metadata:
-  ..              labels:
-  ..                  app: trino
-  ..          spec:
-  ..              containers:
-  ..              - name: trino
-  ..                image: trinodb/trino:latest
-  ..                ports:
-  ..                - containerPort: 8080
-  ..                volumeMounts:
-  ..                - name: config-volume
-  ..                  mountPath: /etc/trino
-  ..              volumes:
-  ..              - name: config-volume
-  ..                configMap:
-  ..                    name: trino-config
-  ..  ```
+     .. code-block:: yaml
+
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: trino
+        spec:
+            replicas: 3
+            selector:
+                matchLabels:
+                    app: trino
+            template:
+                metadata:
+                    labels:
+                        app: trino
+                spec:
+                    containers:
+                    - name: trino
+                      image: trinodb/trino:latest
+                      ports:
+                      - containerPort: 8080
+                      volumeMounts:
+                      - name: config-volume
+                        mountPath: /etc/trino
+                    volumes:
+                    - name: config-volume
+                      configMap:
+                          name: trino-config
 
    - Create a ConfigMap for Trino configuration to manage settings centrally:
 
-  ..    ```yaml
-  ..    apiVersion: v1
-  ..    kind: ConfigMap
-  ..    metadata:
-  ..      name: trino-config
-  ..    data:
-  ..      config.properties: |
-  ..        coordinator=true
-  ..        node-scheduler.include-coordinator=true
-  ..        http-server.http.port=8080
-  ..        query.max-memory=5GB
-  ..        query.max-memory-per-node=1GB
-  ..        discovery-server.enabled=true
-  ..        discovery.uri=http://localhost:8080
-  ..      node.properties: |
-  ..        node.environment=production
-  ..        node.id=unique-node-id
-  ..        node.data-dir=/var/trino/data
-  ..    ```
+     .. code-block:: yaml
+
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: trino-config
+        data:
+          config.properties: |
+            coordinator=true
+            node-scheduler.include-coordinator=true
+            http-server.http.port=8080
+            query.max-memory=5GB
+            query.max-memory-per-node=1GB
+            discovery-server.enabled=true
+            discovery.uri=http://localhost:8080
+          node.properties: |
+            node.environment=production
+            node.id=unique-node-id
+            node.data-dir=/var/trino/data
 
    - Apply the configurations using `kubectl`:
 
-  ..    ```bash
-  ..    kubectl apply -f trino-deployment.yaml
-  ..    kubectl apply -f trino-config.yaml
-  ..    ```
+     .. code-block:: bash
 
-2. **Expose Trino Service**:
+        kubectl apply -f trino-deployment.yaml
+        kubectl apply -f trino-config.yaml
+
+   **Expose Trino Service**:
    - Create a service YAML file to expose Trino to external clients:
 
-  ..  ```yaml
-  ..  apiVersion: v1
-  ..  kind: Service
-  ..  metadata:
-  ..    name: trino-service
-  ..  spec:
-  ..      selector:
-  ..          app: trino
-  ..      ports:
-  ..      - protocol: TCP
-  ..        port: 8080
-  ..        targetPort: 8080
-  ..      type: LoadBalancer
-  ..  ```
+     .. code-block:: yaml
+
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: trino-service
+        spec:
+            selector:
+                app: trino
+            ports:
+            - protocol: TCP
+              port: 8080
+              targetPort: 8080
+            type: LoadBalancer
 
    - Apply the service configuration:
 
-  ..  ```bash
-  ..  kubectl apply -f trino-service.yaml
-  ..  ```
+     .. code-block:: bash
+
+        kubectl apply -f trino-service.yaml
 
 Best Practices
 ---------------
@@ -184,9 +185,9 @@ Best Practices
 Use Cases
 ---------
 
-### Data Lake Analytics
+1. **Data Lake Analytics**:
 
-- **Configuration**:
+   - **Configuration**:
   - Set up an S3 catalog as described in the AWS setup to query data stored in S3.
 
 - **Code Example**:
@@ -200,24 +201,24 @@ Use Cases
 
   This query counts the number of sales records for each region in the year 2025.
 
-### Cross-Database Joins
+2. **Cross-Database Joins**:
 
-- **Configuration**:
+   - **Configuration**:
   - Set up catalogs for MySQL and PostgreSQL to enable cross-database queries:
 
-    .. ```properties
-    .. # MySQL catalog (mysql.properties)
-    .. connector.name=mysql
-    .. connection-url=jdbc:mysql://mysql-host:3306
-    .. connection-user=root
-    .. connection-password=secret
+    .. code-block:: properties
 
-    .. # PostgreSQL catalog (postgresql.properties)
-    .. connector.name=postgresql
-    .. connection-url=jdbc:postgresql://postgres-host:5432
-    .. connection-user=admin
-    .. connection-password=secret
-    .. ```
+       # MySQL catalog (mysql.properties)
+       connector.name=mysql
+       connection-url=jdbc:mysql://mysql-host:3306
+       connection-user=root
+       connection-password=secret
+
+       # PostgreSQL catalog (postgresql.properties)
+       connector.name=postgresql
+       connection-url=jdbc:postgresql://postgres-host:5432
+       connection-user=admin
+       connection-password=secret
 
 - **Code Example**:
 
@@ -230,9 +231,9 @@ Use Cases
 
   This query joins user data from MySQL with order data from PostgreSQL based on the `user_id` column.
 
-### Ad-Hoc Analysis
+3. **Ad-Hoc Analysis**:
 
-- **Configuration**:
+   - **Configuration**:
   - Use Trino CLI or connect a BI tool like Tableau to Trino for interactive analysis.
 
 - **Code Example**:
