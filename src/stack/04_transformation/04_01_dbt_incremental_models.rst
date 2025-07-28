@@ -1,4 +1,4 @@
-5.1. dbt Incremental Models
+4.1. dbt Incremental Models
 ===================================
 
 Advanced strategies for implementing efficient incremental data models in dbt with Databricks.

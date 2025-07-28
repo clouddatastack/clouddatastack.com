@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4.1. dbt Incremental Models &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_storage.html">1. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_compute.html">3. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_governance.html">6. Governance</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">4.1. dbt Incremental Models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dbt-incremental-models">
+<h1>4.1. dbt Incremental Models<a class="headerlink" href="#dbt-incremental-models" title="Link to this heading"></a></h1>
+<p>Advanced strategies for implementing efficient incremental data models in dbt with Databricks.</p>
+<nav class="contents local" id="article-outline">
+<p class="topic-title">Article Outline</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#introduction" id="id1">Introduction</a></p></li>
+<li><p><a class="reference internal" href="#key-benefits-of-incremental-models" id="id2">Key Benefits of Incremental Models</a></p></li>
+<li><p><a class="reference internal" href="#core-incremental-strategies" id="id3">Core Incremental Strategies</a></p></li>
+<li><p><a class="reference internal" href="#understanding-incremental-predicates" id="id4">Understanding Incremental Predicates</a></p></li>
+<li><p><a class="reference internal" href="#partition-strategy-with-partition-by" id="id5">Partition Strategy with partition_by</a></p></li>
+<li><p><a class="reference internal" href="#event-date-as-the-standard" id="id6">Event Date as the Standard</a></p></li>
+<li><p><a class="reference internal" href="#schema-evolution-with-on-schema-change" id="id7">Schema Evolution with on_schema_change</a></p></li>
+<li><p><a class="reference internal" href="#data-retention-management" id="id8">Data Retention Management</a></p></li>
+<li><p><a class="reference internal" href="#column-ordering-problem-and-solution" id="id9">Column Ordering Problem and Solution</a></p></li>
+<li><p><a class="reference internal" href="#complete-example-implementation" id="id10">Complete Example Implementation</a></p></li>
+<li><p><a class="reference internal" href="#best-practices-and-recommendations" id="id11">Best Practices and Recommendations</a></p></li>
+<li><p><a class="reference internal" href="#common-pitfalls-and-solutions" id="id12">Common Pitfalls and Solutions</a></p></li>
+<li><p><a class="reference internal" href="#conclusion" id="id13">Conclusion</a></p></li>
+<li><p><a class="reference internal" href="#references" id="id14">References</a></p></li>
+</ul>
+</nav>
+<section id="introduction">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Introduction</a><a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>Incremental models are one of dbt’s most powerful features for handling large datasets efficiently. Instead of rebuilding entire tables on every run, incremental models only process new or changed data, dramatically reducing compute costs and execution time.</p>
+<p>This guide covers advanced strategies for implementing robust incremental models on Databricks, including:</p>
+<ul class="simple">
+<li><p>Core incremental strategies and their use cases</p></li>
+<li><p>Understanding incremental predicates and partition optimization</p></li>
+<li><p>Establishing event_date as a standard for all incremental models</p></li>
+<li><p>Managing schema changes with append_new_columns</p></li>
+<li><p>Implementing automated data retention policies</p></li>
+<li><p>Solving column ordering issues in incremental models</p></li>
+</ul>
+</section>
+<section id="key-benefits-of-incremental-models">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Key Benefits of Incremental Models</a><a class="headerlink" href="#key-benefits-of-incremental-models" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Performance</strong>: Process only new/changed records instead of full table rebuilds</p></li>
+<li><p><strong>Cost Efficiency</strong>: Significantly reduced compute costs for large datasets</p></li>
+<li><p><strong>Scalability</strong>: Handle tables with billions of records efficiently</p></li>
+<li><p><strong>Flexibility</strong>: Support various update strategies based on business needs</p></li>
+</ul>
+</section>
+<section id="core-incremental-strategies">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Core Incremental Strategies</a><a class="headerlink" href="#core-incremental-strategies" title="Link to this heading"></a></h2>
+<p>dbt supports several incremental strategies, each optimized for different use cases:</p>
+<p><strong>append (Default)</strong></p>
+<p>Simply adds new records to the target table without checking for duplicates.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        incremental_strategy=&#39;append&#39;
+    )
+}}
+
+SELECT * FROM {{ ref(&#39;raw_events&#39;) }}
+{% if is_incremental() %}
+    WHERE created_at &gt; (SELECT MAX(created_at) FROM {{ this }})
+{% endif %}
+</pre></div>
+</div>
+<p><strong>merge (Recommended)</strong></p>
+<p>Performs MERGE operations, ideal for handling updates and inserts (upserts).</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        incremental_strategy=&#39;merge&#39;,
+        unique_key=&#39;user_id&#39;
+    )
+}}
+
+SELECT user_id, email, updated_at
+FROM {{ ref(&#39;raw_users&#39;) }}
+{% if is_incremental() %}
+    WHERE updated_at &gt; (SELECT MAX(updated_at) FROM {{ this }})
+{% endif %}
+</pre></div>
+</div>
+<p><strong>replace_where (Databricks Optimized)</strong></p>
+<p>Replaces data based on a predicate condition, excellent for time-partitioned data.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=[&quot;event_date = &quot; ~ event_date()]
+    )
+}}
+</pre></div>
+</div>
+</section>
+<section id="understanding-incremental-predicates">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Understanding Incremental Predicates</a><a class="headerlink" href="#understanding-incremental-predicates" title="Link to this heading"></a></h2>
+<p>Incremental predicates define which partitions of data to replace or merge. They’re crucial for performance optimization and data consistency.</p>
+<p><strong>Basic Predicate Usage</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=&quot;event_date = &#39;{{ var(&#39;event_date&#39;) }}&#39;&quot;
+    )
+}}
+</pre></div>
+</div>
+<p><strong>Dynamic Predicate with Macros</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=[&quot;event_date = &quot; ~ event_date()]
+    )
+}}
+</pre></div>
+</div>
+<p><strong>Multiple Predicates</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=[
+            &quot;event_date = &quot; ~ event_date(),
+            &quot;region = &#39;&quot; ~ var(&#39;region&#39;) ~ &quot;&#39;&quot;
+        ]
+    )
+}}
+</pre></div>
+</div>
+</section>
+<section id="partition-strategy-with-partition-by">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Partition Strategy with partition_by</a><a class="headerlink" href="#partition-strategy-with-partition-by" title="Link to this heading"></a></h2>
+<p>Proper partitioning is essential for query performance and cost optimization in Databricks.</p>
+<p><strong>Date-based Partitioning (Recommended)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        partition_by=[&#39;event_date&#39;],
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=[&quot;event_date = &quot; ~ event_date()]
+    )
+}}
+</pre></div>
+</div>
+<p><strong>Multi-column Partitioning</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        partition_by=[&#39;event_date&#39;, &#39;region&#39;],
+        incremental_strategy=&#39;replace_where&#39;
+    )
+}}
+</pre></div>
+</div>
+</section>
+<section id="event-date-as-the-standard">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Event Date as the Standard</a><a class="headerlink" href="#event-date-as-the-standard" title="Link to this heading"></a></h2>
+<p>Establishing <code class="docutils literal notranslate"><span class="pre">event_date</span></code> as a consistent column across all incremental models provides numerous benefits:</p>
+<p><strong>Benefits of event_date Standardization</strong></p>
+<ul class="simple">
+<li><p><strong>Consistent Partitioning</strong>: All tables partition on the same column</p></li>
+<li><p><strong>Simplified Joins</strong>: Easy to join tables across different time periods</p></li>
+<li><p><strong>Uniform Retention</strong>: Apply the same retention policies across all models</p></li>
+<li><p><strong>Query Optimization</strong>: Databricks can optimize queries knowing the partition structure</p></li>
+</ul>
+<p><strong>Implementation Pattern</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        on_schema_change=&#39;append_new_columns&#39;,
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=[&quot;event_date = &quot; ~ event_date()],
+        post_hook=&quot;{{ data_retention(90) }}&quot;,
+        partition_by=[&#39;event_date&#39;]
+    )
+}}
+
+SELECT
+    {{ event_date() }} AS event_date,
+    user_id,
+    action_type,
+    created_at
+FROM {{ ref(&#39;raw_events&#39;) }}
+{% if is_incremental() %}
+    WHERE DATE(created_at) = {{ event_date() }}
+{% endif %}
+</pre></div>
+</div>
+</section>
+<section id="schema-evolution-with-on-schema-change">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Schema Evolution with on_schema_change</a><a class="headerlink" href="#schema-evolution-with-on-schema-change" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">on_schema_change='append_new_columns'</span></code> setting allows tables to evolve gracefully when new columns are added to source data.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        on_schema_change=&#39;append_new_columns&#39;
+    )
+}}
+</pre></div>
+</div>
+<p><strong>Benefits:</strong>
+* Automatically adds new columns from source data
+* Prevents model failures when schema changes occur
+* Maintains backward compatibility with existing data</p>
+<p><strong>Considerations:</strong>
+* New columns will be NULL for existing records
+* Column type changes may still cause failures
+* Always test schema changes in development first</p>
+</section>
+<section id="data-retention-management">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Data Retention Management</a><a class="headerlink" href="#data-retention-management" title="Link to this heading"></a></h2>
+<p>Large incremental models require automated data retention to manage storage costs and comply with data governance policies.</p>
+<p><strong>Custom Data Retention Macro</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>{% macro data_retention(days_to_keep=365, date_col=&#39;event_date&#39;) %}
+<span class="linenos">2</span>    DELETE FROM {{ this }}
+<span class="linenos">3</span>    WHERE {{ date_col }} &lt; DATE_ADD({{ event_date() }}, -{{ days_to_keep }})
+<span class="linenos">4</span>    AND {{ event_date() }}  &lt;= CURRENT_DATE()
+<span class="linenos">5</span>{%- endmacro %} 
+</pre></div>
+</div>
+<p><strong>Usage in Incremental Models</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        post_hook=&quot;{{ data_retention(90) }}&quot;
+    )
+}}
+</pre></div>
+</div>
+<p><strong>Retention Configuration Examples</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- Retain 30 days of data
+post_hook=&quot;{{ data_retention(30) }}&quot;
+
+-- Retain 1 year with custom date column
+post_hook=&quot;{{ data_retention(365, &#39;transaction_date&#39;) }}&quot;
+
+-- Retain 90 days (default)
+post_hook=&quot;{{ data_retention() }}&quot;
+</pre></div>
+</div>
+</section>
+<section id="column-ordering-problem-and-solution">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Column Ordering Problem and Solution</a><a class="headerlink" href="#column-ordering-problem-and-solution" title="Link to this heading"></a></h2>
+<p>One of the most challenging issues with incremental models is maintaining consistent column ordering between the source data and target table. When Databricks creates a table, the column order matters for incremental operations. If your dbt model’s SELECT statement has columns in a different order than the target table’s schema, incremental runs will fail with type errors.</p>
+<p>The issue occurs because the <code class="docutils literal notranslate"><span class="pre">SHOW</span> <span class="pre">CREATE</span> <span class="pre">TABLE</span></code> command reveals the actual column order in Databricks, and if your SQL SELECT has a different order, incremental operations fail. This commonly happens when running incremental models multiple times or when pre-commit hooks (like sqlfluff) reorder your SQL columns automatically.</p>
+<p><strong>Solution: Custom Materialization</strong></p>
+<p>The most robust solution is to create a custom materialization that handles column ordering automatically:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>{% macro databricks__get_incremental_replace_where_sql(arg_dict) %}
+<span class="linenos"> 2</span>    {#
+<span class="linenos"> 3</span>      This is the definitive override for the `replace_where` strategy.
+<span class="linenos"> 4</span>      It fixes the column-order problem by using the `SELECT` form of the
+<span class="linenos"> 5</span>      `INSERT ... REPLACE WHERE` command, which allows us to explicitly
+<span class="linenos"> 6</span>      order the columns to match the target table.
+<span class="linenos"> 7</span>    #}
+<span class="linenos"> 8</span>    {%- set target_relation = arg_dict[&#39;target_relation&#39;] -%}
+<span class="linenos"> 9</span>    {%- set temp_relation = arg_dict[&#39;temp_relation&#39;] -%}
+<span class="linenos">10</span>    {%- set predicates = arg_dict[&#39;incremental_predicates&#39;] -%}
+<span class="linenos">11</span>
+<span class="linenos">12</span>    {# Get the ordered list of columns from the target table #}
+<span class="linenos">13</span>    {%- set dest_columns = adapter.get_columns_in_relation(target_relation) -%}
+<span class="linenos">14</span>    {%- set dest_cols_csv = dest_columns | map(attribute=&#39;name&#39;) | join(&#39;, &#39;) -%}
+<span class="linenos">15</span>
+<span class="linenos">16</span>    INSERT INTO {{ target_relation }}
+<span class="linenos">17</span>    REPLACE WHERE
+<span class="linenos">18</span>        {# This robust logic handles both string and list predicates #}
+<span class="linenos">19</span>        {% if predicates is sequence and predicates is not string %}
+<span class="linenos">20</span>            {{ predicates | join(&#39; AND &#39;) }}
+<span class="linenos">21</span>        {% else %}
+<span class="linenos">22</span>            {{ predicates }}
+<span class="linenos">23</span>        {% endif %}
+<span class="linenos">24</span>    -- Use a SELECT instead of original &#39;TABLE {{ temp_relation.render() }}&#39;
+<span class="linenos">25</span>    SELECT {{ dest_cols_csv }} FROM {{ temp_relation.render() }}
+<span class="linenos">26</span>
+<span class="linenos">27</span>{% endmacro %} 
+</pre></div>
+</div>
+<p><strong>Best Practice: Match YAML Schema Order</strong></p>
+<p>The safest approach is to ensure your model’s YAML schema matches Databricks’ table creation order. This prevents the column ordering issue from occurring in the first place and makes your models more predictable and maintainable.</p>
+</section>
+<section id="complete-example-implementation">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Complete Example Implementation</a><a class="headerlink" href="#complete-example-implementation" title="Link to this heading"></a></h2>
+<p><strong>Production-ready Incremental Model</strong></p>
+<p>Here’s a complete example that incorporates all the best practices discussed:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{{
+    config(
+        materialized=&#39;incremental&#39;,
+        on_schema_change=&#39;append_new_columns&#39;,
+        incremental_strategy=&#39;replace_where&#39;,
+        incremental_predicates=[&quot;event_date = &quot; ~ event_date()],
+        post_hook=&quot;{{ data_retention(90) }}&quot;,
+        partition_by=[&#39;event_date&#39;]
+    )
+}}
+
+SELECT
+    {{ event_date() }} AS event_date,
+    user_id,
+    session_id,
+    event_type,
+    properties,
+    created_at
+FROM {{ ref(&#39;raw_user_events&#39;) }}
+{% if is_incremental() %}
+    WHERE DATE(created_at) = {{ event_date() }}
+{% endif %}
+</pre></div>
+</div>
+<p><strong>Corresponding Schema Definition</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_events_incremental</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;User</span><span class="nv"> </span><span class="s">events</span><span class="nv"> </span><span class="s">processed</span><span class="nv"> </span><span class="s">incrementally</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">automated</span><span class="nv"> </span><span class="s">retention&quot;</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Partition</span><span class="nv"> </span><span class="s">date</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">event&quot;</span>
+<span class="w">        </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">        </span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_null</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Unique</span><span class="nv"> </span><span class="s">identifier</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user&quot;</span>
+<span class="w">        </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">        </span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_null</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Session</span><span class="nv"> </span><span class="s">identifier&quot;</span>
+<span class="w">        </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_type</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Type</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">event&quot;</span>
+<span class="w">        </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">properties</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Event</span><span class="nv"> </span><span class="s">properties</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">JSON&quot;</span>
+<span class="w">        </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">created_at</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Original</span><span class="nv"> </span><span class="s">event</span><span class="nv"> </span><span class="s">timestamp&quot;</span>
+<span class="w">        </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+</pre></div>
+</div>
+</section>
+<section id="best-practices-and-recommendations">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Best Practices and Recommendations</a><a class="headerlink" href="#best-practices-and-recommendations" title="Link to this heading"></a></h2>
+<p><strong>Performance Optimization</strong></p>
+<ul class="simple">
+<li><p>Always use <code class="docutils literal notranslate"><span class="pre">event_date</span></code> partitioning for time-series data</p></li>
+<li><p>Choose appropriate incremental strategies based on data patterns</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">replace_where</span></code> for event data, <code class="docutils literal notranslate"><span class="pre">merge</span></code> for dimension tables</p></li>
+<li><p>Implement proper indexing on unique_key columns</p></li>
+</ul>
+<p><strong>Data Quality</strong></p>
+<ul class="simple">
+<li><p>Always test incremental logic with <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">build</span> <span class="pre">--full-refresh</span></code></p></li>
+<li><p>Implement data quality tests on incremental models</p></li>
+<li><p>Monitor for duplicate records when using append strategy</p></li>
+<li><p>Validate that incremental predicates match partition keys</p></li>
+</ul>
+<p><strong>Operational Excellence</strong></p>
+<ul class="simple">
+<li><p>Standardize on <code class="docutils literal notranslate"><span class="pre">event_date</span></code> across all incremental models</p></li>
+<li><p>Implement automated data retention policies</p></li>
+<li><p>Use consistent naming conventions for incremental models</p></li>
+<li><p>Document incremental strategies in model descriptions</p></li>
+</ul>
+<p><strong>Cost Management</strong></p>
+<ul class="simple">
+<li><p>Right-size partitions to avoid small file problems</p></li>
+<li><p>Use appropriate retention periods to manage storage costs</p></li>
+<li><p>Monitor incremental model performance and adjust strategies</p></li>
+<li><p>Consider using <code class="docutils literal notranslate"><span class="pre">insert_overwrite</span></code> for full partition refreshes</p></li>
+</ul>
+</section>
+<section id="common-pitfalls-and-solutions">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Common Pitfalls and Solutions</a><a class="headerlink" href="#common-pitfalls-and-solutions" title="Link to this heading"></a></h2>
+<p><strong>Small Files Problem</strong></p>
+<p>Incremental models can create many small files, impacting performance. Use <code class="docutils literal notranslate"><span class="pre">optimize</span></code> and <code class="docutils literal notranslate"><span class="pre">vacuum</span></code> operations regularly:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>post_hook=[
+    &quot;OPTIMIZE {{ this }}&quot;,
+    &quot;{{ data_retention(90) }}&quot;,
+    &quot;VACUUM {{ this }} RETAIN 168 HOURS&quot;
+]
+</pre></div>
+</div>
+<p><strong>Inconsistent Data Types</strong></p>
+<p>Schema changes can cause type mismatches in incremental runs. Use strict schema definitions and test changes thoroughly:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">    </span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_null</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">    </span><span class="nt">data_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decimal(10,2)</span>
+</pre></div>
+</div>
+<p><strong>Partition Pruning Issues</strong></p>
+<p>Queries scan too many partitions due to improper predicate pushdown. Ensure partition columns are used in WHERE clauses:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{% if is_incremental() %}
+    WHERE event_date = {{ event_date() }}  -- Ensures partition pruning
+{% endif %}
+</pre></div>
+</div>
+</section>
+<section id="conclusion">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Conclusion</a><a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>Incremental models are essential for building scalable data pipelines in dbt. By following these patterns and best practices:</p>
+<ul class="simple">
+<li><p>Use consistent <code class="docutils literal notranslate"><span class="pre">event_date</span></code> partitioning across all models</p></li>
+<li><p>Implement automated data retention policies</p></li>
+<li><p>Choose appropriate incremental strategies for your use cases</p></li>
+<li><p>Solve column ordering issues with custom materializations</p></li>
+<li><p>Monitor and optimize performance regularly</p></li>
+</ul>
+<p>These strategies will help you build robust, efficient, and maintainable incremental models that scale with your data growth while controlling costs and maintaining high performance.</p>
+</section>
+<section id="references">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">References</a><a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.getdbt.com/docs/build/incremental-models">dbt Incremental Models Documentation</a></p></li>
+<li><p><a class="reference external" href="https://docs.databricks.com/delta/index.html">Databricks Delta Lake Documentation</a></p></li>
+<li><p><a class="reference external" href="https://docs.getdbt.com/reference/warehouse-setups/databricks-setup">dbt Databricks Adapter Documentation</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

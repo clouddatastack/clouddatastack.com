@@ -5,4 +5,4 @@
    :maxdepth: 1
    :caption: Contents:
 
-   05_transformation/05_01_dbt_incremental_models
+   04_transformation/04_01_dbt_incremental_models
