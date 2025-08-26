@@ -1,4 +1,4 @@
-2.1. Extraction from Databases
+1.1. Extraction from Databases
 ==============================
 
 This article explains how to extract data from various databases into a centralized data lake using Debizium and Apache Kafka. We will cover the architecture, setup, and best practices for implementing a robust data extraction pipeline.

@@ -1,4 +1,4 @@
-2.1. Extraction from Google Sheets
+1.1. Extraction from Google Sheets
 ==================================
 
 This article explains how to extract tables from Google Sheets to AWS S3 with Apache Airflow. We start with a simple approach for small tables, then scale up as your data grows. Along the way, we cover the 10M cells limit, secrets/configuration, code examples, and a design that stays robust as requirements evolve.
