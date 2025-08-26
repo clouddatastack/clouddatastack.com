@@ -1,4 +1,4 @@
-7. AI Workflows
+8. AI Workflows
 ============================
 
 .. toctree::
