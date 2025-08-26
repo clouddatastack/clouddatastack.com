@@ -58,6 +58,7 @@ Setup and secrets
 	- S3 bucket and prefix (e.g., ``s3://your-bucket/raw/google_sheets/<sheet>/``).
 
 Approach A — Simple JSON (best for small tables)
+------------------------------------------------
 This uses ``GoogleApiToS3Operator`` to call ``spreadsheets.values.get`` and store the response JSON in S3.
 
 .. literalinclude:: code/dags/gsheet_to_s3_basic.py
