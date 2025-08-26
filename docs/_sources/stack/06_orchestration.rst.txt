@@ -5,4 +5,4 @@
    :maxdepth: 1
    :caption: Contents:
 
-   06_orchestration/06_01_schedule_with_airflow.rst
+   06_orchestration/06_01_orchestration_with_airflow.rst
