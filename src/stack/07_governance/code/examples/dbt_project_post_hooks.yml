@@ -1,0 +1,21 @@
+models:
+  my_project:
+    +post-hook:
+      - "{{ set_gdpr_compliance_tag() }}"
+      - "{{ set_data_retention_tag() }}"
+
+    stage:
+      +schema: stage
+      +post-hook:
+        - "{{ set_gdpr_compliance_tag() }}"
+        - "{{ set_data_retention_tag() }}"
+    core:
+      +schema: core
+      +post-hook:
+        - "{{ set_gdpr_compliance_tag() }}"
+        - "{{ set_data_retention_tag() }}"
+    report:
+      +schema: report
+      +post-hook:
+        - "{{ set_gdpr_compliance_tag() }}"
+        - "{{ set_data_retention_tag() }}"

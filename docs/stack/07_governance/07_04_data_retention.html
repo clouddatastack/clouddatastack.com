@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7.4. Data Retention &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="7. AI Workflows" href="../08_ai_workflows.html" />
+    <link rel="prev" title="7.3. GDPR Compliance with dbt" href="07_03_gdpr_compliance.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../07_governance.html">7. Governance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="07_01_audit_guide.html">7.1. Audit Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_02_data_migration_guide.html">7.2. Data Migration Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_03_gdpr_compliance.html">7.3. GDPR Compliance with dbt</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.4. Data Retention</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-you-implement">What you implement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-incremental-model-with-retention">Example: incremental model with retention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#behavior-and-policy-notes">Behavior and policy notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../08_ai_workflows.html">7. AI Workflows</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../07_governance.html">7. Governance</a></li>
+      <li class="breadcrumb-item active">7.4. Data Retention</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-retention">
+<h1>7.4. Data Retention<a class="headerlink" href="#data-retention" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This article outlines a practical way to track and enforce data retention in a dbt project. It uses model <code class="docutils literal notranslate"><span class="pre">meta</span></code> to declare intended retention (for example, <code class="docutils literal notranslate"><span class="pre">90d</span></code>, <code class="docutils literal notranslate"><span class="pre">2y</span></code>, <code class="docutils literal notranslate"><span class="pre">permanent</span></code>), a post-hook macro to stamp warehouse-level tags, and an optional housekeeping macro to delete old rows by date.</p>
+</section>
+<section id="what-you-implement">
+<h2>What you implement<a class="headerlink" href="#what-you-implement" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>A macro to set a table tag <code class="docutils literal notranslate"><span class="pre">retention=&lt;value&gt;</span></code> based on model <code class="docutils literal notranslate"><span class="pre">meta</span></code> or schema defaults.</p></li>
+<li><p>A simple housekeeping macro <code class="docutils literal notranslate"><span class="pre">data_retention(days_to_keep,</span> <span class="pre">date_col)</span></code> that deletes rows older than N days.</p></li>
+<li><p>YAML examples showing how to declare retention in model <code class="docutils literal notranslate"><span class="pre">meta</span></code>.</p></li>
+</ul>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Add the macros to your project:</p>
+<blockquote>
+<div><div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic data retention tagging macro for dbt</span>
+<span class="x">-- Applies a table tag `retention` with value determined by model meta or default policy.</span>
+<span class="x">-- Adjust ALTER syntax to your target warehouse if needed.</span>
+
+<span class="cp">{%</span> <span class="k">macro</span> <span class="nv">set_data_retention_tag</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">execute</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="c">{# Read optional model-level override, e.g. meta: { retention: &quot;90d&quot; | &quot;2y&quot; | &quot;permanent&quot; } #}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">retention_meta</span> <span class="o">=</span> <span class="nv">model.meta.get</span><span class="o">(</span><span class="s1">&#39;retention&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">        </span><span class="c">{# Simple defaults by schema name; adapt to your environment/policies #}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">schema_lower</span> <span class="o">=</span> <span class="nv">this.schema</span> <span class="o">|</span> <span class="nf">lower</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">schema_lower</span> <span class="o">==</span> <span class="s1">&#39;stage&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">default_retention</span> <span class="o">=</span> <span class="s1">&#39;2y&#39;</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">elif</span> <span class="nv">schema_lower</span> <span class="o">==</span> <span class="s1">&#39;core&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">default_retention</span> <span class="o">=</span> <span class="s1">&#39;3y&#39;</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">elif</span> <span class="nv">schema_lower</span> <span class="o">==</span> <span class="s1">&#39;report&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">default_retention</span> <span class="o">=</span> <span class="s1">&#39;5y&#39;</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">default_retention</span> <span class="o">=</span> <span class="s1">&#39;permanent&#39;</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">retention_meta</span> <span class="k">is</span> <span class="nf">string</span> <span class="k">and</span> <span class="nv">retention_meta</span><span class="o">|</span><span class="nf">length</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">tag_value</span> <span class="o">=</span> <span class="nv">retention_meta</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">tag_value</span> <span class="o">=</span> <span class="nv">default_retention</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+
+<span class="x">        </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">tag_sql</span> <span class="cp">%}</span>
+<span class="x">            ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;retention&#39; = &#39;</span><span class="cp">{{</span> <span class="nv">tag_value</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">tag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">caption<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Macro: set_data_retention_tag</p>
+</dd>
+</dl>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Housekeeping macro to delete rows older than N days</span>
+<span class="x">-- Usage: post_hook = &quot;</span><span class="cp">{{</span> <span class="nv">data_retention</span><span class="o">(</span><span class="m">90</span><span class="o">,</span> <span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;</span>
+
+<span class="cp">{%</span> <span class="k">macro</span> <span class="nv">data_retention</span><span class="o">(</span><span class="nv">days_to_keep</span><span class="o">=</span><span class="m">365</span><span class="o">,</span> <span class="nv">date_col</span><span class="o">=</span><span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">    DELETE FROM </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">    WHERE </span><span class="cp">{{</span> <span class="nv">date_col</span> <span class="cp">}}</span><span class="x"> &lt; DATE_ADD(</span><span class="cp">{{</span> <span class="nv">event_date</span><span class="o">()</span> <span class="cp">}}</span><span class="x">, -</span><span class="cp">{{</span> <span class="nv">days_to_keep</span> <span class="cp">}}</span><span class="x">)</span>
+<span class="x">      AND </span><span class="cp">{{</span> <span class="nv">event_date</span><span class="o">()</span> <span class="cp">}}</span><span class="x"> &lt;= </span><span class="cp">{{</span> <span class="nv">current_date</span><span class="o">()</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">caption<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Macro: data_retention</p>
+</dd>
+</dl>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Small helpers to make examples portable across warehouses</span>
+
+<span class="cp">{%</span> <span class="k">macro</span> <span class="nv">event_date</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">var</span><span class="o">(</span><span class="s1">&#39;event_date&#39;</span><span class="o">,</span> <span class="s1">&#39;CURRENT_DATE()&#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">macro</span> <span class="nv">current_date</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">    CURRENT_DATE()</span>
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">caption<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Helper macros for dates</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Declare retention in your model YAML where needed:</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Example YAML with model-level retention</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_events_monthly</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monthly user engagement events used for activity analytics.</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">is_gdpr_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400d</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Anonymized user identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">gdpr_column_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_identifier</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Analytics session identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">is_gdpr_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Logical partition/event date</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_type</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type of event</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advertising_campaigns</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Campaigns table retained permanently for financial audit.</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">permanent</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">campaign_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Campaign identifier</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seller_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Seller identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">gdpr_column_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">business_identifier</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Add post-hooks so the tag macro runs for the relevant models. You can set this at the <code class="docutils literal notranslate"><span class="pre">dbt_project.yml</span></code> folder level or per model via <code class="docutils literal notranslate"><span class="pre">config(post_hook=...)</span></code>.</p></li>
+</ol>
+</section>
+<section id="example-incremental-model-with-retention">
+<h2>Example: incremental model with retention<a class="headerlink" href="#example-incremental-model-with-retention" title="Link to this heading"></a></h2>
+<p>The snippet below shows an incremental model using <code class="docutils literal notranslate"><span class="pre">replace_where</span></code> and a <code class="docutils literal notranslate"><span class="pre">post_hook</span></code> to delete rows older than 90 days:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Incremental model using data_retention</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{{</span>
+    <span class="nv">config</span><span class="o">(</span>
+        <span class="nv">materialized</span><span class="o">=</span><span class="s1">&#39;incremental&#39;</span><span class="o">,</span>
+        <span class="nv">on_schema_change</span><span class="o">=</span><span class="s1">&#39;append_new_columns&#39;</span><span class="o">,</span>
+        <span class="nv">incremental_strategy</span><span class="o">=</span><span class="s1">&#39;replace_where&#39;</span><span class="o">,</span>
+        <span class="nv">incremental_predicates</span> <span class="o">=</span> <span class="s2">&quot;event_date = &quot;</span> <span class="o">~</span> <span class="nv">event_date</span><span class="o">(),</span>
+        <span class="nv">post_hook</span> <span class="o">=</span> <span class="s2">&quot;{{ data_retention(90, &#39;event_date&#39;) }}&quot;</span>
+    <span class="o">)</span>
+<span class="cp">}}</span>
+
+<span class="x">select</span>
+<span class="x">  user_id,</span>
+<span class="x">  session_id,</span>
+<span class="x">  event_date,</span>
+<span class="x">  event_type</span>
+<span class="x">from </span><span class="cp">{{</span> <span class="nv">ref</span><span class="o">(</span><span class="s1">&#39;user_events_monthly_source&#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_incremental</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">where event_date = </span><span class="cp">{{</span> <span class="nv">event_date</span><span class="o">()</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="behavior-and-policy-notes">
+<h2>Behavior and policy notes<a class="headerlink" href="#behavior-and-policy-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>The tag macro does not enforce deletion by itself; it documents intent at the table level for governance and discovery.</p></li>
+<li><p>The housekeeping macro issues a <code class="docutils literal notranslate"><span class="pre">DELETE</span></code> based on a date column and the current date helpers. Adjust for your warehouse functions if needed.</p></li>
+<li><p>Choose safe execution patterns: for large tables, prefer partition filters and limit delete frequency to off-peak hours.</p></li>
+<li><p>Defaults by schema are just examples; adapt them to your organization’s policies.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

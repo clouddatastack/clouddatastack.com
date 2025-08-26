@@ -1,0 +1,37 @@
+{
+  "name": "postgres-source-generic",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+
+    "database.hostname": "<RDS_OR_SELF_HOSTED_PG_HOST>",
+    "database.port": "5432",
+    "database.user": "<REPLICATION_USER>",
+    "database.password": "<REPLICATION_PASSWORD>",
+    "database.dbname": "<DATABASE_NAME>",
+
+    "database.server.name": "pg",  
+    "schema.include.list": "<OPTIONAL_SCHEMA_INCLUDE_LIST>",
+    "table.include.list": "<OPTIONAL_TABLE_INCLUDE_LIST>",
+
+    "plugin.name": "pgoutput",
+    "slot.name": "debezium_slot_generic",
+
+    "tombstones.on.delete": "false",
+    "include.schema.changes": "true",
+
+    "decimal.handling.mode": "string",
+    "time.precision.mode": "adaptive_time_microseconds",
+
+    "snapshot.mode": "initial",
+    "snapshot.fetch.size": "10240",
+
+    "topic.creation.enable": "true",
+    "topic.prefix": "<TOPIC_PREFIX>",
+
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "true",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "true"
+  }
+}

@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: user_events_monthly
+    description: Monthly user engagement events used for activity analytics.
+    meta:
+      is_gdpr_model: true
+      retention: 400d
+    columns:
+      - name: user_id
+        description: Anonymized user identifier
+        meta:
+          gdpr_column_type: user_identifier
+      - name: session_id
+        description: Analytics session identifier
+        meta:
+          is_gdpr_column: true
+      - name: event_date
+        description: Logical partition/event date
+      - name: event_type
+        description: Type of event
+
+  - name: advertising_campaigns
+    description: Campaigns table retained permanently for financial audit.
+    meta:
+      retention: permanent
+    columns:
+      - name: campaign_id
+        description: Campaign identifier
+      - name: seller_id
+        description: Seller identifier
+        meta:
+          gdpr_column_type: business_identifier

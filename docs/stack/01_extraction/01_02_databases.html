@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.1. Extraction from Databases &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="2. Streaming" href="../02_streaming.html" />
+    <link rel="prev" title="2.1. Extraction from Google Sheets" href="01_01_google_sheets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../01_extraction.html">1. Extraction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_01_google_sheets.html">2.1. Extraction from Google Sheets</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Extraction from Databases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#architecture">Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-debezium-postgresql-on-aws">Setup (Debezium + PostgreSQL on AWS)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rds-specifics">RDS specifics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debezium-postgres-connector-generic-config">Debezium Postgres connector (generic config)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#posting-the-connector-to-kafka-connect">Posting the connector to Kafka Connect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#s3-sink-connector-generic-config">S3 sink connector (generic config)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#monitoring-and-operations">Monitoring and operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-pitfalls">Limitations and pitfalls</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07_governance.html">7. Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08_ai_workflows.html">7. AI Workflows</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../01_extraction.html">1. Extraction</a></li>
+      <li class="breadcrumb-item active">2.1. Extraction from Databases</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="extraction-from-databases">
+<h1>2.1. Extraction from Databases<a class="headerlink" href="#extraction-from-databases" title="Link to this heading"></a></h1>
+<p>This article explains how to extract data from various databases into a centralized data lake using Debizium and Apache Kafka. We will cover the architecture, setup, and best practices for implementing a robust data extraction pipeline.</p>
+<nav class="contents local" id="article-outline">
+<p class="topic-title">Article Outline</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#architecture" id="id2">Architecture</a></p></li>
+<li><p><a class="reference internal" href="#setup-debezium-postgresql-on-aws" id="id3">Setup (Debezium + PostgreSQL on AWS)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#prerequisites" id="id4">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#rds-specifics" id="id5">RDS specifics</a></p></li>
+<li><p><a class="reference internal" href="#debezium-postgres-connector-generic-config" id="id6">Debezium Postgres connector (generic config)</a></p></li>
+<li><p><a class="reference internal" href="#posting-the-connector-to-kafka-connect" id="id7">Posting the connector to Kafka Connect</a></p></li>
+<li><p><a class="reference internal" href="#s3-sink-connector-generic-config" id="id8">S3 sink connector (generic config)</a></p></li>
+<li><p><a class="reference internal" href="#monitoring-and-operations" id="id9">Monitoring and operations</a></p></li>
+<li><p><a class="reference internal" href="#limitations-and-pitfalls" id="id10">Limitations and pitfalls</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#best-practices" id="id11">Best Practices</a></p></li>
+<li><p><a class="reference internal" href="#conclusion" id="id12">Conclusion</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Many organizations rely on databases for their operational data, but extracting that data for analytics can be challenging. Debizium is an open-source tool that simplifies change data capture (CDC) from databases, allowing you to stream changes in real-time to a data lake or other downstream systems. This article focuses on using Debizium with Apache Kafka to extract data from multiple databases and load it into a centralized data lake.</p>
+</section>
+<section id="architecture">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Architecture</a><a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
+<p>The architecture for extracting data from databases with Debizium typically involves the following components:</p>
+<ol class="arabic simple">
+<li><p><strong>Debizium Connectors</strong>: These connectors are responsible for capturing changes from the source databases (e.g., MySQL, PostgreSQL) and publishing them to Kafka topics.</p></li>
+<li><p><strong>Apache Kafka</strong>: Kafka serves as the central messaging system, allowing you to decouple the data extraction process from the data loading process.</p></li>
+<li><p><strong>Kafka Connect</strong>: This component is used to move data between Kafka and other systems, such as your data lake (e.g., AWS S3, Google Cloud Storage).</p></li>
+<li><p><strong>Data Lake</strong>: The final destination for the extracted data, where it can be stored, processed, and analyzed.</p></li>
+</ol>
+</section>
+<section id="setup-debezium-postgresql-on-aws">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Setup (Debezium + PostgreSQL on AWS)</a><a class="headerlink" href="#setup-debezium-postgresql-on-aws" title="Link to this heading"></a></h2>
+<p>This section shows a practical setup for CDC from PostgreSQL (Amazon RDS or self-managed on EC2) into Kafka via Debezium, and then to S3 via a sink.</p>
+<section id="prerequisites">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<ul>
+<li><p>A running Kafka cluster and Kafka Connect (can be on EC2, EKS, or a managed service). Ensure network access from Connect to Postgres and S3.</p></li>
+<li><p>PostgreSQL with logical replication enabled (RDS parameter group or postgresql.conf):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>wal_level = logical
+max_replication_slots = 10     # adjust as needed
+max_wal_senders = 10           # adjust as needed
+</pre></div>
+</div>
+</li>
+<li><p>A replication user in Postgres with required privileges and REPLICATION role.</p></li>
+<li><p>Security groups/NACLs allowing Connect to reach Postgres (port 5432) and S3 egress.</p></li>
+</ul>
+</section>
+<section id="rds-specifics">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">RDS specifics</a><a class="headerlink" href="#rds-specifics" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Modify the DB parameter group to set <code class="docutils literal notranslate"><span class="pre">wal_level=logical</span></code> and associate with your RDS instance; apply and reboot if required.</p></li>
+<li><p>Ensure <code class="docutils literal notranslate"><span class="pre">rds.logical_replication</span></code> is enabled for certain engines/versions if applicable (check AWS docs).</p></li>
+<li><p>Grant appropriate permissions to your Debezium user and create a replication slot name that Debezium will use.</p></li>
+</ul>
+</section>
+<section id="debezium-postgres-connector-generic-config">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Debezium Postgres connector (generic config)</a><a class="headerlink" href="#debezium-postgres-connector-generic-config" title="Link to this heading"></a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postgres-source-generic&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="nt">&quot;connector.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.debezium.connector.postgresql.PostgresConnector&quot;</span><span class="p">,</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="nt">&quot;tasks.max&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="nt">&quot;database.hostname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;RDS_OR_SELF_HOSTED_PG_HOST&gt;&quot;</span><span class="p">,</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="nt">&quot;database.port&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5432&quot;</span><span class="p">,</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="nt">&quot;database.user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;REPLICATION_USER&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">    </span><span class="nt">&quot;database.password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;REPLICATION_PASSWORD&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">11</span><span class="w">    </span><span class="nt">&quot;database.dbname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;DATABASE_NAME&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="w">    </span><span class="nt">&quot;database.server.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pg&quot;</span><span class="p">,</span><span class="w">  </span>
+<span class="linenos">14</span><span class="w">    </span><span class="nt">&quot;schema.include.list&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;OPTIONAL_SCHEMA_INCLUDE_LIST&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">15</span><span class="w">    </span><span class="nt">&quot;table.include.list&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;OPTIONAL_TABLE_INCLUDE_LIST&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="w">    </span><span class="nt">&quot;plugin.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pgoutput&quot;</span><span class="p">,</span>
+<span class="linenos">18</span><span class="w">    </span><span class="nt">&quot;slot.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;debezium_slot_generic&quot;</span><span class="p">,</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="w">    </span><span class="nt">&quot;tombstones.on.delete&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">    </span><span class="nt">&quot;include.schema.changes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="w">    </span><span class="nt">&quot;decimal.handling.mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="linenos">24</span><span class="w">    </span><span class="nt">&quot;time.precision.mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;adaptive_time_microseconds&quot;</span><span class="p">,</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="w">    </span><span class="nt">&quot;snapshot.mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;initial&quot;</span><span class="p">,</span>
+<span class="linenos">27</span><span class="w">    </span><span class="nt">&quot;snapshot.fetch.size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10240&quot;</span><span class="p">,</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="w">    </span><span class="nt">&quot;topic.creation.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="linenos">30</span><span class="w">    </span><span class="nt">&quot;topic.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;TOPIC_PREFIX&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="w">    </span><span class="nt">&quot;key.converter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;org.apache.kafka.connect.json.JsonConverter&quot;</span><span class="p">,</span>
+<span class="linenos">33</span><span class="w">    </span><span class="nt">&quot;key.converter.schemas.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="linenos">34</span><span class="w">    </span><span class="nt">&quot;value.converter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;org.apache.kafka.connect.json.JsonConverter&quot;</span><span class="p">,</span>
+<span class="linenos">35</span><span class="w">    </span><span class="nt">&quot;value.converter.schemas.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="linenos">36</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">37</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="posting-the-connector-to-kafka-connect">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Posting the connector to Kafka Connect</a><a class="headerlink" href="#posting-the-connector-to-kafka-connect" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env bash</span>
+<span class="linenos"> 2</span><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="c1"># Usage: ./create_connector.sh http://&lt;connect-host&gt;:8083 connector_postgres_generic.json</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="nv">CONNECT_URL</span><span class="o">=</span><span class="si">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">http</span><span class="p">://localhost:</span><span class="nv">8083</span><span class="si">}</span>
+<span class="linenos"> 7</span><span class="nv">CONFIG_FILE</span><span class="o">=</span><span class="si">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">connector_postgres_generic</span><span class="p">.json</span><span class="si">}</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="linenos">10</span><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos">11</span><span class="w">  </span>--data<span class="w"> </span>@<span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONFIG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos">12</span><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CONNECT_URL</span><span class="si">}</span><span class="s2">/connectors&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="s3-sink-connector-generic-config">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">S3 sink connector (generic config)</a><a class="headerlink" href="#s3-sink-connector-generic-config" title="Link to this heading"></a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3-sink-generic&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="nt">&quot;connector.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.confluent.connect.s3.S3SinkConnector&quot;</span><span class="p">,</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="nt">&quot;tasks.max&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="nt">&quot;topics.regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;TOPIC_PREFIX&gt;\\..*&quot;</span><span class="p">,</span><span class="w">  </span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="nt">&quot;s3.bucket.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;S3_BUCKET&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">    </span><span class="nt">&quot;s3.region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;AWS_REGION&gt;&quot;</span><span class="p">,</span>
+<span class="linenos">11</span><span class="w">    </span><span class="nt">&quot;s3.part.size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5242880&quot;</span><span class="p">,</span>
+<span class="linenos">12</span><span class="w">    </span><span class="nt">&quot;flush.size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1000&quot;</span><span class="p">,</span>
+<span class="linenos">13</span><span class="w">    </span><span class="nt">&quot;rotate.interval.ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;600000&quot;</span><span class="p">,</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="w">    </span><span class="nt">&quot;format.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.confluent.connect.s3.format.json.JsonFormat&quot;</span><span class="p">,</span>
+<span class="linenos">16</span><span class="w">    </span><span class="nt">&quot;storage.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.confluent.connect.s3.storage.S3Storage&quot;</span><span class="p">,</span>
+<span class="linenos">17</span><span class="w">    </span><span class="nt">&quot;partitioner.class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;io.confluent.connect.storage.partitioner.TimeBasedPartitioner&quot;</span><span class="p">,</span>
+<span class="linenos">18</span><span class="w">    </span><span class="nt">&quot;path.format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;year=YYYY/month=MM/day=dd&quot;</span><span class="p">,</span>
+<span class="linenos">19</span><span class="w">    </span><span class="nt">&quot;locale&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
+<span class="linenos">20</span><span class="w">    </span><span class="nt">&quot;timezone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UTC&quot;</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">    </span><span class="nt">&quot;partition.duration.ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;86400000&quot;</span><span class="p">,</span>
+<span class="linenos">22</span><span class="w">    </span><span class="nt">&quot;timestamp.extractor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Record&quot;</span><span class="p">,</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="w">    </span><span class="nt">&quot;schema.compatibility&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="w">    </span><span class="nt">&quot;aws.access.key.id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${file:/opt/kafka/external-credentials/aws.properties:AWS_ACCESS_KEY_ID}&quot;</span><span class="p">,</span>
+<span class="linenos">27</span><span class="w">    </span><span class="nt">&quot;aws.secret.access.key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${file:/opt/kafka/external-credentials/aws.properties:AWS_SECRET_ACCESS_KEY}&quot;</span>
+<span class="linenos">28</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">29</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="monitoring-and-operations">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Monitoring and operations</a><a class="headerlink" href="#monitoring-and-operations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Use Kafka Connect REST API to check connector/task status, offsets, and errors.</p></li>
+<li><p>Observe Postgres replication slots (<code class="docutils literal notranslate"><span class="pre">pg_replication_slots</span></code>) and lag; alert if WAL grows.</p></li>
+<li><p>Scale <code class="docutils literal notranslate"><span class="pre">tasks.max</span></code> and tune flush/rotate parameters in sink based on throughput and latency requirements.</p></li>
+</ul>
+</section>
+<section id="limitations-and-pitfalls">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Limitations and pitfalls</a><a class="headerlink" href="#limitations-and-pitfalls" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Initial snapshot: Large tables can take time; consider off-hours or <code class="docutils literal notranslate"><span class="pre">snapshot.mode=never</span></code> if you pre-seed data.</p></li>
+<li><p>Replication lag: Heavy write load or network issues increase lag; monitor WAL size to avoid storage pressure.</p></li>
+<li><p>DDL changes: Debezium emits schema change events; ensure downstream can adapt or route to a schema registry.</p></li>
+<li><p>Permissions: RDS Postgres requires proper roles for logical replication; ensure slot names are unique per connector.</p></li>
+<li><p>Topic naming: Use a topic prefix and include lists to control scope; avoid accidentally capturing entire databases.</p></li>
+<li><p>S3 sink dependencies: Confluent S3 sink requires appropriate licensing/dependencies; alternatively, consider Kafka Connect S3 sink alternatives (open-source) or write a custom consumer.</p></li>
+</ul>
+</section>
+</section>
+<section id="best-practices">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Best Practices</a><a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Schema Management</strong>: Keep track of schema changes in your source databases and update your Kafka topics accordingly. Debizium can help with this by capturing schema changes as part of the change events.</p></li>
+<li><p><strong>Data Quality</strong>: Implement data validation and cleansing processes in your data lake to ensure the extracted data is accurate and consistent.</p></li>
+<li><p><strong>Performance Tuning</strong>: Monitor the performance of your Debizium connectors and Kafka cluster, and make adjustments as needed to optimize throughput and reduce latency.</p></li>
+</ul>
+</section>
+<section id="conclusion">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Conclusion</a><a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>Debizium provides a powerful solution for extracting data from databases and streaming it to a data lake. By leveraging Kafka and a well-designed architecture, you can build a robust data extraction pipeline that meets your organization’s analytics needs.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

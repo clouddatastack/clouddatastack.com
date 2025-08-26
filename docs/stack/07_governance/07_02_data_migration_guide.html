@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7.2. Data Migration Guide &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="7.3. GDPR Compliance with dbt" href="07_03_gdpr_compliance.html" />
+    <link rel="prev" title="7.1. Audit Guide" href="07_01_audit_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../07_governance.html">7. Governance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="07_01_audit_guide.html">7.1. Audit Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.2. Data Migration Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-considerations-and-steps">Key Considerations and Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#naming-conventions">Naming Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-sqlfluff-for-sql-linting">Using sqlfluff for SQL Linting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-reconciliation">Data Reconciliation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stakeholder-approval">Stakeholder Approval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-dbt-pitfalls-and-solutions">Common dbt Pitfalls and Solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-dbt-scripts">Testing dbt Scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#managing-lookup-tables">Managing Lookup Tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-partitioning-strategies-with-dbt">Data Partitioning Strategies with dbt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#managing-dbt-model-changes-schema-evolution">Managing dbt Model Changes (Schema Evolution)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#capturing-migration-metadata-in-dbt-schema-yml">Capturing Migration Metadata in dbt (schema.yml)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-generic">Example (generic)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#operational-tips">Operational tips</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="07_03_gdpr_compliance.html">7.3. GDPR Compliance with dbt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_04_data_retention.html">7.4. Data Retention</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../08_ai_workflows.html">7. AI Workflows</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../07_governance.html">7. Governance</a></li>
+      <li class="breadcrumb-item active">7.2. Data Migration Guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-migration-guide">
+<h1>7.2. Data Migration Guide<a class="headerlink" href="#data-migration-guide" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>Migrating data and ETL processes from traditional, often unstructured SQL environments to a structured framework like dbt (data build tool) is a common challenge that, when addressed correctly, can significantly improve data reliability, maintainability, and governance. This guide outlines key considerations, best practices, and common pitfalls encountered during such a migration, with a focus on leveraging dbt’s capabilities effectively.</p>
+<p>This guide draws upon experiences from various data migration projects, including the principles outlined in internal project requirement documents for migrating datasets and workloads to new data warehouse environments.</p>
+</section>
+<section id="key-considerations-and-steps">
+<h2>Key Considerations and Steps<a class="headerlink" href="#key-considerations-and-steps" title="Link to this heading"></a></h2>
+<p>Migrating to dbt involves more than just translating SQL queries. It’s an opportunity to refactor, optimize, and apply software engineering best practices to your data transformation workflows.</p>
+<ol class="arabic simple">
+<li><p><strong>Assessment and Planning</strong>:
+-   <strong>Inventory Existing Assets</strong>: Catalog all existing SQL scripts, tables, views, and scheduled jobs.
+-   <strong>Identify Dependencies</strong>: Map out dependencies between various data assets. Tools that analyze query logs or lineage metadata can be helpful.
+-   <strong>Define Scope and Prioritize</strong>: Determine which datasets and workflows to migrate first. A phased approach, starting with less complex or high-impact models, is often advisable.
+-   <strong>Understand the Target Environment</strong>: Familiarize yourself with the target data warehouse (e.g., Snowflake, BigQuery, Redshift, Databricks) and its specific SQL dialect and features that dbt will interact with.</p></li>
+<li><p><strong>Design and Refactoring</strong>:
+-   <strong>Modular Design</strong>: Break down monolithic SQL scripts into smaller, reusable dbt models. Each model should represent a distinct transformation step or logical data entity.
+-   <strong>Staging, Intermediate, and Marts</strong>: Adopt a layered approach (e.g., staging, intermediate/core, data marts/reporting) to organize your dbt models. This improves clarity and reusability.
+-   <strong>Source Definition</strong>: Define sources in dbt to manage dependencies on raw data.
+-   <strong>Incremental Models</strong>: For large datasets, design incremental models to process only new or updated data, significantly reducing processing time and cost.</p></li>
+<li><p><strong>Development and Implementation</strong>:
+-   <strong>dbt Project Setup</strong>: Initialize your dbt project, configure <cite>dbt_project.yml</cite>, and set up profiles in <cite>profiles.yml</cite> for different environments (dev, test, prod).
+-   <strong>Model Creation</strong>: Write dbt models using SQL. Leverage Jinja templating for dynamic SQL generation, macros for reusable code snippets, and refs/sources for dependency management.
+-   <strong>Testing</strong>: Implement dbt tests (schema tests, data tests, custom tests) to ensure data quality and integrity.
+-   <strong>Documentation</strong>: Use dbt’s documentation features to generate comprehensive documentation for your models, columns, and sources.</p></li>
+<li><p><strong>Deployment and Orchestration</strong>:
+-   <strong>Version Control</strong>: Use Git for version control of your dbt project.
+-   <strong>CI/CD</strong>: Implement CI/CD pipelines (e.g., using GitHub Actions, GitLab CI, Jenkins) to automate testing and deployment of dbt models.
+-   <strong>Orchestration</strong>: Schedule dbt runs using an orchestrator like Apache Airflow, Dagster, or dbt Cloud.</p></li>
+</ol>
+</section>
+<section id="naming-conventions">
+<h2>Naming Conventions<a class="headerlink" href="#naming-conventions" title="Link to this heading"></a></h2>
+<p>Consistent naming conventions are crucial for a maintainable dbt project.</p>
+<ul class="simple">
+<li><p><strong>Models</strong>: Use descriptive names that indicate the entity and transformation stage (e.g., <cite>stg_customers</cite>, <cite>int_orders_aggregated</cite>, <cite>fct_monthly_sales</cite>).</p></li>
+<li><p><strong>Columns</strong>: Be consistent with casing (e.g., <cite>snake_case</cite>) and use clear, unambiguous names.</p></li>
+<li><p><strong>Sources and Seeds</strong>: Prefix with <cite>src_</cite> and <cite>seed_</cite> respectively, or follow project-specific guidelines.</p></li>
+<li><p><strong>File Names</strong>: Model file names should match the model names (e.g., <cite>stg_customers.sql</cite>).</p></li>
+</ul>
+<p>Refer to your organization’s specific guidelines for detailed conventions.</p>
+</section>
+<section id="using-sqlfluff-for-sql-linting">
+<h2>Using sqlfluff for SQL Linting<a class="headerlink" href="#using-sqlfluff-for-sql-linting" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">sqlfluff</span></code> is a powerful SQL linter and auto-formatter that helps maintain code quality and consistency.</p>
+<ol class="arabic">
+<li><p><strong>Installation</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sqlfluff<span class="w"> </span>sqlfluff-templater-dbt
+</pre></div>
+</div>
+</li>
+<li><p><strong>Configuration</strong>:
+Create a <code class="docutils literal notranslate"><span class="pre">.sqlfluff</span></code> configuration file in your dbt project root to define rules and dialects.
+Example <code class="docutils literal notranslate"><span class="pre">.sqlfluff</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">ini</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>[sqlfluff]
+templater = dbt
+dialect = snowflake  # Or your specific dialect (bigquery, redshift, etc.)
+rules = AM04, CP01, L003, L010, L019, L029, L030, L031, L034, L036, L042, L050, L051, L052, L053, L057, L059, L062, L063, L066, L067, L068, L070</p>
+<p>[sqlfluff:templater:dbt]
+project_dir = ./</p>
+<p>[sqlfluff:rules:L003] # Indentation
+tab_space_size = 4</p>
+<p>[sqlfluff:rules:L010] # Keywords
+capitalisation_policy = upper</p>
+<p>[sqlfluff:rules:L030] # Function names
+capitalisation_policy = upper</p>
+</div></blockquote>
+</li>
+<li><p><strong>Usage</strong>:
+-   Lint: <code class="docutils literal notranslate"><span class="pre">sqlfluff</span> <span class="pre">lint</span> <span class="pre">models/</span></code>
+-   Fix: <code class="docutils literal notranslate"><span class="pre">sqlfluff</span> <span class="pre">fix</span> <span class="pre">models/</span></code></p></li>
+</ol>
+<p>Integrating <code class="docutils literal notranslate"><span class="pre">sqlfluff</span></code> into your CI/CD pipeline ensures that all code contributions adhere to the defined standards.</p>
+</section>
+<section id="data-reconciliation">
+<h2>Data Reconciliation<a class="headerlink" href="#data-reconciliation" title="Link to this heading"></a></h2>
+<p>Ensuring data consistency between the old and new systems is paramount.</p>
+<ol class="arabic">
+<li><p><strong>Strategy</strong>:
+-   <strong>Row Counts</strong>: Compare row counts for key tables.
+-   <strong>Aggregate Checks</strong>: Compare sums, averages, min/max values for important numeric columns.
+-   <strong>Dimension Comparisons</strong>: For dimensional data, check for discrepancies in distinct values.
+-   <strong>Full Data Dumps (for smaller tables)</strong>: Compare entire datasets if feasible.</p></li>
+<li><p><strong>Reconciliation Script</strong>:
+A Python script can automate the comparison of tables between two different data sources (e.g., the legacy system and the new dbt-managed warehouse). The script typically involves:
+-   Connecting to both source and target databases.
+-   Fetching data (or aggregates) from corresponding tables.
+-   Comparing the results and highlighting discrepancies.</p>
+<p>An example Python script for table reconciliation might look like this (conceptual):</p>
+<div class="literal-block-wrapper docutils container" id="reconcile-tables-py">
+<div class="code-block-caption"><span class="caption-text">Example: reconcile_tables.py</span><a class="headerlink" href="#reconcile-tables-py" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="c1"># Assume functions get_connection_source() and get_connection_target() exist</span>
+<span class="c1"># Assume functions fetch_data(connection, query) exist</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reconcile_tables</span><span class="p">(</span><span class="n">source_table_name</span><span class="p">,</span> <span class="n">target_table_name</span><span class="p">,</span> <span class="n">key_columns</span><span class="p">,</span> <span class="n">value_columns</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reconciles data between a source and target table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconciling </span><span class="si">{</span><span class="n">source_table_name</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">target_table_name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="n">conn_source</span> <span class="o">=</span> <span class="n">get_connection_source</span><span class="p">()</span> <span class="c1"># Implement this</span>
+    <span class="n">conn_target</span> <span class="o">=</span> <span class="n">get_connection_target</span><span class="p">()</span> <span class="c1"># Implement this</span>
+
+    <span class="n">query_source</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">key_columns</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">value_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> FROM </span><span class="si">{</span><span class="n">source_table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">query_target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">key_columns</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">value_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> FROM </span><span class="si">{</span><span class="n">target_table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">df_source</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">conn_source</span><span class="p">,</span> <span class="n">query_source</span><span class="p">)</span> <span class="c1"># Implement this</span>
+    <span class="n">df_target</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">conn_target</span><span class="p">,</span> <span class="n">query_target</span><span class="p">)</span> <span class="c1"># Implement this</span>
+
+    <span class="c1"># Basic checks</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_source</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_target</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Row count mismatch: Source has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_source</span><span class="p">)</span><span class="si">}</span><span class="s2">, Target has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_target</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Row counts match.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Example: Sum check for numeric columns</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">value_columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_numeric_dtype</span><span class="p">(</span><span class="n">df_source</span><span class="p">[</span><span class="n">col</span><span class="p">])</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_numeric_dtype</span><span class="p">(</span><span class="n">df_target</span><span class="p">[</span><span class="n">col</span><span class="p">]):</span>
+            <span class="n">sum_source</span> <span class="o">=</span> <span class="n">df_source</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">sum_target</span> <span class="o">=</span> <span class="n">df_target</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sum_source</span> <span class="o">!=</span> <span class="n">sum_target</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum mismatch for column </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">: Source sum </span><span class="si">{</span><span class="n">sum_source</span><span class="si">}</span><span class="s2">, Target sum </span><span class="si">{</span><span class="n">sum_target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum for column </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> matches.&quot;</span><span class="p">)</span>
+    <span class="c1"># Add more sophisticated checks as needed (e.g., using pandas.merge for detailed diff)</span>
+
+    <span class="n">conn_source</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">conn_target</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># Example usage:</span>
+<span class="c1"># reconcile_tables(&quot;legacy_schema.orders&quot;, &quot;dbt_prod.fct_orders&quot;, [&quot;order_id&quot;], [&quot;order_amount&quot;, &quot;item_count&quot;])</span>
+</pre></div>
+</div>
+</div>
+<p>A more complete version of such a script can be found at:
+<a class="reference external" href="code/dbt_migration/reconcile_tables.py">code/dbt_migration/reconcile_tables.py</a></p>
+<p>This script should be adapted to your specific database connectors and comparison logic.</p>
+</li>
+</ol>
+</section>
+<section id="stakeholder-approval">
+<h2>Stakeholder Approval<a class="headerlink" href="#stakeholder-approval" title="Link to this heading"></a></h2>
+<p>Data migration projects impact various stakeholders (data analysts, business users, data scientists).
+-   <strong>Communication</strong>: Keep stakeholders informed throughout the migration process.
+-   <strong>Validation</strong>: Involve stakeholders in validating the migrated data and reports. Their domain expertise is invaluable for catching subtle errors.
+-   <strong>Sign-off</strong>: Establish a formal sign-off process for migrated datasets and workflows to ensure alignment and accountability.</p>
+</section>
+<section id="common-dbt-pitfalls-and-solutions">
+<h2>Common dbt Pitfalls and Solutions<a class="headerlink" href="#common-dbt-pitfalls-and-solutions" title="Link to this heading"></a></h2>
+<p>### Handling Dates</p>
+<ul>
+<li><p><strong>Pitfall</strong>: Using <cite>CURRENT_DATE</cite> or <cite>NOW()</cite> directly in SQL models makes them non-rerunnable for past dates, hindering backfills and historical reprocessing.</p></li>
+<li><p><strong>Solution</strong>:
+-   <strong>dbt Variables</strong>: Pass processing dates as dbt variables.</p>
+<blockquote>
+<div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- model.sql
+SELECT *
+FROM {{ source(&#39;my_source&#39;, &#39;events&#39;) }}
+WHERE event_date = &#39;{{ var(&quot;processing_date&quot;) }}&#39;
+</pre></div>
+</div>
+<p>Run with: <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">run</span> <span class="pre">--vars</span> <span class="pre">'{&quot;processing_date&quot;:</span> <span class="pre">&quot;2023-01-15&quot;}'</span></code></p>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Date Dimension Table</strong>: Join with a date dimension table and filter on its attributes.</p></li>
+<li><p><strong>Macros for Date Logic</strong>: Encapsulate date logic in dbt macros for consistency.</p></li>
+</ul>
+</li>
+</ul>
+<p>### Data Backfilling Strategies</p>
+<ul>
+<li><p><strong>Strategies</strong>:
+- <strong>Full Refresh</strong>: For smaller tables, a <cite>dbt run –full-refresh</cite> might be sufficient.
+- <strong>Incremental Models with Backfill Logic</strong>: Design incremental models to handle backfills. This might involve:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Temporarily changing the incremental strategy or <cite>is_incremental()</cite> logic.</p></li>
+<li><p>Running the model for specific date ranges.</p></li>
+<li><p>Using custom materializations or pre/post hooks for complex backfill scenarios.</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p><strong>Batching</strong>: For very large backfills, process data in batches (e.g., month by month) to manage resource consumption.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Example: Backfilling month by month
+for year_month in 2022-01 2022-02 ...; do
+  dbt run --select my_incremental_model --vars &quot;{\&quot;processing_month\&quot;: \&quot;${year_month}\&quot;}&quot;
+done
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="testing-dbt-scripts">
+<h2>Testing dbt Scripts<a class="headerlink" href="#testing-dbt-scripts" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Dedicated Test Environment</strong>: Always test dbt models in a dedicated test or pre-production environment that mirrors production as closely as possible. This environment should have its own data sources or sanitized copies of production data.</p></li>
+<li><p><strong>dbt Tests</strong>:
+-   <strong>Schema Tests</strong>: <code class="docutils literal notranslate"><span class="pre">unique</span></code>, <code class="docutils literal notranslate"><span class="pre">not_null</span></code>, <code class="docutils literal notranslate"><span class="pre">accepted_values</span></code>, <code class="docutils literal notranslate"><span class="pre">relationships</span></code>.
+-   <strong>Data Tests</strong>: Custom SQL queries that assert specific conditions (e.g., “total revenue should be positive”).
+-   <strong>Singular Tests (dbt-utils)</strong>: Useful for more complex assertions.</p></li>
+<li><p><strong>Dry Runs</strong>: Use <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">compile</span></code> and <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">run</span> <span class="pre">--dry-run</span></code> (if supported by adapter) to catch compilation errors and review generated SQL before execution.</p></li>
+<li><p><strong>CI Integration</strong>: Run tests automatically in your CI pipeline on every commit or pull request.</p></li>
+</ul>
+</section>
+<section id="managing-lookup-tables">
+<h2>Managing Lookup Tables<a class="headerlink" href="#managing-lookup-tables" title="Link to this heading"></a></h2>
+<p>Lookup tables (or static tables) often contain reference data that changes infrequently.</p>
+<ul>
+<li><p><strong>dbt Seeds</strong>:
+-   <strong>Pros</strong>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Easy to manage small, static datasets directly within your dbt project.</p></li>
+<li><p>Version controlled with your code.</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p><strong>Cons</strong>:</p>
+<ul class="simple">
+<li><p>Not ideal for large datasets or data that needs to be updated by non-technical users.</p></li>
+<li><p>Can lead to slower <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">seed</span></code> runs if many or large CSVs.</p></li>
+</ul>
+</li>
+<li><p><strong>Usage</strong>:</p>
+<p>Place CSV files in the <code class="docutils literal notranslate"><span class="pre">seeds</span></code> directory (or <code class="docutils literal notranslate"><span class="pre">data</span></code> prior to dbt v0.17.0).
+Run <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">seed</span></code> to load the data.
+Reference them in models using <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">ref('my_seed_table')</span> <span class="pre">}}</span></code>.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Static External Tables</strong>:
+-   <strong>Pros</strong>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Suitable for larger lookup tables or when data is managed externally (e.g., by a business team).</p></li>
+<li><p>Data can be updated without a dbt run.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Cons</strong>:</p>
+<ul>
+<li><p>Requires managing the external storage (e.g., CSVs on S3, Google Cloud Storage) and ensuring schema consistency.</p></li>
+</ul>
+</li>
+<li><p><strong>Usage</strong>:</p>
+<ol class="arabic simple">
+<li><p>Store the lookup data as CSVs or Parquet files in object storage (e.g., S3).</p></li>
+<li><p>Define these as external tables in your data warehouse.</p></li>
+<li><p>In dbt, define these external tables as sources in a <code class="docutils literal notranslate"><span class="pre">sources.yml</span></code> file.</p></li>
+<li><p>Reference them using <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">source('my_external_source',</span> <span class="pre">'lookup_table_name')</span> <span class="pre">}}</span></code>.</p></li>
+</ol>
+</li>
+<li><p><strong>Example</strong>: For static tables, use CSV files on S3 (e.g., <cite>s3://&lt;your-bucket&gt;/&lt;domain&gt;/&lt;env&gt;/core/static/&lt;table_name&gt;.csv</cite>) and create external tables pointing to these files. The DDL for these external tables can be managed via Airflow DAGs or dbt pre-hooks.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="data-partitioning-strategies-with-dbt">
+<h2>Data Partitioning Strategies with dbt<a class="headerlink" href="#data-partitioning-strategies-with-dbt" title="Link to this heading"></a></h2>
+<p>Partitioning is crucial for query performance and cost optimization in large data warehouses. While dbt doesn’t directly manage physical partitioning (this is a data warehouse feature), it can and should be used to build models that leverage partitioning effectively.</p>
+<ul>
+<li><p><strong>Model Design</strong>: Design your dbt models, especially incremental ones, to align with the partitioning keys of your target tables (e.g., date, region).</p></li>
+<li><p><strong>Incremental Strategies</strong>: Ensure your incremental model logic correctly filters for and processes data relevant to specific partitions.</p></li>
+<li><p><strong>Warehouse Configuration</strong>: Configure partitioning and clustering (if applicable) directly in your data warehouse (e.g., <code class="docutils literal notranslate"><span class="pre">PARTITION</span> <span class="pre">BY</span> <span class="pre">date_column</span></code> in Snowflake or BigQuery).</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- Example dbt model config for BigQuery partitioning
+{{
+  config(
+    materialized=&#39;incremental&#39;,
+    partition_by={
+      &quot;field&quot;: &quot;event_date&quot;,
+      &quot;data_type&quot;: &quot;date&quot;,
+      &quot;granularity&quot;: &quot;day&quot;
+    },
+    cluster_by = [&quot;user_id&quot;]
+  )
+}}
+
+SELECT
+  event_timestamp,
+  DATE(event_timestamp) as event_date, -- Ensure partition column exists
+  user_id,
+  ...
+FROM {{ source(&#39;raw_events&#39;, &#39;events_table&#39;) }}
+
+{% if is_incremental() %}
+  WHERE DATE(event_timestamp) &gt;= (SELECT MAX(event_date) FROM {{ this }})
+{% endif %}
+</pre></div>
+</div>
+</li>
+<li><p><strong>Best Practices</strong>:
+-   Choose partition keys based on common query filter patterns.
+-   Avoid partitioning on high-cardinality columns unless it aligns with specific access patterns.</p></li>
+</ul>
+</section>
+<section id="managing-dbt-model-changes-schema-evolution">
+<h2>Managing dbt Model Changes (Schema Evolution)<a class="headerlink" href="#managing-dbt-model-changes-schema-evolution" title="Link to this heading"></a></h2>
+<p>Schema evolution (adding, removing, or modifying columns) is inevitable.</p>
+<ul>
+<li><p><strong>dbt ``on_schema_change``: For incremental models, dbt provides the ``on_schema_change`` configuration to handle schema discrepancies between the target table and the new model definition.
+-   ``ignore``: Default. Ignores schema changes. New columns won’t be added.
+-   ``fail``: Fails the run if schemas don’t match.
+-   ``append_new_columns``: Adds new columns to the target table. Does not remove columns.
+-   ``sync_all_columns``: Adds new columns and removes columns present in the target table but not in the model. **Use with caution as it can be destructive.</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># dbt_project.yml or model config block</span>
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">+on_schema_change</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;append_new_columns&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Full Refresh</strong>: Sometimes, a <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">run</span> <span class="pre">--full-refresh</span></code> is the simplest way to apply schema changes, especially for non-incremental models or when <code class="docutils literal notranslate"><span class="pre">sync_all_columns</span></code> behavior is desired safely.</p></li>
+<li><p><strong>Blue/Green Deployments</strong>: For critical models, consider a blue/green deployment strategy:
+1.  Build the new version of the model to a temporary table/schema.
+2.  Test and validate the new version.
+3.  Atomically swap the new version with the old one.
+dbt’s aliasing and custom materializations can facilitate this.</p></li>
+<li><p><strong>Communication</strong>: Communicate schema changes to downstream consumers. dbt’s documentation and tools like <code class="docutils literal notranslate"><span class="pre">dbt-artifacts-parser</span></code> can help track lineage and impact.</p></li>
+<li><p><strong>Avoid Dropping Columns Lightly</strong>: If a column needs to be removed, ensure no downstream models or BI tools depend on it. Consider deprecating it first (e.g., renaming to <code class="docutils literal notranslate"><span class="pre">_old_column_name</span></code> or documenting its removal) before physically dropping it.</p></li>
+</ul>
+</section>
+<section id="capturing-migration-metadata-in-dbt-schema-yml">
+<h2>Capturing Migration Metadata in dbt (schema.yml)<a class="headerlink" href="#capturing-migration-metadata-in-dbt-schema-yml" title="Link to this heading"></a></h2>
+<p>While migrating, it is useful to record the provenance of each dbt model and any structural changes made along the way. You can add a <code class="docutils literal notranslate"><span class="pre">meta</span></code> block in your model’s YAML (<code class="docutils literal notranslate"><span class="pre">schema.yml</span></code>) to capture:</p>
+<ul class="simple">
+<li><p>Original system/database/schema/model names</p></li>
+<li><p>Flags indicating migration status</p></li>
+<li><p>Lists of columns that were added, modified, or deleted</p></li>
+<li><p>Per-column previous names/types for traceability</p></li>
+</ul>
+<p>This metadata improves documentation, lineage, audits, and automated checks during/after migration.</p>
+<section id="example-generic">
+<h3>Example (generic)<a class="headerlink" href="#example-generic" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;target_model_name&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;&lt;Short</span><span class="nv"> </span><span class="s">description</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">migrated</span><span class="nv"> </span><span class="s">model&gt;&quot;</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">is_migrated</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">migrated_from_system</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;source_system&gt;</span>
+<span class="w">            </span><span class="nt">migrated_from_database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;source_database&gt;</span>
+<span class="w">            </span><span class="nt">migrated_from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;source_schema&gt;</span>
+<span class="w">            </span><span class="nt">migrated_from_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;source_table_or_view&gt;</span>
+<span class="w">            </span><span class="nt">added_columns</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;new_col_1&gt;</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;new_col_2&gt;</span>
+<span class="w">            </span><span class="nt">modified_columns</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;changed_col_1&gt;</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;changed_col_2&gt;</span>
+<span class="w">            </span><span class="nt">deleted_columns</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;removed_col_1&gt;</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;removed_col_2&gt;</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;col_a&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">data_type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;type&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">meta</span><span class="p p-Indicator">:</span>
+<span class="w">                    </span><span class="nt">previous_column_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;old_name_if_any&gt;</span>
+<span class="w">                    </span><span class="nt">previous_column_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;old_type_if_any&gt;</span>
+<span class="w">              </span><span class="w w-Error">  </span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_null</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;col_b&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">data_type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;type&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">meta</span><span class="p p-Indicator">:</span>
+<span class="w">                    </span><span class="nt">previous_column_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;old_name_if_any&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="operational-tips">
+<h3>Operational tips<a class="headerlink" href="#operational-tips" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Keep this metadata up to date as you iterate during migration.</p></li>
+<li><p>Use it to generate migration reports and to drive conditional logic in checks (e.g., validating that deleted columns are not referenced downstream).</p></li>
+<li><p>Expose it in dbt docs so consumers can see what changed and where the data originated.</p></li>
+</ul>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>Migrating to dbt is a strategic move towards a more robust and agile data platform. By following these guidelines, embracing best practices in naming, linting, testing, and carefully managing common pitfalls, organizations can unlock the full potential of dbt for their data transformation needs. Remember that documentation, stakeholder communication, and an iterative approach are key to a successful migration.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

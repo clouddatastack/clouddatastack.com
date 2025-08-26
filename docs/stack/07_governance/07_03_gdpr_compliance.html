@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7.3. GDPR Compliance with dbt &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="7.4. Data Retention" href="07_04_data_retention.html" />
+    <link rel="prev" title="7.2. Data Migration Guide" href="07_02_data_migration_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../07_governance.html">7. Governance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="07_01_audit_guide.html">7.1. Audit Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_02_data_migration_guide.html">7.2. Data Migration Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7.3. GDPR Compliance with dbt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-you-implement">What you implement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#warehouse-syntax-notes">Warehouse syntax notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-end-to-end">Example: end-to-end</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-implementation">Reference implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operational-tips">Operational tips</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="07_04_data_retention.html">7.4. Data Retention</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../08_ai_workflows.html">7. AI Workflows</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../07_governance.html">7. Governance</a></li>
+      <li class="breadcrumb-item active">7.3. GDPR Compliance with dbt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdpr-compliance-with-dbt">
+<h1>7.3. GDPR Compliance with dbt<a class="headerlink" href="#gdpr-compliance-with-dbt" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This guide shows a portable approach to marking dbt models and columns as GDPR-relevant and applying tags at the warehouse level automatically. The pattern uses dbt <code class="docutils literal notranslate"><span class="pre">meta</span></code> on models/columns plus a simple post-hook macro that runs <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE/ALTER</span> <span class="pre">COLUMN</span></code> statements. Adjust SQL syntax to match your warehouse (Databricks Unity Catalog, Snowflake, BigQuery, etc.).</p>
+</section>
+<section id="what-you-implement">
+<h2>What you implement<a class="headerlink" href="#what-you-implement" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>A model-level opt-in flag to mark a table as GDPR-relevant.</p></li>
+<li><p>Optional column-level tags for sensitive fields (for example, user identifiers).</p></li>
+<li><p>A post-hook macro that sets/unsets warehouse tags based on <code class="docutils literal notranslate"><span class="pre">meta</span></code>.</p></li>
+</ul>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Add macros to your project (example files in this repository):</p>
+<blockquote>
+<div><div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic GDPR tagging macro for dbt</span>
+<span class="x">-- Notes:</span>
+<span class="x">-- - Example SQL below uses Databricks/Unity Catalog syntax for tags.</span>
+<span class="x">-- - If your warehouse uses a different syntax (e.g., Snowflake), adjust the ALTER statements accordingly.</span>
+
+<span class="cp">{%</span> <span class="k">macro</span> <span class="nv">set_gdpr_compliance_tag</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">execute</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="c">{# Table-level meta flag to opt-in the model for GDPR tagging #}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">is_gdpr_model</span> <span class="o">=</span> <span class="nv">model.meta.get</span><span class="o">(</span><span class="s1">&#39;is_gdpr_model&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_gdpr_model</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="c">{# Table-level tag #}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">table_tag_name</span> <span class="o">=</span> <span class="s1">&#39;gdpr_deletion&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">table_tag_value</span> <span class="o">=</span> <span class="s1">&#39;enabled&#39;</span> <span class="cp">%}</span>
+
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">table_level_tag_sql</span> <span class="cp">%}</span>
+<span class="x">                ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">table_tag_name</span> <span class="cp">}}</span><span class="x">&#39; = &#39;</span><span class="cp">{{</span> <span class="nv">table_tag_value</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">table_level_tag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">            </span><span class="c">{# Column-level tags: set gdpr_column_type when provided #}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_tag_name</span> <span class="o">=</span> <span class="s1">&#39;gdpr_column_type&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">column</span> <span class="k">in</span> <span class="nv">model.columns</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">col_meta</span> <span class="o">=</span> <span class="nv">model.columns.get</span><span class="o">(</span><span class="nv">column</span><span class="o">)</span><span class="nv">.meta</span> <span class="k">or</span> <span class="o">{}</span> <span class="cp">%}</span>
+
+<span class="x">                </span><span class="c">{# Support either a boolean flag or explicit type string #}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">explicit_type</span> <span class="o">=</span> <span class="nv">col_meta.get</span><span class="o">(</span><span class="s1">&#39;gdpr_column_type&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">is_flagged</span> <span class="o">=</span> <span class="nv">col_meta.get</span><span class="o">(</span><span class="s1">&#39;is_gdpr_column&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">                </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">explicit_type</span> <span class="k">is</span> <span class="nf">string</span> <span class="k">and</span> <span class="nv">explicit_type</span><span class="o">|</span><span class="nf">length</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_level_tag_sql</span> <span class="cp">%}</span>
+<span class="x">                        ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                        ALTER COLUMN </span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">column_tag_name</span> <span class="cp">}}</span><span class="x">&#39; = &#39;</span><span class="cp">{{</span> <span class="nv">explicit_type</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">column_level_tag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">elif</span> <span class="nv">is_flagged</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_level_tag_sql_default</span> <span class="cp">%}</span>
+<span class="x">                        ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                        ALTER COLUMN </span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">column_tag_name</span> <span class="cp">}}</span><span class="x">&#39; = &#39;user_identifier&#39;);</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">column_level_tag_sql_default</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_level_untag_sql</span> <span class="cp">%}</span>
+<span class="x">                        ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                        ALTER COLUMN </span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="x"> UNSET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">column_tag_name</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">column_level_untag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">caption<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Macro: set_gdpr_compliance_tag</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>In your dbt model YAML, annotate tables/columns via <code class="docutils literal notranslate"><span class="pre">meta</span></code>:</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Example model YAML with GDPR meta</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_events_monthly</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monthly user engagement events used for activity analytics.</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">is_gdpr_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400d</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Anonymized user identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">gdpr_column_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_identifier</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Analytics session identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">is_gdpr_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Logical partition/event date</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_type</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type of event</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advertising_campaigns</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Campaigns table retained permanently for financial audit.</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Configure a post-hook on the models where you want the macro to run. You can set this at the folder level (<code class="docutils literal notranslate"><span class="pre">models:</span></code> in <code class="docutils literal notranslate"><span class="pre">dbt_project.yml</span></code>) or per-model using <code class="docutils literal notranslate"><span class="pre">config(post_hook=...)</span></code>.</p></li>
+</ol>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Model-level: set <code class="docutils literal notranslate"><span class="pre">meta:</span> <span class="pre">{</span> <span class="pre">is_gdpr_model:</span> <span class="pre">true</span> <span class="pre">}</span></code>. The macro will set a table tag <code class="docutils literal notranslate"><span class="pre">gdpr_deletion=enabled</span></code>.</p></li>
+<li><p>Column-level: either set <code class="docutils literal notranslate"><span class="pre">meta:</span> <span class="pre">{</span> <span class="pre">is_gdpr_column:</span> <span class="pre">true</span> <span class="pre">}</span></code> to mark a field as sensitive with default type <code class="docutils literal notranslate"><span class="pre">user_identifier</span></code>, or provide an explicit type via <code class="docutils literal notranslate"><span class="pre">meta:</span> <span class="pre">{</span> <span class="pre">gdpr_column_type:</span> <span class="pre">&lt;type&gt;</span> <span class="pre">}</span></code>.</p></li>
+<li><p>The macro also unsets <code class="docutils literal notranslate"><span class="pre">gdpr_column_type</span></code> on columns that aren’t flagged, keeping tags consistent when schemas evolve.</p></li>
+</ul>
+</section>
+<section id="warehouse-syntax-notes">
+<h2>Warehouse syntax notes<a class="headerlink" href="#warehouse-syntax-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Databricks/Unity Catalog: uses <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">&lt;table&gt;</span> <span class="pre">SET</span> <span class="pre">TAGS</span> <span class="pre">(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">COLUMN</span> <span class="pre">...</span> <span class="pre">SET</span> <span class="pre">TAGS</span> <span class="pre">(...)</span></code>.</p></li>
+<li><p>Snowflake: use <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span> <span class="pre">&lt;table&gt;</span> <span class="pre">SET</span> <span class="pre">TAG</span> <span class="pre">&lt;name&gt;</span> <span class="pre">=</span> <span class="pre">'&lt;value&gt;'</span></code>; adjust the macro accordingly.</p></li>
+<li><p>BigQuery: consider labels or policy tags via separate APIs; the post-hook may call an external procedure instead of SQL.</p></li>
+</ul>
+</section>
+<section id="example-end-to-end">
+<h2>Example: end-to-end<a class="headerlink" href="#example-end-to-end" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Add meta in YAML for your model and columns.</p></li>
+<li><p>Ensure the macro is available and included in the models’ post-hooks.</p></li>
+<li><p>Run your model; dbt will execute the post-hook and apply tags to the relation and columns.</p></li>
+</ol>
+</section>
+<section id="reference-implementation">
+<h2>Reference implementation<a class="headerlink" href="#reference-implementation" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">set_gdpr_compliance_tag macro (full)</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic GDPR tagging macro for dbt</span>
+<span class="x">-- Notes:</span>
+<span class="x">-- - Example SQL below uses Databricks/Unity Catalog syntax for tags.</span>
+<span class="x">-- - If your warehouse uses a different syntax (e.g., Snowflake), adjust the ALTER statements accordingly.</span>
+
+<span class="cp">{%</span> <span class="k">macro</span> <span class="nv">set_gdpr_compliance_tag</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">execute</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="c">{# Table-level meta flag to opt-in the model for GDPR tagging #}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">is_gdpr_model</span> <span class="o">=</span> <span class="nv">model.meta.get</span><span class="o">(</span><span class="s1">&#39;is_gdpr_model&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">        </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_gdpr_model</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="c">{# Table-level tag #}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">table_tag_name</span> <span class="o">=</span> <span class="s1">&#39;gdpr_deletion&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">table_tag_value</span> <span class="o">=</span> <span class="s1">&#39;enabled&#39;</span> <span class="cp">%}</span>
+
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">table_level_tag_sql</span> <span class="cp">%}</span>
+<span class="x">                ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">table_tag_name</span> <span class="cp">}}</span><span class="x">&#39; = &#39;</span><span class="cp">{{</span> <span class="nv">table_tag_value</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">table_level_tag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">            </span><span class="c">{# Column-level tags: set gdpr_column_type when provided #}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_tag_name</span> <span class="o">=</span> <span class="s1">&#39;gdpr_column_type&#39;</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">column</span> <span class="k">in</span> <span class="nv">model.columns</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">col_meta</span> <span class="o">=</span> <span class="nv">model.columns.get</span><span class="o">(</span><span class="nv">column</span><span class="o">)</span><span class="nv">.meta</span> <span class="k">or</span> <span class="o">{}</span> <span class="cp">%}</span>
+
+<span class="x">                </span><span class="c">{# Support either a boolean flag or explicit type string #}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">explicit_type</span> <span class="o">=</span> <span class="nv">col_meta.get</span><span class="o">(</span><span class="s1">&#39;gdpr_column_type&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">is_flagged</span> <span class="o">=</span> <span class="nv">col_meta.get</span><span class="o">(</span><span class="s1">&#39;is_gdpr_column&#39;</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="x">                </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">explicit_type</span> <span class="k">is</span> <span class="nf">string</span> <span class="k">and</span> <span class="nv">explicit_type</span><span class="o">|</span><span class="nf">length</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_level_tag_sql</span> <span class="cp">%}</span>
+<span class="x">                        ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                        ALTER COLUMN </span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">column_tag_name</span> <span class="cp">}}</span><span class="x">&#39; = &#39;</span><span class="cp">{{</span> <span class="nv">explicit_type</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">column_level_tag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">elif</span> <span class="nv">is_flagged</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_level_tag_sql_default</span> <span class="cp">%}</span>
+<span class="x">                        ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                        ALTER COLUMN </span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="x"> SET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">column_tag_name</span> <span class="cp">}}</span><span class="x">&#39; = &#39;user_identifier&#39;);</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">column_level_tag_sql_default</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">set</span> <span class="nv">column_level_untag_sql</span> <span class="cp">%}</span>
+<span class="x">                        ALTER TABLE </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                        ALTER COLUMN </span><span class="cp">{{</span> <span class="nv">column</span> <span class="cp">}}</span><span class="x"> UNSET TAGS (&#39;</span><span class="cp">{{</span> <span class="nv">column_tag_name</span> <span class="cp">}}</span><span class="x">&#39;);</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">endset</span> <span class="cp">%}</span>
+<span class="x">                    </span><span class="cp">{%</span> <span class="k">do</span> <span class="nv">run_query</span><span class="o">(</span><span class="nv">column_level_untag_sql</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">YAML meta example for GDPR</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_events_monthly</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monthly user engagement events used for activity analytics.</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">is_gdpr_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400d</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Anonymized user identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">gdpr_column_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user_identifier</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session_id</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Analytics session identifier</span>
+<span class="w">        </span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">is_gdpr_column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Logical partition/event date</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_type</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Type of event</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">advertising_campaigns</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Campaigns table retained permanently for financial audit.</span>
+<span class="w">    </span><span class="nt">meta</span><span class="p">:</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="operational-tips">
+<h2>Operational tips<a class="headerlink" href="#operational-tips" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Run this macro via post-hooks to keep tags aligned with each run, especially after schema changes.</p></li>
+<li><p>Use explicit types like <code class="docutils literal notranslate"><span class="pre">user_identifier</span></code>, <code class="docutils literal notranslate"><span class="pre">pii_email</span></code>, or <code class="docutils literal notranslate"><span class="pre">business_identifier</span></code> to categorize sensitivity.</p></li>
+<li><p>Keep the tagging macro idempotent and safe for reruns; the provided implementation sets or unsets tags based on current <code class="docutils literal notranslate"><span class="pre">meta</span></code>.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

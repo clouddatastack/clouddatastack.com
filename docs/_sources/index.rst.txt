@@ -9,12 +9,14 @@ If you want to contact `me <https://yuri.chernushenko.com/>`_ for consulting or 
    :maxdepth: 1
    :caption: Technology Stack:
 
-   stack/01_storage
-   stack/02_compute
-   stack/03_streaming
-   stack/04_transformation
-   stack/05_orchestration
-   stack/06_governance
+   stack/01_extraction
+   stack/02_streaming
+   stack/03_storage
+   stack/04_compute
+   stack/05_transformation
+   stack/06_orchestration
+   stack/07_governance
+   stack/08_ai_workflows
 
 .. raw:: html
 

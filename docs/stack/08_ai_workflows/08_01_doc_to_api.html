@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8.1. Document to API Call &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="7. AI Workflows" href="../08_ai_workflows.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07_governance.html">7. Governance</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../08_ai_workflows.html">7. AI Workflows</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">8.1. Document to API Call</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-phased-ai-solution">The Phased AI Solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#two-step-approach">Two-step approach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-case-and-scope">Use case and scope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#architecture-poc">Architecture (POC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-flow-and-contracts">Data flow and contracts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extraction-schema">Extraction schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prompt-template">Prompt template</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapping-logic-sketch">Mapping logic (sketch)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#salesforce-payload-sketch">Salesforce payload (sketch)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline-skeleton">Pipeline skeleton</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crm-adapter-select-provider">CRM adapter (select provider)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quotes-payload-generic">Quotes payload (generic)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operational-notes">Operational notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delivery-outline">Delivery outline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#portability">Portability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../08_ai_workflows.html">7. AI Workflows</a></li>
+      <li class="breadcrumb-item active">8.1. Document to API Call</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="document-to-api-call">
+<h1>8.1. Document to API Call<a class="headerlink" href="#document-to-api-call" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Apply AI to handle incoming automated requests by parsing generated content and turning it into precise API calls. A common example: tenders or RFQs arrive as emails with PDF/Word attachments; the goal is to parse the message and documents, extract product lines, map them to your catalog, and automatically create Opportunities and Line Items in systems like Salesforce.</p>
+</section>
+<section id="the-phased-ai-solution">
+<h2>The Phased AI Solution<a class="headerlink" href="#the-phased-ai-solution" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Extract Products</dt><dd><p>→ AI identifies and pulls product names, specifications, and quantities from tender documents.
+→ Proves the core ability to read complex text.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Map Products</dt><dd><p>→ Matches extracted names to the official product catalog.
+→ Translates customer terminology into internal product codes/SKUs.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Create Quotes</dt><dd><p>→ Generates an automated quote based on the mapped products.
+→ Depends entirely on the success of the first two phases.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="two-step-approach">
+<h2>Two-step approach<a class="headerlink" href="#two-step-approach" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Step 1: Document Processing
+• Convert tender documents (PDFs/Word) and email bodies into a structured digital format (JSON).
+• This creates a foundation of clean, searchable, and structured data.</p></li>
+<li><p>Step 2: Intelligent Extraction
+• Feed the JSON into a prompt template and then to an LLM.
+• Use a specialized prompt with detailed instructions to guide the model.
+• Extract specific product information with high accuracy.</p></li>
+</ul>
+</section>
+<section id="use-case-and-scope">
+<h2>Use case and scope<a class="headerlink" href="#use-case-and-scope" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Inputs: RFC-822 email (MIME) and attachments (PDF/Docx), languages such as English/German.</p></li>
+<li><p>Entities: Product mentions (name/spec/qty/unit/packaging/standards), optional price.</p></li>
+<li><p>Outputs: Structured JSON for extracted items; mapped SKUs with confidence; API payload for CRM.</p></li>
+<li><p>Targets: CRM objects such as Salesforce (Account/Contact, Opportunity, OpportunityLineItem, Files/Notes) or other CRMs via an adapter.</p></li>
+<li><p>Users: Sales Ops/Bid Desk; optional human-in-the-loop for low-confidence lines.</p></li>
+</ul>
+</section>
+<section id="architecture-poc">
+<h2>Architecture (POC)<a class="headerlink" href="#architecture-poc" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Ingest: webhook/IMAP/SES → queue → worker.</p></li>
+<li><p>Parsing: text + tables; OCR for scanned PDFs.</p></li>
+<li><p>LLM extraction: JSON-only mode, validated by schema.</p></li>
+<li><p>Catalog mapping: hybrid search (lexical + embeddings) + rules and unit constraints.</p></li>
+<li><p>Review: approve/correct low-confidence items.</p></li>
+<li><p>Integration: create CRM records via REST/Composite API with retries.</p></li>
+<li><p>Observability: logs, metrics, costs, drift.</p></li>
+</ul>
+</section>
+<section id="data-flow-and-contracts">
+<h2>Data flow and contracts<a class="headerlink" href="#data-flow-and-contracts" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Input: email body and attachments.</p></li>
+<li><p>Intermediate: structured JSON from parsing (Step 1) and refined JSON from LLM (Step 2).</p></li>
+<li><p>Output: mapped decisions with confidences and a ready-to-send CRM payload.</p></li>
+</ul>
+</section>
+<section id="extraction-schema">
+<h2>Extraction schema<a class="headerlink" href="#extraction-schema" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">JSON schema for extracted items</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://json-schema.org/draft-07/schema#&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TenderExtraction&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;raw_mention&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;normalized_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;qty&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;packaging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">]},</span>
+<span class="w">          </span><span class="nt">&quot;standards&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">}},</span>
+<span class="w">          </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;context_span&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">]}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;raw_mention&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;normalized_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;qty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;unit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;context_span&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;minItems&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;source_language&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;string&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">]}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="prompt-template">
+<h2>Prompt template<a class="headerlink" href="#prompt-template" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Prompt for product extraction</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SYSTEM:
+You are an expert tender analyst. Extract product items from text and tables.
+Output JSON only. No prose. Follow the schema exactly.
+
+SCHEMA:
+{
+  &quot;items&quot;: [
+    {
+      &quot;raw_mention&quot;: &quot;string&quot;,
+      &quot;normalized_name&quot;: &quot;string&quot;,
+      &quot;qty&quot;: 0,
+      &quot;unit&quot;: &quot;pcs|m|kg|l|box|pack|set|...&quot;,
+      &quot;packaging&quot;: &quot;string|null&quot;,
+      &quot;standards&quot;: [&quot;string&quot;, &quot;...&quot;] | null,
+      &quot;price&quot;: 0 | null,
+      &quot;context_span&quot;: &quot;string&quot;,
+      &quot;notes&quot;: &quot;string|null&quot;
+    }
+  ],
+  &quot;source_language&quot;: &quot;en|de|...&quot;
+}
+
+INSTRUCTIONS:
+- Parse line items, tables, and free text.
+- Prefer quantities and units from tables; normalize unit spellings.
+- Keep context_span as a short quote of the source line.
+- If price is not present, set it to null.
+- If packaging or standards are not present, set them to null.
+
+USER:
+{{INPUT_TEXT}}
+</pre></div>
+</div>
+</div>
+</section>
+<section id="mapping-logic-sketch">
+<h2>Mapping logic (sketch)<a class="headerlink" href="#mapping-logic-sketch" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Hybrid mapping toy example</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtractedItem</span><span class="p">,</span> <span class="n">MappingDecision</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">candidate_generation</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return candidate (sku, name) pairs. Placeholder for BM25 + embeddings.&quot;&quot;&quot;</span>
+    <span class="c1"># In a real system, query Postgres/OpenSearch and pgvector for hybrid recall</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;SKU-001&quot;</span><span class="p">,</span> <span class="s2">&quot;Steel Rod EN 10060, 10mm&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;SKU-002&quot;</span><span class="p">,</span> <span class="s2">&quot;Steel Rod EN 10060, 12mm&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">score_candidate</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">ExtractedItem</span><span class="p">,</span> <span class="n">candidate</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Score based on lexical similarity, UoM compatibility, and standards hints.&quot;&quot;&quot;</span>
+    <span class="n">sku</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">candidate</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;normalized_name&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;normalized_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.6</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;en 10060&quot;</span><span class="p">,</span> <span class="s2">&quot;iso&quot;</span><span class="p">,</span> <span class="s2">&quot;din&quot;</span><span class="p">]):</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.2</span>
+    <span class="c1"># toy heuristic for UoM presence</span>
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unit&quot;</span><span class="p">):</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="mf">0.2</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">map_items</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ExtractedItem</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MappingDecision</span><span class="p">]:</span>
+    <span class="n">decisions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MappingDecision</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">cands</span> <span class="o">=</span> <span class="n">candidate_generation</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;normalized_name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;raw_mention&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="n">scored</span> <span class="o">=</span> <span class="p">[(</span><span class="n">cand</span><span class="p">,</span> <span class="n">score_candidate</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">cand</span><span class="p">))</span> <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">cands</span><span class="p">]</span>
+        <span class="n">scored</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">best</span><span class="p">,</span> <span class="n">conf</span> <span class="o">=</span> <span class="p">(</span><span class="n">scored</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">scored</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">scored</span> <span class="k">else</span> <span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">decision</span><span class="p">:</span> <span class="n">MappingDecision</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;extracted&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">,</span>
+            <span class="s2">&quot;candidate_sku&quot;</span><span class="p">:</span> <span class="n">best</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">best</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;candidate_name&quot;</span><span class="p">:</span> <span class="n">best</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">best</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="n">conf</span><span class="p">,</span>
+            <span class="s2">&quot;rationale&quot;</span><span class="p">:</span> <span class="s2">&quot;toy matcher: lexical + hints&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">decisions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decision</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decisions</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="salesforce-payload-sketch">
+<h2>Salesforce payload (sketch)<a class="headerlink" href="#salesforce-payload-sketch" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Composite API payload builder example</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingDecision</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_sfdc_composite_payload</span><span class="p">(</span>
+    <span class="n">account_external_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">opportunity_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">close_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">stage_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pricebook2_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">decisions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MappingDecision</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a Salesforce Composite API payload to create Opportunity and Line Items.</span>
+
+<span class="sd">    Assumes candidate_sku maps to a PricebookEntry via an External ID.</span>
+<span class="sd">    Replace references with your org&#39;s External IDs and fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ref_opp</span> <span class="o">=</span> <span class="s2">&quot;refOpp&quot;</span>
+    <span class="n">composite</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Create Opportunity</span>
+    <span class="n">composite</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/services/data/v59.0/sobjects/Opportunity&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;referenceId&quot;</span><span class="p">:</span> <span class="n">ref_opp</span><span class="p">,</span>
+            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="n">opportunity_name</span><span class="p">,</span>
+                <span class="s2">&quot;StageName&quot;</span><span class="p">:</span> <span class="n">stage_name</span><span class="p">,</span>
+                <span class="s2">&quot;CloseDate&quot;</span><span class="p">:</span> <span class="n">close_date</span><span class="p">,</span>
+                <span class="s2">&quot;Pricebook2Id&quot;</span><span class="p">:</span> <span class="n">pricebook2_id</span><span class="p">,</span>
+                <span class="s2">&quot;Account__c&quot;</span><span class="p">:</span> <span class="n">account_external_id</span><span class="p">,</span>  <span class="c1"># replace with your lookup strategy</span>
+                <span class="s2">&quot;Source__c&quot;</span><span class="p">:</span> <span class="s2">&quot;Tender Intake&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create line items for candidates with a mapping</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">decisions</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;candidate_sku&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">composite</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/services/data/v59.0/sobjects/OpportunityLineItem&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;referenceId&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;refLine</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;OpportunityId&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;@</span><span class="se">{{</span><span class="si">{</span><span class="n">ref_opp</span><span class="si">}</span><span class="s2">.id</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;PricebookEntryId&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;@</span><span class="se">{{</span><span class="s2">refPbe</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">.id</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Quantity&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;extracted&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;qty&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="c1"># Resolve PricebookEntry by SKU external id</span>
+        <span class="n">composite</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;/services/data/v59.0/query?q=SELECT+Id+FROM+PricebookEntry+WHERE+Product2.ExternalId__c=&#39;</span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;candidate_sku&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;+AND+Pricebook2Id=&#39;</span><span class="si">{</span><span class="n">pricebook2_id</span><span class="si">}</span><span class="s2">&#39;+LIMIT+1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;referenceId&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;refPbe</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;allOrNone&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;compositeRequest&quot;</span><span class="p">:</span> <span class="n">composite</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="pipeline-skeleton">
+<h2>Pipeline skeleton<a class="headerlink" href="#pipeline-skeleton" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">End-to-end POC pipeline steps</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">TenderExtraction</span><span class="p">,</span> <span class="n">ExtractedItem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..mapping.catalog_mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">map_items</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..integrations.crm_adapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_crm_payload</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_email_and_docs_to_json</span><span class="p">(</span><span class="n">email_body</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attachments</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TenderExtraction</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Step 1: Document Processing. Placeholder converting email/PDF into structured JSON.</span>
+<span class="sd">    Replace with real parsing: MIME processing, PDF table extraction, OCR if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Toy output for illustration</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;raw_mention&quot;</span><span class="p">:</span> <span class="s2">&quot;Steel Rod EN 10060 10mm qty 100&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;normalized_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Steel Rod EN 10060 10mm&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;qty&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+                <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;pcs&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;packaging&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;standards&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;EN 10060&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;context_span&quot;</span><span class="p">:</span> <span class="s2">&quot;Table row 4&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;source_language&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_with_llm</span><span class="p">(</span><span class="n">parsed_json</span><span class="p">:</span> <span class="n">TenderExtraction</span><span class="p">,</span> <span class="n">prompt_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TenderExtraction</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Step 2: Intelligent Extraction. Placeholder that would call an LLM in production.</span>
+<span class="sd">    Here we simply return the parsed_json to illustrate the flow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">parsed_json</span>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_pipeline</span><span class="p">(</span><span class="n">email_body</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attachments</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">crm_provider</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;salesforce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;End-to-end orchestration following the Phased AI Solution.</span>
+
+<span class="sd">    Phase 1: Extract Products (parse + LLM)</span>
+<span class="sd">    Phase 2: Map Products (catalog mapping)</span>
+<span class="sd">    Phase 3: Create Quotes (quote payload) and/or CRM payload</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Phase 1</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">parse_email_and_docs_to_json</span><span class="p">(</span><span class="n">email_body</span><span class="p">,</span> <span class="n">attachments</span><span class="p">)</span>
+    <span class="n">extracted</span> <span class="o">=</span> <span class="n">extract_with_llm</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span>
+
+    <span class="c1"># Phase 2</span>
+    <span class="n">decisions</span> <span class="o">=</span> <span class="n">map_items</span><span class="p">(</span><span class="n">extracted</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">])</span>  <span class="c1"># mapping results with confidence</span>
+
+    <span class="c1"># Phase 3 — vendor-agnostic adapter (Salesforce is one option)</span>
+    <span class="n">crm_payload</span> <span class="o">=</span> <span class="n">build_crm_payload</span><span class="p">(</span>
+        <span class="n">provider</span><span class="o">=</span><span class="n">crm_provider</span><span class="p">,</span>
+        <span class="n">decisions</span><span class="o">=</span><span class="n">decisions</span><span class="p">,</span>
+        <span class="n">customer_id</span><span class="o">=</span><span class="s2">&quot;ACME-EXT-123&quot;</span><span class="p">,</span>
+        <span class="n">currency</span><span class="o">=</span><span class="s2">&quot;EUR&quot;</span><span class="p">,</span>
+        <span class="n">sfdc_opportunity_name</span><span class="o">=</span><span class="s2">&quot;Tender Intake - ACME&quot;</span><span class="p">,</span>
+        <span class="n">sfdc_close_date</span><span class="o">=</span><span class="s2">&quot;2025-09-30&quot;</span><span class="p">,</span>
+        <span class="n">sfdc_stage_name</span><span class="o">=</span><span class="s2">&quot;Qualification&quot;</span><span class="p">,</span>
+        <span class="n">sfdc_pricebook2_id</span><span class="o">=</span><span class="s2">&quot;01sXXXXXXXXXXXX&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;crm&quot;</span><span class="p">:</span> <span class="n">crm_payload</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="crm-adapter-select-provider">
+<h2>CRM adapter (select provider)<a class="headerlink" href="#crm-adapter-select-provider" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Adapter: Salesforce or vendor-agnostic quote payload</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingDecision</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.salesforce_payload</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_sfdc_composite_payload</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.quotes_payload</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_quote_payload</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_crm_payload</span><span class="p">(</span>
+    <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">decisions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MappingDecision</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">currency</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EUR&quot;</span><span class="p">,</span>
+    <span class="c1"># Salesforce-specific (optional)</span>
+    <span class="n">sfdc_opportunity_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">sfdc_close_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">sfdc_stage_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">sfdc_pricebook2_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a payload for the selected CRM provider.</span>
+
+<span class="sd">    - provider=&#39;salesforce&#39;: returns a Composite API payload to create Opp + Line Items.</span>
+<span class="sd">    - other: returns a generic quote payload suitable for custom or alternate CRMs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;salesforce&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">sfdc_opportunity_name</span> <span class="ow">and</span> <span class="n">sfdc_close_date</span> <span class="ow">and</span> <span class="n">sfdc_stage_name</span> <span class="ow">and</span> <span class="n">sfdc_pricebook2_id</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Missing Salesforce parameters for CRM adapter&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">build_sfdc_composite_payload</span><span class="p">(</span>
+            <span class="n">account_external_id</span><span class="o">=</span><span class="n">customer_id</span><span class="p">,</span>
+            <span class="n">opportunity_name</span><span class="o">=</span><span class="n">sfdc_opportunity_name</span><span class="p">,</span>
+            <span class="n">close_date</span><span class="o">=</span><span class="n">sfdc_close_date</span><span class="p">,</span>
+            <span class="n">stage_name</span><span class="o">=</span><span class="n">sfdc_stage_name</span><span class="p">,</span>
+            <span class="n">pricebook2_id</span><span class="o">=</span><span class="n">sfdc_pricebook2_id</span><span class="p">,</span>
+            <span class="n">decisions</span><span class="o">=</span><span class="n">decisions</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Default: vendor-agnostic quote payload</span>
+    <span class="k">return</span> <span class="n">build_quote_payload</span><span class="p">(</span><span class="n">customer_id</span><span class="o">=</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">currency</span><span class="o">=</span><span class="n">currency</span><span class="p">,</span> <span class="n">decisions</span><span class="o">=</span><span class="n">decisions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="quotes-payload-generic">
+<h2>Quotes payload (generic)<a class="headerlink" href="#quotes-payload-generic" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Quote payload builder (vendor-agnostic)</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">MappingDecision</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_quote_payload</span><span class="p">(</span>
+    <span class="n">customer_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">currency</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">decisions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MappingDecision</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic quote payload independent of any specific CRM.</span>
+
+<span class="sd">    The payload contains the customer reference, currency, and quote line items</span>
+<span class="sd">    with SKU, name, qty, unit, and price if available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">decisions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;candidate_sku&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;extracted&quot;</span><span class="p">]</span>
+        <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;sku&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;candidate_sku&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;candidate_name&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;qty&quot;</span><span class="p">:</span> <span class="n">ext</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;qty&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="n">ext</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="s2">&quot;pcs&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="n">ext</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">),</span>  <span class="c1"># may be null; pricing can be resolved later</span>
+                <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confidence&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;customer_id&quot;</span><span class="p">:</span> <span class="n">customer_id</span><span class="p">,</span>
+        <span class="s2">&quot;currency&quot;</span><span class="p">:</span> <span class="n">currency</span><span class="p">,</span>
+        <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span>
+        <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="s2">&quot;Auto-generated from tender intake&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="operational-notes">
+<h2>Operational notes<a class="headerlink" href="#operational-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Guardrails: enforce JSON-only LLM output; validate against schema; cap tokens; redact PII.</p></li>
+<li><p>Constraints: only map active SKUs with valid pricebook entries and unit compatibility.</p></li>
+<li><p>HITL: show source snippet, extracted line, candidate SKUs with confidence; approve/correct.</p></li>
+<li><p>Retries/backoff: handle 429/5xx from CRM APIs.</p></li>
+<li><p>Metrics: extraction accuracy (precision/recall/F1), mapping confidence histogram, turnaround time, API errors.</p></li>
+</ul>
+</section>
+<section id="delivery-outline">
+<h2>Delivery outline<a class="headerlink" href="#delivery-outline" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>MVP: Ingest → Parse → Extract → Map → Create Opportunity/Line Items (fixed pricebook); small reviewer UI; a golden set for regression.</p></li>
+<li><p>Iteration: composite API, account match via domain/external ID, synonyms cache, telemetry dashboard.</p></li>
+<li><p>V1+: improved OCR for tables, additional languages, canary prompts, role-based reviewer.</p></li>
+</ul>
+</section>
+<section id="portability">
+<h2>Portability<a class="headerlink" href="#portability" title="Link to this heading"></a></h2>
+<p>The examples are provider-agnostic. Swap AWS components for GCP/Azure equivalents. Replace CRM integration with your target system while keeping the contracts and steps unchanged.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
