@@ -1,7 +1,7 @@
-6.1 Orchestration with Airflow
+6.1 Schedule with Airflow
 =================================
 
-How to orchestrate your Workloads on Databricks with Airflow.
+How to schedule your Workloads on Databricks with Airflow.
 
 .. contents:: Article Outline
    :local:
