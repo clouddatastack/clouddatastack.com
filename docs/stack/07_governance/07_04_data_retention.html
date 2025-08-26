@@ -61,7 +61,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#what-you-implement">What you implement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-incremental-model-with-retention">Example: incremental model with retention</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#behavior-and-policy-notes">Behavior and policy notes</a></li>
 </ul>
 </li>
@@ -113,7 +112,9 @@
 <ol class="arabic">
 <li><p>Add the macros to your project:</p>
 <blockquote>
-<div><div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic data retention tagging macro for dbt</span>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Macro: set_data_retention_tag</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic data retention tagging macro for dbt</span>
 <span class="x">-- Applies a table tag `retention` with value determined by model meta or default policy.</span>
 <span class="x">-- Adjust ALTER syntax to your target warehouse if needed.</span>
 
@@ -148,11 +149,9 @@
 <span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">caption<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Macro: set_data_retention_tag</p>
-</dd>
-</dl>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Macro: data_retention</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
 <div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Housekeeping macro to delete rows older than N days</span>
 <span class="x">-- Usage: post_hook = &quot;</span><span class="cp">{{</span> <span class="nv">data_retention</span><span class="o">(</span><span class="m">90</span><span class="o">,</span> <span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;</span>
 
@@ -163,11 +162,9 @@
 <span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">caption<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Macro: data_retention</p>
-</dd>
-</dl>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Helper macros for dates</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
 <div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Small helpers to make examples portable across warehouses</span>
 
 <span class="cp">{%</span> <span class="k">macro</span> <span class="nv">event_date</span><span class="o">()</span> <span class="cp">%}</span>
@@ -179,17 +176,13 @@
 <span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">caption<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Helper macros for dates</p>
-</dd>
-</dl>
+</div>
 </div></blockquote>
 </li>
 <li><p>Declare retention in your model YAML where needed:</p>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Example YAML with model-level retention</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Example YAML with model-level retention</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 
 <span class="nt">models</span><span class="p">:</span>
@@ -230,12 +223,10 @@
 </li>
 <li><p>Add post-hooks so the tag macro runs for the relevant models. You can set this at the <code class="docutils literal notranslate"><span class="pre">dbt_project.yml</span></code> folder level or per model via <code class="docutils literal notranslate"><span class="pre">config(post_hook=...)</span></code>.</p></li>
 </ol>
-</section>
-<section id="example-incremental-model-with-retention">
-<h2>Example: incremental model with retention<a class="headerlink" href="#example-incremental-model-with-retention" title="Link to this heading"></a></h2>
-<p>The snippet below shows an incremental model using <code class="docutils literal notranslate"><span class="pre">replace_where</span></code> and a <code class="docutils literal notranslate"><span class="pre">post_hook</span></code> to delete rows older than 90 days:</p>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Incremental model using data_retention</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<p>Example: incremental model with retention
+The snippet below shows an incremental model using <code class="docutils literal notranslate"><span class="pre">replace_where</span></code> and a <code class="docutils literal notranslate"><span class="pre">post_hook</span></code> to delete rows older than 90 days:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Incremental model using data_retention</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
 <div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{{</span>
     <span class="nv">config</span><span class="o">(</span>
         <span class="nv">materialized</span><span class="o">=</span><span class="s1">&#39;incremental&#39;</span><span class="o">,</span>

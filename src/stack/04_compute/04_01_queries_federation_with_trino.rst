@@ -188,9 +188,9 @@ Use Cases
 1. **Data Lake Analytics**:
 
    - **Configuration**:
-  - Set up an S3 catalog as described in the AWS setup to query data stored in S3.
+     - Set up an S3 catalog as described in the AWS setup to query data stored in S3.
 
-- **Code Example**:
+   - **Code Example**:
 
   ```sql
   SELECT region, COUNT(*)
@@ -201,12 +201,13 @@ Use Cases
 
   This query counts the number of sales records for each region in the year 2025.
 
+
 2. **Cross-Database Joins**:
 
    - **Configuration**:
-  - Set up catalogs for MySQL and PostgreSQL to enable cross-database queries:
+     - Set up catalogs for MySQL and PostgreSQL to enable cross-database queries:
 
-    .. code-block:: properties
+     .. code-block:: properties
 
        # MySQL catalog (mysql.properties)
        connector.name=mysql
@@ -231,12 +232,13 @@ Use Cases
 
   This query joins user data from MySQL with order data from PostgreSQL based on the `user_id` column.
 
+
 3. **Ad-Hoc Analysis**:
 
    - **Configuration**:
-  - Use Trino CLI or connect a BI tool like Tableau to Trino for interactive analysis.
+     - Use Trino CLI or connect a BI tool like Tableau to Trino for interactive analysis.
 
-- **Code Example**:
+   - **Code Example**:
 
   ```sql
   SELECT product_id, AVG(sales)

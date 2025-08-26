@@ -58,9 +58,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">7.2. Data Migration Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#key-considerations-and-steps">Key Considerations and Steps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#naming-conventions">Naming Conventions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-sqlfluff-for-sql-linting">Using sqlfluff for SQL Linting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#data-reconciliation">Data Reconciliation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saving-platform-scripts-for-audit-and-reuse">Saving Platform Scripts for Audit and Reuse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#stakeholder-approval">Stakeholder Approval</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#common-dbt-pitfalls-and-solutions">Common dbt Pitfalls and Solutions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#testing-dbt-scripts">Testing dbt Scripts</a></li>
@@ -138,68 +136,40 @@
 -   <strong>Orchestration</strong>: Schedule dbt runs using an orchestrator like Apache Airflow, Dagster, or dbt Cloud.</p></li>
 </ol>
 </section>
-<section id="naming-conventions">
-<h2>Naming Conventions<a class="headerlink" href="#naming-conventions" title="Link to this heading"></a></h2>
-<p>Consistent naming conventions are crucial for a maintainable dbt project.</p>
+<section id="saving-platform-scripts-for-audit-and-reuse">
+<h2>Saving Platform Scripts for Audit and Reuse<a class="headerlink" href="#saving-platform-scripts-for-audit-and-reuse" title="Link to this heading"></a></h2>
+<p>It is highly recommended to save all SQL and Python scripts exported from the source platform (e.g., legacy DWH, ETL tool, or BI platform) into a separate version-controlled repository. This provides:</p>
 <ul class="simple">
-<li><p><strong>Models</strong>: Use descriptive names that indicate the entity and transformation stage (e.g., <cite>stg_customers</cite>, <cite>int_orders_aggregated</cite>, <cite>fct_monthly_sales</cite>).</p></li>
-<li><p><strong>Columns</strong>: Be consistent with casing (e.g., <cite>snake_case</cite>) and use clear, unambiguous names.</p></li>
-<li><p><strong>Sources and Seeds</strong>: Prefix with <cite>src_</cite> and <cite>seed_</cite> respectively, or follow project-specific guidelines.</p></li>
-<li><p><strong>File Names</strong>: Model file names should match the model names (e.g., <cite>stg_customers.sql</cite>).</p></li>
+<li><p>A full audit trail of the original logic and transformations.</p></li>
+<li><p>A safe place for users to review, edit, or annotate legacy scripts during migration.</p></li>
+<li><p>A reference for debugging or rollback if issues arise post-migration.</p></li>
 </ul>
+<p>Organize the repository by source system, script type (SQL, Python, etc.), and business domain for easy navigation.</p>
+<p>Naming Conventions</p>
+<p>Consistent naming conventions are crucial for a maintainable dbt project.</p>
 <p>Refer to your organization’s specific guidelines for detailed conventions.</p>
-</section>
-<section id="using-sqlfluff-for-sql-linting">
-<h2>Using sqlfluff for SQL Linting<a class="headerlink" href="#using-sqlfluff-for-sql-linting" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">sqlfluff</span></code> is a powerful SQL linter and auto-formatter that helps maintain code quality and consistency.</p>
-<ol class="arabic">
-<li><p><strong>Installation</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sqlfluff<span class="w"> </span>sqlfluff-templater-dbt
-</pre></div>
-</div>
-</li>
-<li><p><strong>Configuration</strong>:
-Create a <code class="docutils literal notranslate"><span class="pre">.sqlfluff</span></code> configuration file in your dbt project root to define rules and dialects.
-Example <code class="docutils literal notranslate"><span class="pre">.sqlfluff</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">ini</span>
-</pre></div>
-</div>
-<blockquote>
-<div><p>[sqlfluff]
-templater = dbt
-dialect = snowflake  # Or your specific dialect (bigquery, redshift, etc.)
-rules = AM04, CP01, L003, L010, L019, L029, L030, L031, L034, L036, L042, L050, L051, L052, L053, L057, L059, L062, L063, L066, L067, L068, L070</p>
-<p>[sqlfluff:templater:dbt]
-project_dir = ./</p>
-<p>[sqlfluff:rules:L003] # Indentation
-tab_space_size = 4</p>
-<p>[sqlfluff:rules:L010] # Keywords
-capitalisation_policy = upper</p>
-<p>[sqlfluff:rules:L030] # Function names
-capitalisation_policy = upper</p>
-</div></blockquote>
-</li>
-<li><p><strong>Usage</strong>:
--   Lint: <code class="docutils literal notranslate"><span class="pre">sqlfluff</span> <span class="pre">lint</span> <span class="pre">models/</span></code>
--   Fix: <code class="docutils literal notranslate"><span class="pre">sqlfluff</span> <span class="pre">fix</span> <span class="pre">models/</span></code></p></li>
+<p>Validation and Reconciliation of Migration Results</p>
+<ul class="simple">
+<li><p><strong>Row Counts and Aggregates</strong>: For each migrated table, compare row counts and key aggregates (sum, min, max, avg) between source and target. Discrepancies should be investigated and explained.</p></li>
+<li><p><strong>Sampling and Spot Checks</strong>: For large tables, sample random rows and compare key fields. For smaller tables, consider full data diffs.</p></li>
+<li><p><strong>Dimension and Value Checks</strong>: Compare distinct values for categorical columns (e.g., status, type) to catch mapping or truncation errors.</p></li>
+<li><dl class="simple">
+<dt><strong>Full Data Dumps</strong>: For smaller tables, compare entire datasets if feasible.</dt><dd><ol class="arabic simple" start="3">
+<li><p><strong>Measure Target</strong>: Record counts and aggregates from the target system.</p></li>
+<li><p><strong>Compare and Log</strong>: Save all queries and results in the notebook for traceability.</p></li>
 </ol>
-<p>Integrating <code class="docutils literal notranslate"><span class="pre">sqlfluff</span></code> into your CI/CD pipeline ensures that all code contributions adhere to the defined standards.</p>
-</section>
-<section id="data-reconciliation">
-<h2>Data Reconciliation<a class="headerlink" href="#data-reconciliation" title="Link to this heading"></a></h2>
-<p>Ensuring data consistency between the old and new systems is paramount.</p>
-<ol class="arabic">
-<li><p><strong>Strategy</strong>:
--   <strong>Row Counts</strong>: Compare row counts for key tables.
--   <strong>Aggregate Checks</strong>: Compare sums, averages, min/max values for important numeric columns.
--   <strong>Dimension Comparisons</strong>: For dimensional data, check for discrepancies in distinct values.
--   <strong>Full Data Dumps (for smaller tables)</strong>: Compare entire datasets if feasible.</p></li>
-<li><p><strong>Reconciliation Script</strong>:
-A Python script can automate the comparison of tables between two different data sources (e.g., the legacy system and the new dbt-managed warehouse). The script typically involves:
--   Connecting to both source and target databases.
--   Fetching data (or aggregates) from corresponding tables.
--   Comparing the results and highlighting discrepancies.</p>
-<p>An example Python script for table reconciliation might look like this (conceptual):</p>
+</dd>
+</dl>
+</li>
+<li><p><strong>Automated Scripts</strong>: Use Python or SQL scripts to automate these checks across many tables. Log results and flag mismatches for review.</p></li>
+</ul>
+<p><strong>Example: Python Reconciliation Script</strong></p>
+<p>A Python script can automate the comparison of tables between two different data sources (e.g., the legacy system and the new dbt-managed warehouse). The script typically involves:</p>
+<ul class="simple">
+<li><p>Connecting to both source and target databases.</p></li>
+<li><p>Fetching data (or aggregates) from corresponding tables.</p></li>
+<li><p>Comparing the results and highlighting discrepancies.</p></li>
+</ul>
 <div class="literal-block-wrapper docutils container" id="reconcile-tables-py">
 <div class="code-block-caption"><span class="caption-text">Example: reconcile_tables.py</span><a class="headerlink" href="#reconcile-tables-py" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -238,7 +208,7 @@ A Python script can automate the comparison of tables between two different data
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum for column </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> matches.&quot;</span><span class="p">)</span>
     <span class="c1"># Add more sophisticated checks as needed (e.g., using pandas.merge for detailed diff)</span>
 
-    <span class="n">conn_source</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
     <span class="n">conn_target</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <span class="c1"># Example usage:</span>
@@ -248,9 +218,27 @@ A Python script can automate the comparison of tables between two different data
 </div>
 <p>A more complete version of such a script can be found at:
 <a class="reference external" href="code/dbt_migration/reconcile_tables.py">code/dbt_migration/reconcile_tables.py</a></p>
-<p>This script should be adapted to your specific database connectors and comparison logic.</p>
-</li>
+<blockquote>
+<div><p>This script should be adapted to your specific database connectors and comparison logic.</p>
+</div></blockquote>
+<p>Backfilling Best Practices: Staged Notebooks and Traceability
+Backfilling (historical data loading) is a critical part of most migrations. To ensure accuracy and reproducibility:</p>
+<ul class="simple">
+<li><p>Use a dedicated folder (e.g., <code class="docutils literal notranslate"><span class="pre">backfill_notebooks/</span></code>) to store Python notebooks for each backfill task or table.</p></li>
+<li><dl class="simple">
+<dt>Structure each notebook into clear stages:</dt><dd><ol class="arabic simple">
+<li><p><strong>Measure Source State</strong>: Run and save a query like <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">COUNT(*)</span></code> (and optionally aggregates) on the source system. Record the result.</p></li>
+<li><p><strong>Ingest Data</strong>: Run the ingestion query or script, saving the exact SQL/Python used for traceability.</p></li>
+<li><p><strong>Measure Target State</strong>: After ingestion, run <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">COUNT(*)</span></code> (and aggregates) on the target table. Record the result.</p></li>
 </ol>
+</dd>
+</dl>
+</li>
+<li><p>Save all queries and scripts used for each stage in the notebook or as separate files in the same folder.</p></li>
+<li><p>Track the number of records ingested and compare source/target counts to validate completeness.</p></li>
+<li><p>Optionally, automate logging of these metrics for audit and reporting.</p></li>
+</ul>
+<p>This staged, notebook-driven approach makes the backfill process transparent, repeatable, and easy to review or rerun if needed.</p>
 </section>
 <section id="stakeholder-approval">
 <h2>Stakeholder Approval<a class="headerlink" href="#stakeholder-approval" title="Link to this heading"></a></h2>

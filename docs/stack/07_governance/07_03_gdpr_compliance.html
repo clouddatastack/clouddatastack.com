@@ -116,7 +116,9 @@
 <ol class="arabic">
 <li><p>Add macros to your project (example files in this repository):</p>
 <blockquote>
-<div><div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic GDPR tagging macro for dbt</span>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Macro: set_gdpr_compliance_tag</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic GDPR tagging macro for dbt</span>
 <span class="x">-- Notes:</span>
 <span class="x">-- - Example SQL below uses Databricks/Unity Catalog syntax for tags.</span>
 <span class="x">-- - If your warehouse uses a different syntax (e.g., Snowflake), adjust the ALTER statements accordingly.</span>
@@ -170,17 +172,13 @@
 <span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">caption<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Macro: set_gdpr_compliance_tag</p>
-</dd>
-</dl>
+</div>
 </div></blockquote>
 </li>
 <li><p>In your dbt model YAML, annotate tables/columns via <code class="docutils literal notranslate"><span class="pre">meta</span></code>:</p>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Example model YAML with GDPR meta</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Example model YAML with GDPR meta</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 
 <span class="nt">models</span><span class="p">:</span>
@@ -240,8 +238,8 @@
 </section>
 <section id="reference-implementation">
 <h2>Reference implementation<a class="headerlink" href="#reference-implementation" title="Link to this heading"></a></h2>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">set_gdpr_compliance_tag macro (full)</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">set_gdpr_compliance_tag macro (full)</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
 <div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="x">-- Generic GDPR tagging macro for dbt</span>
 <span class="x">-- Notes:</span>
 <span class="x">-- - Example SQL below uses Databricks/Unity Catalog syntax for tags.</span>
@@ -297,8 +295,8 @@
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">YAML meta example for GDPR</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">YAML meta example for GDPR</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 
 <span class="nt">models</span><span class="p">:</span>

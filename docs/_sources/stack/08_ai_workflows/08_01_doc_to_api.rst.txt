@@ -79,7 +79,7 @@ Mapping logic (sketch)
 
 .. literalinclude:: code/mapping/catalog_mapping.py
 	:language: python
-	:lines: 1-200
+	:lines: 1-45
 	:caption: Hybrid mapping toy example
 
 Salesforce payload (sketch)
@@ -87,7 +87,7 @@ Salesforce payload (sketch)
 
 .. literalinclude:: code/integrations/salesforce_payload.py
 	:language: python
-	:lines: 1-200
+	:lines: 1-65
 	:caption: Composite API payload builder example
 
 Pipeline skeleton
@@ -95,7 +95,7 @@ Pipeline skeleton
 
 .. literalinclude:: code/pipeline/tender_to_api.py
 	:language: python
-	:lines: 1-999
+	:lines: 1-67
 	:caption: End-to-end POC pipeline steps
 
 CRM adapter (select provider)
@@ -103,7 +103,7 @@ CRM adapter (select provider)
 
 .. literalinclude:: code/integrations/crm_adapter.py
 	:language: python
-	:lines: 1-200
+	:lines: 1-39
 	:caption: Adapter: Salesforce or vendor-agnostic quote payload
 
 Quotes payload (generic)
@@ -111,7 +111,7 @@ Quotes payload (generic)
 
 .. literalinclude:: code/integrations/quotes_payload.py
 	:language: python
-	:lines: 1-200
+	:lines: 1-38
 	:caption: Quote payload builder (vendor-agnostic)
 
 Operational notes

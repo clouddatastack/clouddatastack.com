@@ -36,127 +36,106 @@ Migrating to dbt involves more than just translating SQL queries. It's an opport
     -   **CI/CD**: Implement CI/CD pipelines (e.g., using GitHub Actions, GitLab CI, Jenkins) to automate testing and deployment of dbt models.
     -   **Orchestration**: Schedule dbt runs using an orchestrator like Apache Airflow, Dagster, or dbt Cloud.
 
+Saving Platform Scripts for Audit and Reuse
+-------------------------------------------
+
+It is highly recommended to save all SQL and Python scripts exported from the source platform (e.g., legacy DWH, ETL tool, or BI platform) into a separate version-controlled repository. This provides:
+
+- A full audit trail of the original logic and transformations.
+- A safe place for users to review, edit, or annotate legacy scripts during migration.
+- A reference for debugging or rollback if issues arise post-migration.
+
+Organize the repository by source system, script type (SQL, Python, etc.), and business domain for easy navigation.
+
 Naming Conventions
-------------------
 
 Consistent naming conventions are crucial for a maintainable dbt project.
 
--   **Models**: Use descriptive names that indicate the entity and transformation stage (e.g., `stg_customers`, `int_orders_aggregated`, `fct_monthly_sales`).
--   **Columns**: Be consistent with casing (e.g., `snake_case`) and use clear, unambiguous names.
--   **Sources and Seeds**: Prefix with `src_` and `seed_` respectively, or follow project-specific guidelines.
--   **File Names**: Model file names should match the model names (e.g., `stg_customers.sql`).
-
 Refer to your organization's specific guidelines for detailed conventions.
 
-Using sqlfluff for SQL Linting
-------------------------------
+Validation and Reconciliation of Migration Results
 
-``sqlfluff`` is a powerful SQL linter and auto-formatter that helps maintain code quality and consistency.
+- **Row Counts and Aggregates**: For each migrated table, compare row counts and key aggregates (sum, min, max, avg) between source and target. Discrepancies should be investigated and explained.
+- **Sampling and Spot Checks**: For large tables, sample random rows and compare key fields. For smaller tables, consider full data diffs.
+- **Dimension and Value Checks**: Compare distinct values for categorical columns (e.g., status, type) to catch mapping or truncation errors.
+- **Full Data Dumps**: For smaller tables, compare entire datasets if feasible.
+    3. **Measure Target**: Record counts and aggregates from the target system.
+    4. **Compare and Log**: Save all queries and results in the notebook for traceability.
+- **Automated Scripts**: Use Python or SQL scripts to automate these checks across many tables. Log results and flag mismatches for review.
 
-1.  **Installation**:
 
-    .. code-block:: bash
+**Example: Python Reconciliation Script**
 
-       pip install sqlfluff sqlfluff-templater-dbt
+A Python script can automate the comparison of tables between two different data sources (e.g., the legacy system and the new dbt-managed warehouse). The script typically involves:
 
-2.  **Configuration**:
-    Create a ``.sqlfluff`` configuration file in your dbt project root to define rules and dialects.
-    Example ``.sqlfluff``::
+- Connecting to both source and target databases.
+- Fetching data (or aggregates) from corresponding tables.
+- Comparing the results and highlighting discrepancies.
 
-    .. code-block:: ini
+.. code-block:: python
+   :caption: Example: reconcile_tables.py
+   :name: reconcile_tables_py
 
-       [sqlfluff]
-       templater = dbt
-       dialect = snowflake  # Or your specific dialect (bigquery, redshift, etc.)
-       rules = AM04, CP01, L003, L010, L019, L029, L030, L031, L034, L036, L042, L050, L051, L052, L053, L057, L059, L062, L063, L066, L067, L068, L070
+   import pandas as pd
+   # Assume functions get_connection_source() and get_connection_target() exist
+   # Assume functions fetch_data(connection, query) exist
 
-       [sqlfluff:templater:dbt]
-       project_dir = ./
+   def reconcile_tables(source_table_name, target_table_name, key_columns, value_columns):
+       """
+       Reconciles data between a source and target table.
+       """
+       print(f"Reconciling {source_table_name} with {target_table_name}...")
 
-       [sqlfluff:rules:L003] # Indentation
-       tab_space_size = 4
+       conn_source = get_connection_source() # Implement this
+       conn_target = get_connection_target() # Implement this
 
-       [sqlfluff:rules:L010] # Keywords
-       capitalisation_policy = upper
+       query_source = f"SELECT {', '.join(key_columns + value_columns)} FROM {source_table_name}"
+       query_target = f"SELECT {', '.join(key_columns + value_columns)} FROM {target_table_name}"
 
-       [sqlfluff:rules:L030] # Function names
-       capitalisation_policy = upper
+       df_source = fetch_data(conn_source, query_source) # Implement this
+       df_target = fetch_data(conn_target, query_target) # Implement this
 
-3.  **Usage**:
-    -   Lint: ``sqlfluff lint models/``
-    -   Fix: ``sqlfluff fix models/``
+       # Basic checks
+       if len(df_source) != len(df_target):
+           print(f"Row count mismatch: Source has {len(df_source)}, Target has {len(df_target)}")
+       else:
+           print("Row counts match.")
 
-Integrating ``sqlfluff`` into your CI/CD pipeline ensures that all code contributions adhere to the defined standards.
+       # Example: Sum check for numeric columns
+       for col in value_columns:
+           if pd.api.types.is_numeric_dtype(df_source[col]) and pd.api.types.is_numeric_dtype(df_target[col]):
+               sum_source = df_source[col].sum()
+               sum_target = df_target[col].sum()
+               if sum_source != sum_target:
+                   print(f"Sum mismatch for column {col}: Source sum {sum_source}, Target sum {sum_target}")
+               else:
+                   print(f"Sum for column {col} matches.")
+       # Add more sophisticated checks as needed (e.g., using pandas.merge for detailed diff)
 
-Data Reconciliation
--------------------
 
-Ensuring data consistency between the old and new systems is paramount.
+       conn_target.close()
 
-1.  **Strategy**:
-    -   **Row Counts**: Compare row counts for key tables.
-    -   **Aggregate Checks**: Compare sums, averages, min/max values for important numeric columns.
-    -   **Dimension Comparisons**: For dimensional data, check for discrepancies in distinct values.
-    -   **Full Data Dumps (for smaller tables)**: Compare entire datasets if feasible.
+   # Example usage:
+   # reconcile_tables("legacy_schema.orders", "dbt_prod.fct_orders", ["order_id"], ["order_amount", "item_count"])
 
-2.  **Reconciliation Script**:
-    A Python script can automate the comparison of tables between two different data sources (e.g., the legacy system and the new dbt-managed warehouse). The script typically involves:
-    -   Connecting to both source and target databases.
-    -   Fetching data (or aggregates) from corresponding tables.
-    -   Comparing the results and highlighting discrepancies.
-
-    An example Python script for table reconciliation might look like this (conceptual):
-
-    .. code-block:: python
-       :caption: Example: reconcile_tables.py
-       :name: reconcile_tables_py
-
-       import pandas as pd
-       # Assume functions get_connection_source() and get_connection_target() exist
-       # Assume functions fetch_data(connection, query) exist
-
-       def reconcile_tables(source_table_name, target_table_name, key_columns, value_columns):
-           """
-           Reconciles data between a source and target table.
-           """
-           print(f"Reconciling {source_table_name} with {target_table_name}...")
-
-           conn_source = get_connection_source() # Implement this
-           conn_target = get_connection_target() # Implement this
-
-           query_source = f"SELECT {', '.join(key_columns + value_columns)} FROM {source_table_name}"
-           query_target = f"SELECT {', '.join(key_columns + value_columns)} FROM {target_table_name}"
-
-           df_source = fetch_data(conn_source, query_source) # Implement this
-           df_target = fetch_data(conn_target, query_target) # Implement this
-
-           # Basic checks
-           if len(df_source) != len(df_target):
-               print(f"Row count mismatch: Source has {len(df_source)}, Target has {len(df_target)}")
-           else:
-               print("Row counts match.")
-
-           # Example: Sum check for numeric columns
-           for col in value_columns:
-               if pd.api.types.is_numeric_dtype(df_source[col]) and pd.api.types.is_numeric_dtype(df_target[col]):
-                   sum_source = df_source[col].sum()
-                   sum_target = df_target[col].sum()
-                   if sum_source != sum_target:
-                       print(f"Sum mismatch for column {col}: Source sum {sum_source}, Target sum {sum_target}")
-                   else:
-                       print(f"Sum for column {col} matches.")
-           # Add more sophisticated checks as needed (e.g., using pandas.merge for detailed diff)
-
-           conn_source.close()
-           conn_target.close()
-
-       # Example usage:
-       # reconcile_tables("legacy_schema.orders", "dbt_prod.fct_orders", ["order_id"], ["order_amount", "item_count"])
-
-    A more complete version of such a script can be found at:
-    `code/dbt_migration/reconcile_tables.py <code/dbt_migration/reconcile_tables.py>`_
+A more complete version of such a script can be found at:
+`code/dbt_migration/reconcile_tables.py <code/dbt_migration/reconcile_tables.py>`_
 
     This script should be adapted to your specific database connectors and comparison logic.
+
+Backfilling Best Practices: Staged Notebooks and Traceability
+Backfilling (historical data loading) is a critical part of most migrations. To ensure accuracy and reproducibility:
+
+- Use a dedicated folder (e.g., ``backfill_notebooks/``) to store Python notebooks for each backfill task or table.
+- Structure each notebook into clear stages:
+    1. **Measure Source State**: Run and save a query like ``SELECT COUNT(*)`` (and optionally aggregates) on the source system. Record the result.
+    2. **Ingest Data**: Run the ingestion query or script, saving the exact SQL/Python used for traceability.
+    3. **Measure Target State**: After ingestion, run ``SELECT COUNT(*)`` (and aggregates) on the target table. Record the result.
+- Save all queries and scripts used for each stage in the notebook or as separate files in the same folder.
+- Track the number of records ingested and compare source/target counts to validate completeness.
+- Optionally, automate logging of these metrics for audit and reporting.
+
+This staged, notebook-driven approach makes the backfill process transparent, repeatable, and easy to review or rerun if needed.
 
 Stakeholder Approval
 --------------------

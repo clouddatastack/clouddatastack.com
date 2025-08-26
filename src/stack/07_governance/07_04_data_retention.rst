@@ -18,30 +18,27 @@ Setup
 
 1. Add the macros to your project:
 
-		.. literalinclude:: code/macros/set_data_retention_tag.sql
-			:language: jinja
-		:caption: Macro: set_data_retention_tag
+    .. literalinclude:: code/macros/set_data_retention_tag.sql
+        :language: jinja
+        :caption: Macro: set_data_retention_tag
 
-		.. literalinclude:: code/macros/data_retention.sql
-			:language: jinja
-		:caption: Macro: data_retention
+    .. literalinclude:: code/macros/data_retention.sql
+        :language: jinja
+        :caption: Macro: data_retention
 
-		.. literalinclude:: code/macros/dates.sql
-			:language: jinja
-		:caption: Helper macros for dates
+    .. literalinclude:: code/macros/dates.sql
+        :language: jinja
+        :caption: Helper macros for dates
 
 2. Declare retention in your model YAML where needed:
 
 	.. literalinclude:: code/examples/schema_gdpr_and_retention.yml
 		:language: yaml
-		:lines: 1-999
 		:caption: Example YAML with model-level retention
 
 3. Add post-hooks so the tag macro runs for the relevant models. You can set this at the ``dbt_project.yml`` folder level or per model via ``config(post_hook=...)``.
 
 Example: incremental model with retention
-----------------------------------------
-
 The snippet below shows an incremental model using ``replace_where`` and a ``post_hook`` to delete rows older than 90 days:
 
 .. literalinclude:: code/examples/model_with_retention.sql

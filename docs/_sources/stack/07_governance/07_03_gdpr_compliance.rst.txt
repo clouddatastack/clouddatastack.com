@@ -18,9 +18,9 @@ Setup
 
 1. Add macros to your project (example files in this repository):
 
-		.. literalinclude:: code/macros/set_gdpr_compliance_tag.sql
-			:language: jinja
-		:caption: Macro: set_gdpr_compliance_tag
+    .. literalinclude:: code/macros/set_gdpr_compliance_tag.sql
+        :language: jinja
+        :caption: Macro: set_gdpr_compliance_tag
 
 2. In your dbt model YAML, annotate tables/columns via ``meta``:
 

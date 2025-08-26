@@ -282,36 +282,26 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <ol class="arabic simple">
 <li><p><strong>Data Lake Analytics</strong>:</p>
 <ul class="simple">
-<li><p><strong>Configuration</strong>:</p></li>
+<li><p><strong>Configuration</strong>:
+- Set up an S3 catalog as described in the AWS setup to query data stored in S3.</p></li>
+<li><p><strong>Code Example</strong>:</p></li>
 </ul>
 </li>
 </ol>
 <blockquote>
-<div><ul class="simple">
-<li><p>Set up an S3 catalog as described in the AWS setup to query data stored in S3.</p></li>
-</ul>
-</div></blockquote>
-<ul>
-<li><p><strong>Code Example</strong>:</p>
-<p><code class="docutils literal notranslate"><span class="pre">`sql</span>
+<div><p><code class="docutils literal notranslate"><span class="pre">`sql</span>
 <span class="pre">SELECT</span> <span class="pre">region,</span> <span class="pre">COUNT(*)</span>
 <span class="pre">FROM</span> <span class="pre">s3.sales_data</span>
 <span class="pre">WHERE</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">2025</span>
 <span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">region;</span>
 <span class="pre">`</span></code></p>
 <p>This query counts the number of sales records for each region in the year 2025.</p>
-</li>
-</ul>
-<ol class="arabic simple" start="2">
+</div></blockquote>
+<ol class="arabic" start="2">
 <li><p><strong>Cross-Database Joins</strong>:</p>
-<ul class="simple">
-<li><p><strong>Configuration</strong>:</p></li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<div><ul>
-<li><p>Set up catalogs for MySQL and PostgreSQL to enable cross-database queries:</p>
+<ul>
+<li><p><strong>Configuration</strong>:
+- Set up catalogs for MySQL and PostgreSQL to enable cross-database queries:</p>
 <div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="c1"># MySQL catalog (mysql.properties)</span>
 <span class="na">connector.name</span><span class="o">=</span><span class="s">mysql</span>
 <span class="na">connection-url</span><span class="o">=</span><span class="s">jdbc:mysql://mysql-host:3306</span>
@@ -327,7 +317,8 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </div>
 </li>
 </ul>
-</div></blockquote>
+</li>
+</ol>
 <ul>
 <li><p><strong>Code Example</strong>:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`sql</span>
@@ -342,26 +333,21 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 <ol class="arabic simple" start="3">
 <li><p><strong>Ad-Hoc Analysis</strong>:</p>
 <ul class="simple">
-<li><p><strong>Configuration</strong>:</p></li>
+<li><p><strong>Configuration</strong>:
+- Use Trino CLI or connect a BI tool like Tableau to Trino for interactive analysis.</p></li>
+<li><p><strong>Code Example</strong>:</p></li>
 </ul>
 </li>
 </ol>
 <blockquote>
-<div><ul class="simple">
-<li><p>Use Trino CLI or connect a BI tool like Tableau to Trino for interactive analysis.</p></li>
-</ul>
-</div></blockquote>
-<ul>
-<li><p><strong>Code Example</strong>:</p>
-<p><code class="docutils literal notranslate"><span class="pre">`sql</span>
+<div><p><code class="docutils literal notranslate"><span class="pre">`sql</span>
 <span class="pre">SELECT</span> <span class="pre">product_id,</span> <span class="pre">AVG(sales)</span>
 <span class="pre">FROM</span> <span class="pre">s3.sales_data</span>
 <span class="pre">WHERE</span> <span class="pre">category</span> <span class="pre">=</span> <span class="pre">'electronics'</span>
 <span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">product_id;</span>
 <span class="pre">`</span></code></p>
 <p>This query calculates the average sales for each product in the “electronics” category.</p>
-</li>
-</ul>
+</div></blockquote>
 </section>
 </section>
 
