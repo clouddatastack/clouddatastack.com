@@ -24,6 +24,9 @@ I am open to work on projects involving `Data Migration <stack/07_governance/07_
    <script>
    var links = document.querySelectorAll('a[href^="http"]');
    links.forEach(function(link) {
-       link.setAttribute('target', '_blank');
+      // Only open in new tab if the link is external
+      if (!link.href.startsWith(window.location.origin)) {
+         link.setAttribute('target', '_blank');
+      }
    });
    </script>

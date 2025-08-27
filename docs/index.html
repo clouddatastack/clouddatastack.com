@@ -99,7 +99,10 @@
 <script>
 var links = document.querySelectorAll('a[href^="http"]');
 links.forEach(function(link) {
-    link.setAttribute('target', '_blank');
+   // Only open in new tab if the link is external
+   if (!link.href.startsWith(window.location.origin)) {
+      link.setAttribute('target', '_blank');
+   }
 });
 </script></section>
 
