@@ -4,7 +4,7 @@ Cloud Data Stack
 Tools and Workshops for Event Streaming, Big Data and MLOps infrastructure.
 
 
-I am open to work on projects involving `Data Migration <stack/07_governance/07_02_data_migration_guide.html>`_, `GDPR compliance <stack/07_governance/07_03_gdpr_compliance.html>`_, and `AI Workflows <stack/08_ai_workflows/index.html>`_. To reach out to `me <https://yuri.chernushenko.com/>`_ for consulting or workshop, you can write at `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_ or `schedule a call <https://calendly.com/y-chernushenko>`_.
+I am open to work on projects involving `Data Migration <stack/07_governance.html>`_, `GDPR compliance <stack/07_governance.html>`_, and `AI Workflows <stack/08_ai_workflows.html>`_. To reach out to `me <https://yuri.chernushenko.com/>`_ for consulting or workshop, you can write at `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_ or `schedule a call <https://calendly.com/y-chernushenko>`_.
 
 .. toctree::
    :maxdepth: 1
