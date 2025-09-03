@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>6. Orchestration &mdash; Cloud Data Stack  documentation</title>
+  <title>2. AI Workflows &mdash; Cloud Data Stack  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="6.1 Schedule with Airflow" href="06_orchestration/06_01_schedule_with_airflow.html" />
-    <link rel="prev" title="5.1. dbt Incremental Models" href="05_transformation/05_01_dbt_incremental_models.html" /> 
+    <link rel="next" title="3. Data Migrations" href="03_data_migrations.html" />
+    <link rel="prev" title="2. Enterprise Data Platforms" href="01_enterprise_data_platforms.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,24 +46,21 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="01_extraction.html">1. Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02_streaming.html">2. Streaming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03_storage.html">3. Storage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_compute.html">4. Compute and Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05_transformation.html">5. Transformation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Orchestration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="06_orchestration/06_01_schedule_with_airflow.html">6.1 Schedule with Airflow</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="07_governance.html">7. Governance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08_ai_workflows.html">8. AI Workflows</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../stack/01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/07_governance.html">7. Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/08_ai_workflows.html">8. AI Workflows</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../services/01_enterprise_data_platforms.html">2. Enterprise Data Platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../services/02_ai_workflows.html">2. AI Workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../services/03_data_migrations.html">3. Data Migrations</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_enterprise_data_platforms.html">2. Enterprise Data Platforms</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. AI Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_data_migrations.html">3. Data Migrations</a></li>
 </ul>
 
         </div>
@@ -80,7 +77,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">6. Orchestration</li>
+      <li class="breadcrumb-item active">2. AI Workflows</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -89,14 +86,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="orchestration">
-<h1>6. Orchestration<a class="headerlink" href="#orchestration" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="06_orchestration/06_01_schedule_with_airflow.html">6.1 Schedule with Airflow</a></li>
+  <section id="ai-workflows">
+<h1>2. AI Workflows<a class="headerlink" href="#ai-workflows" title="Link to this heading"></a></h1>
+<p>Unlock the power of AI in your business with our end-to-end workflow solutions:</p>
+<ul class="simple">
+<li><p>Machine learning model development and deployment</p></li>
+<li><p>MLOps and automation</p></li>
+<li><p>Generative AI and RAG (Retrieval-Augmented Generation)</p></li>
+<li><p>Responsible AI and compliance</p></li>
 </ul>
-</div>
+<p>Explore related topics:
+- <a class="reference external" href="../stack/08_ai_workflows.html">Agentic Workflows</a>
+- <a class="reference external" href="../stack/07_governance.html">GDPR Compliance</a></p>
+<p>Ready to accelerate your AI journey? Contact us for a workshop or consulting at <a class="reference external" href="mailto:y&#46;chernushenko&#37;&#52;&#48;gmail&#46;com">y<span>&#46;</span>chernushenko<span>&#64;</span>gmail<span>&#46;</span>com</a>.</p>
 </section>
 
 
