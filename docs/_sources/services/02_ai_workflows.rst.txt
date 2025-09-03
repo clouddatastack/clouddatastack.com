@@ -9,6 +9,7 @@ Unlock the power of AI in your business with our end-to-end workflow solutions:
 - Responsible AI and compliance
 
 Explore related topics:
+
 - `Agentic Workflows <../stack/08_ai_workflows.html>`_
 - `GDPR Compliance <../stack/07_governance.html>`_
 

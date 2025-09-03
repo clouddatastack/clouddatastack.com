@@ -1,4 +1,4 @@
-2. Enterprise Data Platforms
+1. Enterprise Data Platforms
 ============================
 
 I help organizations design, build, and optimize modern data platforms tailored to their business needs. My services include:
@@ -9,6 +9,7 @@ I help organizations design, build, and optimize modern data platforms tailored 
 - Data governance and compliance
 
 Explore related topics:
+
 - `Data Storage <../stack/01_storage.html>`_
 - `Streaming Platform <../stack/02_streaming.html>`_
 - `Governance Monitor <../stack/07_governance.html>`_

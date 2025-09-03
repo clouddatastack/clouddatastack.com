@@ -9,6 +9,7 @@ I specialize in seamless data migration projects, ensuring data integrity and mi
 - GDPR and regulatory compliance
 
 Explore related topics:
+
 - `Data Migration Guide <../stack/07_governance/07_02_data_migration_guide.html>`_
 - `Streaming Platform <../stack/02_streaming.html>`_
 
