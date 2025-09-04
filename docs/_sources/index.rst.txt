@@ -30,12 +30,6 @@ You can reach out to `me <https://yuri.chernushenko.com/>`_ via email `y.chernus
    services/02_ai_workflows
    services/03_data_migrations
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Company:
-
-   company/privacy-policy
-
 .. raw:: html
 
    <script>
