@@ -36,8 +36,6 @@ You can reach out to `me <https://yuri.chernushenko.com/>`_ via email `y.chernus
 
    company/privacy-policy
 
-For details on how we handle your data, please see our `Privacy Policy <company/privacy-policy.rst>`_.
-
 .. raw:: html
 
    <script>
