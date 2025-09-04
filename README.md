@@ -13,7 +13,6 @@ poetry run sphinx-build -E -b html src docs
 - Maintanance of DataLake (Optimize queries, monitor usage and others)
 - Write-Audit-Publish with Slim CI
 - Write baout Prefect templitize of the projects
-- RAG
 - fastai usercase
 
 Add services:
