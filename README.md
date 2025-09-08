@@ -22,3 +22,4 @@ Youtube videos:
 - DLT for API integration (Salesforce, google analytics)
 - Modern airflow (scrape videos + experience)
 - DBT (scripts and metadata)
+- duckdb pipelines
