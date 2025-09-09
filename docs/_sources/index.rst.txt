@@ -1,7 +1,7 @@
 Cloud Data Stack
 ============================
 
-I specialise in building custom cloud-native, future-proofed data platforms for enterprises. 
+I specialize in building custom cloud-native, future-proofed data platforms for enterprises. 
 
 Preparing you for the AI era, I help you build strong foundations and radically improve maturity of your data and MLOps infrastructure to give you a competitive edge and a maximum return on investment.
 
