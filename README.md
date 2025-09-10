@@ -23,3 +23,6 @@ Youtube videos:
 - Modern airflow (scrape videos + experience)
 - DBT (scripts and metadata)
 - duckdb pipelines
+
+Workshop
+- DBT
