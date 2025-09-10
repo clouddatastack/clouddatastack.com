@@ -26,3 +26,5 @@ Youtube videos:
 
 Workshop
 - DBT
+- Streaming
+- Orchestration
