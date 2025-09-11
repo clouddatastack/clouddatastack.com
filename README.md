@@ -41,3 +41,4 @@ Partners/Certification
 
 Open source contributions:
 - DBT Packages (gdpr, migration, data vault)
+
