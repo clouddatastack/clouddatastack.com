@@ -28,3 +28,13 @@ Workshop
 - DBT
 - Streaming
 - Orchestration
+
+Work
+- Usecases
+- Community (open source contribution)
+
+Partners/Certification
+- dbt
+- Snowflake
+- Databricks
+- AWS
