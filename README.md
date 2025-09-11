@@ -40,5 +40,5 @@ Partners/Certification
 - AWS
 
 Open source contributions:
-- DBT Packages (gdpr, migration, data vault)
+- DBT Packages (gdpr, migration, data vault, scraper)
 
