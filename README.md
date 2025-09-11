@@ -32,3 +32,4 @@ Open source contributions:
 
 Website
 - Corousel: Clients, Tools, Partners
+- About: I + AI
