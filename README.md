@@ -29,3 +29,6 @@ Partners/Certification
 
 Open source contributions:
 - DBT Packages: gdpr, migration, data vault, scraper (dlt), pii tracer
+
+Website
+- Corousel: Clients, Tools, Partners
