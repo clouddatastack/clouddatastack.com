@@ -38,3 +38,6 @@ Partners/Certification
 - Snowflake
 - Databricks
 - AWS
+
+Open source contributions:
+- DBT Packages (gdpr, migration, data vault)
