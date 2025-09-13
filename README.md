@@ -27,9 +27,11 @@ Partners/Certification
 - Databricks
 - AWS
 
-Open source contributions:
-- DBT Packages: gdpr, migration, data vault, api integration (dlt), pii tracer
-- Scraper/sourcing pipeline. scraping + ai + schema mapping
+Open source contributions as DBT Packages:
+- gdpr, data vault, pii tracer
+- api integration (dlt), scraper/sourcing pipeline
+- cost estimations
+- data migration, testing, validation, deployment
 
 Website
 - Corousel: Clients, Tools, Partners
