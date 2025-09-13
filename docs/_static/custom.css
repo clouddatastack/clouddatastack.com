@@ -1,0 +1,23 @@
+/* Hide toctree rendered on the index page while keeping the toctree available to Sphinx
+   This ensures documents are included (no warnings) but the lists do not show on the main page. */
+body.document.index .toctree-wrapper {
+  display: none !important;
+}
+
+/* Slight spacing for the custom sidebar block */
+.wy-side-nav-search h3 {
+  margin-top: 0.2em;
+  margin-bottom: 0.3em;
+}
+
+/* Profile photo on index page */
+.profile-photo {
+  float: right;
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  border: 3px solid rgba(255,255,255,0.06);
+}
