@@ -2,9 +2,6 @@
    :class: profile-photo
    :alt: Yuri Chernushenko
 
-Data Platforms and Migrations
-=============================
-
 Hi, my name is Yuri 👋 I help companies to build custom **cloud-native data platforms** future-proofed for the AI era. 
 
 My services include designing and implementing `Enterprise Data Platforms <services/01_enterprise_data_platforms.html>`_, building infrastructure for `AI workflows <services/02_ai_workflows.html>`_ and facilitating `Data Migrations <services/03_data_migrations.html>`_. 
