@@ -12,5 +12,3 @@ Explore related topics:
 
 - `AI Workflows <../stack/08_ai_workflows.html>`_
 - `GDPR Compliance <../stack/07_governance.html>`_
-
-Ready to accelerate your AI journey? Contact for a workshop or consulting at `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_.

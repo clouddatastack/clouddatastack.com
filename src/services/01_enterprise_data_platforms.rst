@@ -13,5 +13,3 @@ Explore related topics:
 - `Data Storage <../stack/03_storage.html>`_
 - `Streaming Platform <../stack/02_streaming.html>`_
 - `Data Governance <../stack/07_governance.html>`_
-
-Interested in transforming your data platform? Reach out for a consultation or workshop at `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_.
