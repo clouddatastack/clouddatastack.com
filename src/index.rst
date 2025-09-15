@@ -59,3 +59,5 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
       }
    });
    </script>
+
+   <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/72d3ceb1d702538ba241a6b70/c8d1d5037b3a2fee928292e30.js");</script>
