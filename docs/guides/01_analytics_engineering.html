@@ -6,10 +6,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1. Extraction &mdash; Cloud Data Stack  documentation</title>
+  <title>1. Analytics Engineering &mdash; Cloud Data Stack  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=0c6f8ee4" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
 
   
     <link rel="shortcut icon" href="../_static/logo_white_16x16.png"/>
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="1.1. Extraction from Google Sheets" href="01_extraction/01_01_google_sheets.html" />
-    <link rel="prev" title="3. Data Migrations" href="../services/03_data_migrations.html" /> 
+    <link rel="next" title="1. Enterprise Data Platforms" href="../services/01_enterprise_data_platforms.html" />
+    <link rel="prev" title="8.2. RAG Blueprint" href="../stack/08_ai_workflows/08_02_rag_blueprint.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,32 +45,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Services:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../services/01_enterprise_data_platforms.html">1. Enterprise Data Platforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../services/02_ai_workflows.html">2. AI Workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../services/03_data_migrations.html">3. Data Migrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/05_transformation.html">5. Transformation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/07_governance.html">7. Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stack/08_ai_workflows.html">8. AI Workflows</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Extraction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="01_extraction/01_01_google_sheets.html">1.1. Extraction from Google Sheets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="01_extraction/01_02_databases.html">1.2. Extraction from Databases</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="02_streaming.html">2. Streaming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03_storage.html">3. Storage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_compute.html">4. Compute and Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05_transformation.html">5. Transformation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06_orchestration.html">6. Orchestration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07_governance.html">7. Governance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08_ai_workflows.html">8. AI Workflows</a></li>
-</ul>
-<<<<<<< HEAD
-=======
 <p class="caption" role="heading"><span class="caption-text">Guides:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../guides/01_analytics_engineering.html">1. Analytics Engineering</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Analytics Engineering</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Services:</span></p>
 <ul>
@@ -78,7 +66,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../services/02_ai_workflows.html">2. AI Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../services/03_data_migrations.html">3. Data Migrations</a></li>
 </ul>
->>>>>>> d9ad83c (add guide)
 
         </div>
       </div>
@@ -94,7 +81,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">1. Extraction</li>
+      <li class="breadcrumb-item active">1. Analytics Engineering</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -103,15 +90,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="extraction">
-<h1>1. Extraction<a class="headerlink" href="#extraction" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="01_extraction/01_01_google_sheets.html">1.1. Extraction from Google Sheets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_extraction/01_02_databases.html">1.2. Extraction from Databases</a></li>
-</ul>
-</div>
+  <section id="analytics-engineering">
+<h1>1. Analytics Engineering<a class="headerlink" href="#analytics-engineering" title="Link to this heading"></a></h1>
+<p>Get Your Copy of the Analytics Engineering White Paper. Download to learn how leading organizations are building scalable, cost-effective, and AI-ready data platforms.</p>
+<p>This guide provides a comprehensive framework for modernizing your data stack, covering key topics like:
+- The shift from static reporting to dynamic data products.
+- Essential roles and team structures for a modern data organization.
+- A technical deep-dive into the cloud-native stack, including dbt, Snowflake, and Databricks.
+- Best practices for orchestration, governance, and building a value-driven roadmap.</p>
 </section>
 
 

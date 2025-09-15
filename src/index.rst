@@ -41,6 +41,23 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
    stack/07_governance
    stack/08_ai_workflows
 
+<<<<<<< HEAD
+=======
+.. toctree::
+   :maxdepth: 1
+   :caption: Guides:
+
+   guides/01_analytics_engineering
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Services:
+
+   services/01_enterprise_data_platforms
+   services/02_ai_workflows
+   services/03_data_migrations
+
+>>>>>>> d9ad83c (add guide)
 .. raw:: html
 
    <script>
@@ -52,3 +69,5 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
       }
    });
    </script>
+
+   <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/72d3ceb1d702538ba241a6b70/c8d1d5037b3a2fee928292e30.js");</script>
