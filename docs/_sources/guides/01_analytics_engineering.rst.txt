@@ -14,10 +14,10 @@ Get your copy of the Analytics Engineering Guide. It provides a comprehensive fr
 
     <script>
     function loadMC() {
-    // prevent double injection
-    if (document.getElementById("mcjs")) return;
-    
-    var mc = document.createElement("script");
+        var old = document.getElementById("mcjs");
+        if (old) old.remove();
+
+        var mc = document.createElement("script");
         mc.id = "mcjs";
         mc.src = "https://chimpstatic.com/mcjs-connected/js/users/72d3ceb1d702538ba241a6b70/c8d1d5037b3a2fee928292e30.js";
         mc.async = true;
