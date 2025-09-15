@@ -30,6 +30,13 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
 .. toctree::
    :hidden:
    :maxdepth: 1
+   :caption: Guides:
+
+   guides/01_analytics_engineering
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
    :caption: Technology Stack:
 
    stack/01_extraction
@@ -40,20 +47,6 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
    stack/06_orchestration
    stack/07_governance
    stack/08_ai_workflows
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Guides:
-
-   guides/01_analytics_engineering
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Services:
-
-   services/01_enterprise_data_platforms
-   services/02_ai_workflows
-   services/03_data_migrations
 
 .. raw:: html
 
