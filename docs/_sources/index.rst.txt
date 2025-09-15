@@ -41,8 +41,6 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
    stack/07_governance
    stack/08_ai_workflows
 
-<<<<<<< HEAD
-=======
 .. toctree::
    :maxdepth: 1
    :caption: Guides:
@@ -57,7 +55,6 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
    services/02_ai_workflows
    services/03_data_migrations
 
->>>>>>> d9ad83c (add guide)
 .. raw:: html
 
    <script>
