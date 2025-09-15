@@ -9,3 +9,15 @@ Get your copy of the Analytics Engineering Guide. It provides a comprehensive fr
 - Best practices for orchestration, governance, and building a value-driven roadmap.
 
 📥 `Download PDF <https://clouddatastack.s3.eu-central-1.amazonaws.com/guides/Analytics_Engineering_Cloud_Data_Stack.pdf>`_
+
+.. raw:: html
+
+   <script>
+   var links = document.querySelectorAll('a[href^="http"]');
+   links.forEach(function(link) {
+      // Only open in new tab if the link is external
+      if (!link.href.startsWith(window.location.origin)) {
+         link.setAttribute('target', '_blank');
+      }
+   });
+   </script>
