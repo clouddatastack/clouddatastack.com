@@ -8,3 +8,19 @@ Get your copy of the Analytics Engineering Guide. It provides a comprehensive fr
 - A technical deep-dive into the cloud-native stack, including dbt, Snowflake, and Databricks.
 - Best practices for orchestration, governance, and building a value-driven roadmap.
 
+.. raw:: html
+
+    <button onclick="loadMC()">📥 Download PDF</button>
+
+    <script>
+    function loadMC() {
+    // prevent double injection
+    if (document.getElementById("mcjs")) return;
+    
+    var mc = document.createElement("script");
+        mc.id = "mcjs";
+        mc.src = "https://chimpstatic.com/mcjs-connected/js/users/72d3ceb1d702538ba241a6b70/c8d1d5037b3a2fee928292e30.js";
+        mc.async = true;
+        document.body.appendChild(mc);
+    }
+    </script>
