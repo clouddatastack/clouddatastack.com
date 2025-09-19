@@ -10,25 +10,30 @@ The Phased AI Solution
 ----------------------
 
 - Extract Products
-	→ AI identifies and pulls product names, specifications, and quantities from tender documents.
-	→ Proves the core ability to read complex text.
+
+	• AI identifies and pulls product names, specifications, and quantities from tender documents.
+	• Proves the core ability to read complex text.
 
 - Map Products
-	→ Matches extracted names to the official product catalog.
-	→ Translates customer terminology into internal product codes/SKUs.
+
+	• Matches extracted names to the official product catalog.
+	• Translates customer terminology into internal product codes/SKUs.
 
 - Create Quotes
-	→ Generates an automated quote based on the mapped products.
-	→ Depends entirely on the success of the first two phases.
+
+	• Generates an automated quote based on the mapped products.
+	• Depends entirely on the success of the first two phases.
 
 Two-step approach
 -----------------
 
 - Step 1: Document Processing
+
   • Convert tender documents (PDFs/Word) and email bodies into a structured digital format (JSON).
   • This creates a foundation of clean, searchable, and structured data.
 
 - Step 2: Intelligent Extraction
+
   • Feed the JSON into a prompt template and then to an LLM.
   • Use a specialized prompt with detailed instructions to guide the model.
   • Extract specific product information with high accuracy.
@@ -45,7 +50,7 @@ Use case and scope
 Architecture (POC)
 ------------------
 
-- Ingest: webhook/IMAP/SES → queue → worker.
+- Ingest: webhook/IMAP/SES • queue • worker.
 - Parsing: text + tables; OCR for scanned PDFs.
 - LLM extraction: JSON-only mode, validated by schema.
 - Catalog mapping: hybrid search (lexical + embeddings) + rules and unit constraints.
@@ -126,7 +131,7 @@ Operational notes
 Delivery outline
 ----------------
 
-- MVP: Ingest → Parse → Extract → Map → Create Opportunity/Line Items (fixed pricebook); small reviewer UI; a golden set for regression.
+- MVP: Ingest • Parse • Extract • Map • Create Opportunity/Line Items (fixed pricebook); small reviewer UI; a golden set for regression.
 - Iteration: composite API, account match via domain/external ID, synonyms cache, telemetry dashboard.
 - V1+: improved OCR for tables, additional languages, canary prompts, role-based reviewer.
 

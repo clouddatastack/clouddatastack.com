@@ -121,37 +121,49 @@
 </section>
 <section id="the-phased-ai-solution">
 <h2>The Phased AI Solution<a class="headerlink" href="#the-phased-ai-solution" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Extract Products</dt><dd><p>→ AI identifies and pulls product names, specifications, and quantities from tender documents.
-→ Proves the core ability to read complex text.</p>
-</dd>
-</dl>
+<ul>
+<li><p>Extract Products</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>AI identifies and pulls product names, specifications, and quantities from tender documents.</p></li>
+<li><p>Proves the core ability to read complex text.</p></li>
+</ul>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Map Products</dt><dd><p>→ Matches extracted names to the official product catalog.
-→ Translates customer terminology into internal product codes/SKUs.</p>
-</dd>
-</dl>
+<li><p>Map Products</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Matches extracted names to the official product catalog.</p></li>
+<li><p>Translates customer terminology into internal product codes/SKUs.</p></li>
+</ul>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>Create Quotes</dt><dd><p>→ Generates an automated quote based on the mapped products.
-→ Depends entirely on the success of the first two phases.</p>
-</dd>
-</dl>
+<li><p>Create Quotes</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Generates an automated quote based on the mapped products.</p></li>
+<li><p>Depends entirely on the success of the first two phases.</p></li>
+</ul>
+</div></blockquote>
 </li>
 </ul>
 </section>
 <section id="two-step-approach">
 <h2>Two-step approach<a class="headerlink" href="#two-step-approach" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Step 1: Document Processing
-• Convert tender documents (PDFs/Word) and email bodies into a structured digital format (JSON).
-• This creates a foundation of clean, searchable, and structured data.</p></li>
-<li><p>Step 2: Intelligent Extraction
-• Feed the JSON into a prompt template and then to an LLM.
-• Use a specialized prompt with detailed instructions to guide the model.
-• Extract specific product information with high accuracy.</p></li>
+<li><p>Step 1: Document Processing</p>
+<ul>
+<li><p>Convert tender documents (PDFs/Word) and email bodies into a structured digital format (JSON).</p></li>
+<li><p>This creates a foundation of clean, searchable, and structured data.</p></li>
+</ul>
+</li>
+<li><p>Step 2: Intelligent Extraction</p>
+<ul>
+<li><p>Feed the JSON into a prompt template and then to an LLM.</p></li>
+<li><p>Use a specialized prompt with detailed instructions to guide the model.</p></li>
+<li><p>Extract specific product information with high accuracy.</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="use-case-and-scope">
@@ -167,7 +179,7 @@
 <section id="architecture-poc">
 <h2>Architecture (POC)<a class="headerlink" href="#architecture-poc" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Ingest: webhook/IMAP/SES → queue → worker.</p></li>
+<li><p>Ingest: webhook/IMAP/SES • queue • worker.</p></li>
 <li><p>Parsing: text + tables; OCR for scanned PDFs.</p></li>
 <li><p>LLM extraction: JSON-only mode, validated by schema.</p></li>
 <li><p>Catalog mapping: hybrid search (lexical + embeddings) + rules and unit constraints.</p></li>
@@ -566,7 +578,7 @@ USER:
 <section id="delivery-outline">
 <h2>Delivery outline<a class="headerlink" href="#delivery-outline" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>MVP: Ingest → Parse → Extract → Map → Create Opportunity/Line Items (fixed pricebook); small reviewer UI; a golden set for regression.</p></li>
+<li><p>MVP: Ingest • Parse • Extract • Map • Create Opportunity/Line Items (fixed pricebook); small reviewer UI; a golden set for regression.</p></li>
 <li><p>Iteration: composite API, account match via domain/external ID, synonyms cache, telemetry dashboard.</p></li>
 <li><p>V1+: improved OCR for tables, additional languages, canary prompts, role-based reviewer.</p></li>
 </ul>
