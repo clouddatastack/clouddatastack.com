@@ -28,6 +28,7 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
        <img src="_static/technology/python.svg" alt="Python">
        <img src="_static/technology/spark.svg" alt="Spark">
        <img src="_static/technology/kafka.svg" alt="Kafka">
+       <img src="_static/technology/flink.svg" alt="Flink">
        <img src="_static/technology/db.svg" alt="Databricks">
        <img src="_static/technology/sf.svg" alt="Snowflake">
        <img src="_static/technology/sql.svg" alt="SQL">
