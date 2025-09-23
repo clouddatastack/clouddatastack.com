@@ -34,11 +34,11 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
        <img src="_static/technology/terraform.svg" alt="Terraform">
        <img src="_static/technology/fa.svg" alt="FastAPI">
        <img src="_static/technology/learn.svg" alt="scikit-learn">
-       <img src="_static/technology/numpy.svg" alt="NumPy">       
+       <img src="_static/technology/numpy.svg" alt="NumPy">
+       <img src="_static/technology/pandas.svg" alt="Pandas">     
        <img src="_static/technology/tf.svg" alt="TensorFlow">
        <img src="_static/technology/hf.svg" alt="Hugging Face">
        <img src="_static/technology/openai.svg" alt="OpenAI">
-       <img src="_static/technology/pandas.svg" alt="Pandas">
      </div>
    </div>
 
