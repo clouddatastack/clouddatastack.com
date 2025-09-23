@@ -22,22 +22,22 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
 
    <div style="background:#949191; padding:20px; border-radius:12px; text-align:center;">
      <div class="tech-logos" style="display:flex; gap:24px; justify-content:center; flex-wrap:wrap; align-items:center;">
-       <img src="_static/technology/numpy.svg" alt="NumPy">
        <img src="_static/technology/aws.svg" alt="AWS">
        <img src="_static/technology/docker.svg" alt="Docker">
-       <img src="_static/technology/learn.svg" alt="scikit-learn">
-       <img src="_static/technology/tf.svg" alt="TensorFlow">
        <img src="_static/technology/cuber.svg" alt="Kubernetes">
        <img src="_static/technology/python.svg" alt="Python">
-       <img src="_static/technology/hf.svg" alt="Hugging Face">
        <img src="_static/technology/spark.svg" alt="Spark">
-       <img src="_static/technology/fa.svg" alt="FastAPI">
-       <img src="_static/technology/openai.svg" alt="OpenAI">
-       <img src="_static/technology/sql.svg" alt="SQL">
-       <img src="_static/technology/pandas.svg" alt="Pandas">
        <img src="_static/technology/db.svg" alt="Databricks">
        <img src="_static/technology/sf.svg" alt="Snowflake">
+       <img src="_static/technology/sql.svg" alt="SQL">
        <img src="_static/technology/terraform.svg" alt="Terraform">
+       <img src="_static/technology/fa.svg" alt="FastAPI">
+       <img src="_static/technology/learn.svg" alt="scikit-learn">
+       <img src="_static/technology/numpy.svg" alt="NumPy">       
+       <img src="_static/technology/tf.svg" alt="TensorFlow">
+       <img src="_static/technology/hf.svg" alt="Hugging Face">
+       <img src="_static/technology/openai.svg" alt="OpenAI">
+       <img src="_static/technology/pandas.svg" alt="Pandas">
      </div>
    </div>
 
