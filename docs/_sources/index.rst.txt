@@ -30,6 +30,7 @@ or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
        <img src="_static/technology/db.svg" alt="Databricks">
        <img src="_static/technology/sf.svg" alt="Snowflake">
        <img src="_static/technology/sql.svg" alt="SQL">
+       <img src="_static/technology/dbt.svg" alt="DBT">
        <img src="_static/technology/terraform.svg" alt="Terraform">
        <img src="_static/technology/fa.svg" alt="FastAPI">
        <img src="_static/technology/learn.svg" alt="scikit-learn">
