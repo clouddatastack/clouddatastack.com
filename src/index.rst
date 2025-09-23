@@ -18,11 +18,6 @@ I specialize in:
 `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_ 
 or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
 
-Technology
-----------
-
-I use a solid range of technologies, libraries, and tools to deliver robust and innovative solutions tailored to your business needs.
-
 .. raw:: html
 
    <div style="background:#949191; padding:20px; border-radius:12px; text-align:center;">
