@@ -1,13 +1,49 @@
-body,
+/* =============================================
+   Font Override: Force Helvetica Everywhere
+   ============================================= */
+/* 1. Alias the theme's preferred webfont (e.g. Lato) to Helvetica if Lato is referenced */
+@font-face {
+  font-family: "Lato"; /* RTD theme uses Lato – we map it to local Helvetica */
+  src: local("Helvetica Neue"), local("Helvetica"), local("Arial");
+  font-weight: 300 900;
+  font-style: normal;
+}
+
+html, body,
+.wy-body-for-nav,
+.wy-grid-for-nav,
 .wy-nav-content,
 .wy-side-nav-search,
-.wy-menu,
-.rst-content,
+.wy-side-scroll,
+.wy-menu-vertical,
+.wy-menu-vertical a,
 div.body,
 div.sphinxsidebar,
-div.sphinxsidebarwrapper {
+div.sphinxsidebarwrapper,
+.rst-content,
+.rst-content p,
+.rst-content li,
+.rst-content dt,
+.rst-content dd,
+.rst-content blockquote,
+.rst-content table,
+.rst-content caption,
+.rst-content h1,
+.rst-content h2,
+.rst-content h3,
+.rst-content h4,
+.rst-content h5,
+.rst-content h6,
+nav[role="navigation"],
+nav[role="navigation"] a,
+.toctree-wrapper p.caption {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Keep code blocks monospace (do NOT inherit Helvetica) */
+code, pre, tt { font-family: Menlo, Monaco, "Courier New", monospace !important; }
 /* Slight spacing for the custom sidebar block */
 .wy-side-nav-search h3 {
   margin-top: 0.2em;
