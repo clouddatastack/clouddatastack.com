@@ -1,3 +1,8 @@
+/* Force Helvetica instead of Lato/Roboto */
+body, html {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
 /* Hide toctree rendered on the index page while keeping the toctree available to Sphinx
    This ensures documents are included (no warnings) but the lists do not show on the main page. */
 body.document.index .toctree-wrapper {
