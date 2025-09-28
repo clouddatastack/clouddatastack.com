@@ -1,23 +1,6 @@
-@font-face {
-    font-family: 'Roboto Slab';
-    src: local("Helvetica Neue"), local(Helvetica), local(Arial);
+body, .wy-nav-content, .wy-side-nav-search, .wy-menu, .rst-content {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
-@font-face {
-    font-family: 'Lato';
-    src: local("Helvetica Neue"), local(Helvetica), local(Arial);
-}
-
-/* Force all text to Helvetica */
-body, .wy-nav-content, .wy-menu-vertical, .rst-content, .wy-side-nav-search {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-}
-
-/* Hide toctree rendered on the index page while keeping the toctree available to Sphinx
-   This ensures documents are included (no warnings) but the lists do not show on the main page. */
-body.document.index .toctree-wrapper {
-  display: none !important;
-}
-
 /* Slight spacing for the custom sidebar block */
 .wy-side-nav-search h3 {
   margin-top: 0.2em;
