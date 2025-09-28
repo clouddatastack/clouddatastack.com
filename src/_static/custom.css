@@ -1,46 +1,35 @@
 /* =============================================
-   Font Override: Force Helvetica Everywhere
+   Typography System
+   Option 1: Brand (Helvetica) on headings & nav, system stack for body
    ============================================= */
-/* 1. Alias the theme's preferred webfont (e.g. Lato) to Helvetica if Lato is referenced */
-@font-face {
-  font-family: "Lato"; /* RTD theme uses Lato – we map it to local Helvetica */
-  src: local("Helvetica Neue"), local("Helvetica"), local("Arial");
-  font-weight: 300 900;
-  font-style: normal;
+/* Body / paragraph text: system UI stack for readability */
+body, div.body, .rst-content p, .rst-content li, .rst-content dt, .rst-content dd, .rst-content table, .rst-content caption {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-weight: 400;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-html, body,
-.wy-body-for-nav,
-.wy-grid-for-nav,
-.wy-nav-content,
-.wy-side-nav-search,
-.wy-side-scroll,
-.wy-menu-vertical,
-.wy-menu-vertical a,
-div.body,
-div.sphinxsidebar,
-div.sphinxsidebarwrapper,
-.rst-content,
-.rst-content p,
-.rst-content li,
-.rst-content dt,
-.rst-content dd,
-.rst-content blockquote,
-.rst-content table,
-.rst-content caption,
+/* Headings & navigation: brand voice */
 .rst-content h1,
 .rst-content h2,
 .rst-content h3,
 .rst-content h4,
 .rst-content h5,
 .rst-content h6,
-nav[role="navigation"],
+.wy-side-nav-search,
+.wy-menu-vertical a,
 nav[role="navigation"] a,
 .toctree-wrapper p.caption {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-weight: 600;
+  letter-spacing: 0.25px;
 }
+
+/* Improve visual hierarchy: slightly darker headings */
+.rst-content h1, .rst-content h2, .rst-content h3 { color: #171717; }
+.rst-content p { color: #222; }
 
 /* Keep code blocks monospace (do NOT inherit Helvetica) */
 code, pre, tt { font-family: Menlo, Monaco, "Courier New", monospace !important; }
@@ -68,3 +57,19 @@ code, pre, tt { font-family: Menlo, Monaco, "Courier New", monospace !important;
   margin: 8px;
   transition: transform 0.2s ease;
 }
+
+.tech-logos img:hover { transform: scale(1.05); }
+
+/* Hide the (now only structural) toctree on index page – it exists solely to satisfy Sphinx inclusion */
+.wy-nav-content .toctree-wrapper { display: none; }
+
+/* Figure / caption tweaks */
+figure .caption, figcaption, .figure .caption { 
+  font-size: 0.8rem; 
+  color: #666; 
+  text-align: center; 
+  line-height: 1.3; 
+}
+
+/* Slightly tighter list spacing in sidebar custom lists */
+.wy-menu-vertical li a { line-height: 1.25; }
