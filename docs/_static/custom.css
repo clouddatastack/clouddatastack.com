@@ -1,5 +1,11 @@
 /* Force Helvetica instead of Lato/Roboto */
-body, html {
+body,
+html,
+.wy-body-for-nav,
+.wy-nav-content,
+.wy-side-nav-search,
+.wy-menu-vertical,
+.rst-content {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
