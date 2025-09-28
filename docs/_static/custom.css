@@ -1,11 +1,14 @@
-/* Force Helvetica instead of Lato/Roboto */
-body,
-html,
-.wy-body-for-nav,
-.wy-nav-content,
-.wy-side-nav-search,
-.wy-menu-vertical,
-.rst-content {
+@font-face {
+    font-family: 'Roboto Slab';
+    src: local("Helvetica Neue"), local(Helvetica), local(Arial);
+}
+@font-face {
+    font-family: 'Lato';
+    src: local("Helvetica Neue"), local(Helvetica), local(Arial);
+}
+
+/* Force all text to Helvetica */
+body, .wy-nav-content, .wy-menu-vertical, .rst-content, .wy-side-nav-search {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
