@@ -2,6 +2,9 @@
    :class: profile-photo
    :alt: Yuri Chernushenko
 
+Data Platforms & AI Workflows
+=============================
+
 Hi, I’m Yuri 👋 — I help companies design and build **cloud-native data platforms** 
 that are **scalable, reliable, and ready for the AI era**.
 
