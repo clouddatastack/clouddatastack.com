@@ -1,3 +1,8 @@
+/* Hide navigation only on index page */
+body#index .navigation {
+    display: none !important;
+}
+
 /* Slight spacing for the custom sidebar block */
 .wy-side-nav-search h3 {
   margin-top: 0.2em;
