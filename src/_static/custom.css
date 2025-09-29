@@ -1,5 +1,9 @@
-/* Hide navigation only on index page */
-body#index .navigation {
+/* div[role="navigation"][aria-label="Page navigation"] {
+    display: none !important;
+} */
+
+
+div[role="navigation"] .wy-breadcrumbs {
     display: none !important;
 }
 
