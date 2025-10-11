@@ -2,7 +2,7 @@
 name = "clouddatastack-com"
 version = "0.1.0"
 description = ""
-authors = ["Yuri Chernushenko <yuri@clouddatastack.com>"]
+authors = ["Yuri Chernushenko <y.chernushenko@gmail.com>"]
 readme = "README.md"
 packages = [{include = "clouddatastack"}]
 
