@@ -15,7 +15,7 @@ I specialize in:
 - `Data Migrations <services/03_data_migrations.html>`_
 
 📩 You can reach out to `me <https://yuri.chernushenko.com/>`_ via email 
-`y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_ 
+`yuri@clouddatastack.com <mailto:yuri@clouddatastack.com>`_ 
 or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
 
 .. raw:: html

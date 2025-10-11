@@ -48,7 +48,7 @@ Contact Us
 ----------
 If you have any questions about this Privacy Policy or your data, please contact us at:
 
-Email: y.chernushenko@gmail.com
+Email: yuri@clouddatastack.com
 
 Changes to This Policy
 ----------------------
