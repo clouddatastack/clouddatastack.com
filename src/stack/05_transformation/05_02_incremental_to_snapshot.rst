@@ -1,7 +1,7 @@
 5.2. Incremental to Snapshot
 ============================
 
-Many data integrations, especially with third-party APIs, provide data incrementally. Instead of getting a full dump of a source table every day, you receive only the records that were created or updated on that day. While this is efficient for data extraction, it's less convenient for analytics, where analysts often need a complete "snapshot" of the table as it looked on a specific day.
+Many data integrations, especially with third-party APIs (e.g., Stripe, Salesforce), provide data incrementally. Instead of getting a full dump of a source table every day, you receive only the records that were created or updated on that day. While this is efficient for data extraction, it's less convenient for analytics, where analysts often need a complete "snapshot" of the table as it looked on a specific day.
 
 The Core Logic
 ---------------
@@ -18,7 +18,6 @@ Here is a generalized dbt macro that implements this logic. It's designed to be 
 
 .. literalinclude:: code/macros/incremental_api_to_snapshot_staging.sql
    :language: jinja
-   :caption: macros/incremental_api_to_snapshot_staging.sql
 
 **How to Use It**
 

@@ -104,7 +104,7 @@
              
   <section id="incremental-to-snapshot">
 <h1>5.2. Incremental to Snapshot<a class="headerlink" href="#incremental-to-snapshot" title="Link to this heading"></a></h1>
-<p>Many data integrations, especially with third-party APIs, provide data incrementally. Instead of getting a full dump of a source table every day, you receive only the records that were created or updated on that day. While this is efficient for data extraction, it’s less convenient for analytics, where analysts often need a complete “snapshot” of the table as it looked on a specific day.</p>
+<p>Many data integrations, especially with third-party APIs (e.g., Stripe, Salesforce), provide data incrementally. Instead of getting a full dump of a source table every day, you receive only the records that were created or updated on that day. While this is efficient for data extraction, it’s less convenient for analytics, where analysts often need a complete “snapshot” of the table as it looked on a specific day.</p>
 <section id="the-core-logic">
 <h2>The Core Logic<a class="headerlink" href="#the-core-logic" title="Link to this heading"></a></h2>
 <p>The goal is to build a dbt model that, for any given day, represents the complete state of the source data. We achieve this with a macro that combines the latest incremental data with the previous day’s snapshot.</p>
@@ -116,8 +116,6 @@
 <section id="the-macro">
 <h2>The Macro<a class="headerlink" href="#the-macro" title="Link to this heading"></a></h2>
 <p>Here is a generalized dbt macro that implements this logic. It’s designed to be placed in your <code class="docutils literal notranslate"><span class="pre">macros</span></code> directory.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">macros/incremental_api_to_snapshot_staging.sql</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
 <div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">macro</span> <span class="nv">incremental_api_to_snapshot_staging</span><span class="o">(</span><span class="nv">source_relation</span><span class="o">)</span> <span class="cp">%}</span>
 
 <span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_incremental</span><span class="o">()</span> <span class="cp">%}</span>
@@ -179,7 +177,6 @@
 
 <span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
 </pre></div>
-</div>
 </div>
 <p><strong>How to Use It</strong></p>
 <p>You would call this macro from your staging model, which should be materialized as an incremental table itself, partitioned by <code class="docutils literal notranslate"><span class="pre">event_date</span></code>.</p>
