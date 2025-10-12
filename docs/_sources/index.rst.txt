@@ -14,6 +14,14 @@ I specialize in:
 - `AI Workflows <services/02_ai_workflows.html>`_
 - `Data Migrations <services/03_data_migrations.html>`_
 
+Workflow:
+
+1. Idea formulation
+2. Requirements engineering
+3. MVP
+4. Pilot testing
+5. Launch
+
 📩 You can reach out to `me <https://yuri.chernushenko.com/>`_ via email 
 `y.chernushenko@gmail.com <mailto:y.chernushenko@gmail.com>`_ 
 or `schedule a call ↗ <https://calendly.com/y-chernushenko>`_.
