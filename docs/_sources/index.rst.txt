@@ -8,13 +8,13 @@ Data Platforms & AI Workflows
 Hi, I’m Yuri 👋 — I help companies design and build **cloud-native data platforms** 
 that are **scalable, reliable, and ready for the AI era**.
 
-I specialize in:
+**I specialize in**
 
 - `Enterprise Data Platforms <services/01_enterprise_data_platforms.html>`_
 - `AI Workflows <services/02_ai_workflows.html>`_
 - `Data Migrations <services/03_data_migrations.html>`_
 
-Workflow:
+**Workflow**
 
 1. Idea formulation
 2. Requirements engineering
