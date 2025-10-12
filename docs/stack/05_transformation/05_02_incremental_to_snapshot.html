@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5.2. Incremental to Snapshot &mdash; Cloud Data Stack  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=1b128adb" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logo_white_16x16.png"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="6. Orchestration" href="../06_orchestration.html" />
+    <link rel="prev" title="5.1. dbt Incremental Models" href="05_01_dbt_incremental_models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo_text_white.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Services:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../services/01_enterprise_data_platforms.html">1. Enterprise Data Platforms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/02_ai_workflows.html">2. AI Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/03_data_migrations.html">3. Data Migrations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/01_analytics_engineering.html">1. Analytics Engineering</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology Stack:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_extraction.html">1. Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_streaming.html">2. Streaming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_storage.html">3. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_compute.html">4. Compute and Query</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../05_transformation.html">5. Transformation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="05_01_dbt_incremental_models.html">5.1. dbt Incremental Models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.2. Incremental to Snapshot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-core-logic">The Core Logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-macro">The Macro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#potential-challenges-and-solutions">Potential Challenges and Solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-quality-and-deduplication">1. Data Quality and Deduplication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schema-changes">2. Schema Changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../06_orchestration.html">6. Orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07_governance.html">7. Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08_ai_workflows.html">8. AI Workflows</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cloud Data Stack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../05_transformation.html">5. Transformation</a></li>
+      <li class="breadcrumb-item active">5.2. Incremental to Snapshot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="incremental-to-snapshot">
+<h1>5.2. Incremental to Snapshot<a class="headerlink" href="#incremental-to-snapshot" title="Link to this heading"></a></h1>
+<p>Many data integrations, especially with third-party APIs, provide data incrementally. Instead of getting a full dump of a source table every day, you receive only the records that were created or updated on that day. While this is efficient for data extraction, it’s less convenient for analytics, where analysts often need a complete “snapshot” of the table as it looked on a specific day.</p>
+<section id="the-core-logic">
+<h2>The Core Logic<a class="headerlink" href="#the-core-logic" title="Link to this heading"></a></h2>
+<p>The goal is to build a dbt model that, for any given day, represents the complete state of the source data. We achieve this with a macro that combines the latest incremental data with the previous day’s snapshot.</p>
+<ul class="simple">
+<li><p><strong>For an incremental run (daily operation):</strong> The model takes all new and updated records from today’s load and combines them with all the <em>unchanged</em> records from yesterday’s snapshot.</p></li>
+<li><p><strong>For a full refresh (initial setup or recovery):</strong> The model scans the entire history of incremental loads, finds the absolute latest version of each record, and builds a snapshot from scratch.</p></li>
+</ul>
+</section>
+<section id="the-macro">
+<h2>The Macro<a class="headerlink" href="#the-macro" title="Link to this heading"></a></h2>
+<p>Here is a generalized dbt macro that implements this logic. It’s designed to be placed in your <code class="docutils literal notranslate"><span class="pre">macros</span></code> directory.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">macros/incremental_api_to_snapshot_staging.sql</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-jinja notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">macro</span> <span class="nv">incremental_api_to_snapshot_staging</span><span class="o">(</span><span class="nv">source_relation</span><span class="o">)</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_incremental</span><span class="o">()</span> <span class="cp">%}</span>
+<span class="x">    -- Incremental logic: Combine today&#39;s data with unchanged records from yesterday&#39;s snapshot.</span>
+
+<span class="x">    -- 1. Select all records from the latest incremental load (today&#39;s data).</span>
+<span class="x">    with current_increment as (</span>
+<span class="x">        select *</span>
+<span class="x">        from </span><span class="cp">{{</span> <span class="nv">source_relation</span> <span class="cp">}}</span>
+<span class="x">        where event_date = </span><span class="cp">{{</span> <span class="nv">var</span><span class="o">(</span><span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="x">    ),</span>
+
+<span class="x">    -- 2. Select records from the previous day&#39;s snapshot that haven&#39;t been updated today.</span>
+<span class="x">    --    This carries forward the state of unchanged records.</span>
+<span class="x">    previous_snapshot_unchanged as (</span>
+<span class="x">        select *</span>
+<span class="x">        from (</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">if</span> <span class="nv">adapter.get_relation</span><span class="o">(</span><span class="nv">this.database</span><span class="o">,</span> <span class="nv">this.schema</span><span class="o">,</span> <span class="nv">this.identifier</span><span class="o">)</span> <span class="cp">%}</span>
+<span class="x">                select * except(event_date),</span>
+<span class="x">                       </span><span class="cp">{{</span> <span class="nv">var</span><span class="o">(</span><span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"> as event_date</span>
+<span class="x">                from </span><span class="cp">{{</span> <span class="nv">this</span> <span class="cp">}}</span>
+<span class="x">                where event_date = </span><span class="cp">{{</span> <span class="nv">date_add</span><span class="o">(</span><span class="nv">var</span><span class="o">(</span><span class="s1">&#39;event_date&#39;</span><span class="o">),</span> <span class="o">-</span><span class="m">1</span><span class="o">,</span> <span class="s1">&#39;day&#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="x">                  and record_id not in (</span>
+<span class="x">                    select record_id</span>
+<span class="x">                    from current_increment</span>
+<span class="x">                )</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
+<span class="x">                -- If the target model doesn&#39;t exist yet, return an empty set with the correct schema.</span>
+<span class="x">                select *</span>
+<span class="x">                from </span><span class="cp">{{</span> <span class="nv">source_relation</span> <span class="cp">}}</span>
+<span class="x">                where 1=0</span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="x">        )</span>
+<span class="x">    )</span>
+
+<span class="x">    -- 3. Union the new/updated records with the unchanged records from the previous snapshot.</span>
+<span class="x">    select * from current_increment</span>
+<span class="x">    union all</span>
+<span class="x">    select * from previous_snapshot_unchanged</span>
+
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span>
+<span class="x">    -- Full refresh logic: Build the snapshot from the entire history.</span>
+
+<span class="x">    -- 1. Select the most recent version of each record based on the event_date.</span>
+<span class="x">    with latest_records as (</span>
+<span class="x">        select *,</span>
+<span class="x">               row_number() over (partition by record_id order by event_date desc) as rn</span>
+<span class="x">        from </span><span class="cp">{{</span> <span class="nv">source_relation</span> <span class="cp">}}</span>
+<span class="x">        where event_date &lt;= </span><span class="cp">{{</span> <span class="nv">var</span><span class="o">(</span><span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="x">    )</span>
+
+<span class="x">    -- 2. Select only the latest version (rn=1) and set the event_date to the processing date.</span>
+<span class="x">    select * except(event_date, rn),</span>
+<span class="x">           </span><span class="cp">{{</span> <span class="nv">var</span><span class="o">(</span><span class="s1">&#39;event_date&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"> as event_date</span>
+<span class="x">    from latest_records</span>
+<span class="x">    where rn = 1</span>
+
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+
+<span class="cp">{%</span> <span class="k">endmacro</span> <span class="cp">%}</span>
+</pre></div>
+</div>
+</div>
+<p><strong>How to Use It</strong></p>
+<p>You would call this macro from your staging model, which should be materialized as an incremental table itself, partitioned by <code class="docutils literal notranslate"><span class="pre">event_date</span></code>.</p>
+<div class="highlight-sql+jinja notranslate"><div class="highlight"><pre><span></span><span class="p">..</span><span class="w"> </span><span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span><span class="w"> </span><span class="n">jinja</span>
+
+<span class="c1">-- models/staging/stage_api_snapshots.sql</span>
+<span class="cp">{{</span>
+  <span class="nv">config</span><span class="o">(</span>
+    <span class="nv">materialized</span><span class="o">=</span><span class="s1">&#39;incremental&#39;</span><span class="o">,</span>
+    <span class="nv">unique_key</span><span class="o">=</span><span class="s1">&#39;record_id&#39;</span><span class="o">,</span>
+    <span class="nv">partition_by</span><span class="o">={</span>
+      <span class="s2">&quot;field&quot;</span><span class="o">:</span> <span class="s2">&quot;event_date&quot;</span><span class="o">,</span>
+      <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="s2">&quot;date&quot;</span>
+    <span class="o">}</span>
+  <span class="o">)</span>
+<span class="cp">}}</span>
+
+<span class="cp">{{</span> <span class="nv">incremental_api_to_snapshot_staging</span><span class="o">(</span><span class="nv">source</span><span class="o">(</span><span class="s1">&#39;api_source&#39;</span><span class="o">,</span> <span class="s1">&#39;daily_loads&#39;</span><span class="o">))</span> <span class="cp">}}</span>
+</pre></div>
+</div>
+</section>
+<section id="potential-challenges-and-solutions">
+<h2>Potential Challenges and Solutions<a class="headerlink" href="#potential-challenges-and-solutions" title="Link to this heading"></a></h2>
+<p>This pattern is powerful, but real-world data introduces complexities. Here’s how to handle them.</p>
+</section>
+<section id="data-quality-and-deduplication">
+<h2>1. Data Quality and Deduplication<a class="headerlink" href="#data-quality-and-deduplication" title="Link to this heading"></a></h2>
+<p><strong>Problem:</strong> The integrity of your snapshot depends entirely on the quality of your incremental loads. If the source API sends duplicate <code class="docutils literal notranslate"><span class="pre">record_id</span></code> values within a single day’s load, it can break your model.</p>
+<p><strong>Solution:</strong></p>
+<ul class="simple">
+<li><p><strong>Initial Load:</strong> The <code class="docutils literal notranslate"><span class="pre">row_number()</span></code> window function in the macro’s <code class="docutils literal notranslate"><span class="pre">else</span></code> block effectively deduplicates the historical data, ensuring that only the most recent version of each record is used for the initial snapshot.</p></li>
+<li><p><strong>Incremental Loads:</strong> The primary defense is testing. You must add data tests to your source-configured dbt model to ensure the uniqueness of the primary key (e.g., <code class="docutils literal notranslate"><span class="pre">record_id</span></code>) for each daily partition (<code class="docutils literal notranslate"><span class="pre">event_date</span></code>).</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># models/sources/sources.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="nt">sources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api_source</span>
+<span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw_data</span>
+<span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">daily_loads</span>
+<span class="w">        </span><span class="nt">columns</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record_id</span>
+<span class="w">            </span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">dbt_utils.unique_combination_of_columns</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">combination_of_columns</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record_id</span>
+</pre></div>
+</div>
+</section>
+<section id="schema-changes">
+<h2>2. Schema Changes<a class="headerlink" href="#schema-changes" title="Link to this heading"></a></h2>
+<p><strong>Problem:</strong> APIs evolve. A field might be added, removed, or have its data type changed. A standard dbt incremental model can fail or, worse, silently ignore new columns if not configured correctly.</p>
+<p><strong>Solution:</strong></p>
+<ul class="simple">
+<li><p><strong>Adding Columns:</strong> The use of <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">*</span> <span class="pre">except(...)</span></code> makes this macro resilient to newly added columns. They will be automatically included in both the incremental and full-refresh paths. Potential backfilling might be needed for historical dates, depending on your use case.</p></li>
+<li><p><strong>Removing/Renaming/Changing Data Types:</strong> These are breaking changes. The simplest solution is to run a full refresh: <code class="docutils literal notranslate"><span class="pre">dbt</span> <span class="pre">run</span> <span class="pre">--full-refresh</span> <span class="pre">-s</span> <span class="pre">stage_api_snapshots</span></code>. This rebuilds the entire snapshot using the new schema from the source. For a more automated but complex solution, you could explore dbt’s <code class="docutils literal notranslate"><span class="pre">on_schema_change</span></code> configuration in your staging model, though it requires careful implementation to work with this custom snapshot logic.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <!-- Empty footer.html to remove the footer -->
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
